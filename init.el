@@ -12,10 +12,22 @@
 ;; Manage with `package-install-selected-packages' and `package-autoremove'.
 (setq package-selected-packages '(quelpa
                                   esup
+
                                   fancy-battery
                                   anzu
+
                                   eshell-prompt-extras
-                                  eshell-z)
+                                  eshell-z
+
+                                  evil
+                                  evil-collection
+                                  evil-snipe
+                                  evil-surround
+                                  evil-commentary
+                                  evil-exchange
+                                  evil-escape
+                                  evil-org
+                                  avy)
       package-quickstart t)
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
