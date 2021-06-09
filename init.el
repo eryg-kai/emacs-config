@@ -27,7 +27,16 @@
                                   evil-exchange
                                   evil-escape
                                   evil-org
-                                  avy)
+                                  avy
+
+                                  typo
+                                  org-bullets
+                                  ob-async
+                                  ob-go
+                                  ob-http
+                                  ob-restclient
+                                  ob-typescript
+                                  org-edna)
       package-quickstart t)
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))

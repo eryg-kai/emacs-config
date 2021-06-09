@@ -1,0 +1,7 @@
+* CALL %?
+  :PROPERTIES:
+  :With:  %^{With}
+  :END:
+  :LOGBOOK:
+  - State "CALL"       from              %U
+  :END:

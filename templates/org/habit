@@ -1,0 +1,9 @@
+* HABIT %?
+  SCHEDULED: %<<%Y-%m-%d %a .+1d/3d>>
+  :PROPERTIES:
+  :STYLE:  habit
+  :REPEAT_TO_STATE:  HABIT
+  :END:
+  :LOGBOOK:
+  - State "HABIT"      from              %U
+  :END:

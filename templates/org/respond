@@ -1,0 +1,8 @@
+* NEXT Respond to %:from on %:subject
+  SCHEDULED: %t
+  :PROPERTIES:
+  :See:  %a
+  :END:
+  :LOGBOOK:
+  - State "NEXT"       from              %U
+  :END:
