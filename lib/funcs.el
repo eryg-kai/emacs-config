@@ -45,4 +45,17 @@
   (cond ((>= seconds 0) (format-seconds "%h:%.2m" seconds))
         (t (concat "-" (format-seconds "%h:%.2m" (* seconds -1))))))
 
+(defun ec-center-truncate (item len)
+  "Replace the center of ITEM with … to make it of length LEN (including …).
+
+When the length is odd the right side will be one longer than the left."
+  (let ((item (if (stringp item) item (format "%s" item))))
+    (if (> (length item) len)
+        (let* ((len (- len 1))
+               (mid (/ len 2)))
+          (concat (substring item 0 mid)
+                  (apply #'propertize "…" (text-properties-at (- mid 1) item))
+                  (substring item (- mid len) nil)))
+      item)))
+
 ;;; funcs.el ends here

@@ -10,7 +10,10 @@
       delete-by-moving-to-trash nil)
 
 ;; Manage with `package-install-selected-packages' and `package-autoremove'.
-(setq package-selected-packages '(quelpa esup)
+(setq package-selected-packages '(quelpa
+                                  esup
+                                  fancy-battery
+                                  anzu)
       package-quickstart t)
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
