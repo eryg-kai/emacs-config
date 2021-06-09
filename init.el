@@ -29,6 +29,13 @@
                                   evil-org
                                   avy
 
+                                  which-key
+                                  yasnippet
+                                  yasnippet-snippets
+                                  company
+                                  ispell
+                                  flimenu
+
                                   typo
                                   org-bullets
                                   ob-async
