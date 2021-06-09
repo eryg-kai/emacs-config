@@ -13,7 +13,9 @@
 (setq package-selected-packages '(quelpa
                                   esup
                                   fancy-battery
-                                  anzu)
+                                  anzu
+                                  eshell-prompt-extras
+                                  eshell-z)
       package-quickstart t)
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
