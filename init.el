@@ -40,6 +40,7 @@
             (load (file-name-sans-extension fn) nil t))
           (find-lisp-find-files directory "\\.el\\'")))
 
+(ec--load-directory ec-lib-dir)
 (ec--load-directory ec-config-dir)
 
 (defun ec-test()
