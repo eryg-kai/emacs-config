@@ -25,6 +25,8 @@
                                   ripgrep
                                   projectile
 
+                                  persistent-scratch
+
                                   markdown-mode
                                   nix-mode
                                   web-mode
