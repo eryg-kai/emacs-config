@@ -58,4 +58,10 @@ When the length is odd the right side will be one longer than the left."
                   (substring item (- mid len) nil)))
       item)))
 
+(defun ec-run-and-bury (fn &rest args)
+  "Run the FN with ARGS then bury the current buffer."
+  (let ((buf (buffer-name)))
+    (apply fn args)
+    (bury-buffer buf)))
+
 ;;; funcs.el ends here
