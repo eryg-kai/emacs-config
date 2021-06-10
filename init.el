@@ -25,6 +25,20 @@
                                   ripgrep
                                   projectile
 
+                                  markdown-mode
+                                  nix-mode
+                                  web-mode
+                                  yaml-mode
+                                  yarn-mode
+                                  lsp-mode
+                                  go-mode
+                                  css-mode
+                                  tide
+                                  typescript-mode
+                                  flycheck
+                                  dash-docs
+                                  editorconfig
+
                                   fancy-battery
                                   anzu
 
