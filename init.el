@@ -22,6 +22,9 @@
                                   forge
                                   git-commit
 
+                                  ripgrep
+                                  projectile
+
                                   fancy-battery
                                   anzu
 
