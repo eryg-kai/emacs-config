@@ -32,6 +32,13 @@
                                   hl-todo
                                   undo-tree
 
+                                  docker
+                                  magit-annex
+                                  rfc-mode
+                                  pinentry
+                                  speed-type
+                                  pdf-tools
+
                                   markdown-mode
                                   nix-mode
                                   web-mode
