@@ -27,6 +27,11 @@
 
                                   persistent-scratch
 
+                                  smartparens
+                                  evil-string-inflection
+                                  hl-todo
+                                  undo-tree
+
                                   markdown-mode
                                   nix-mode
                                   web-mode
