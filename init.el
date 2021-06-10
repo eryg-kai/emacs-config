@@ -32,6 +32,8 @@
                                   hl-todo
                                   undo-tree
 
+                                  winum
+
                                   docker
                                   magit-annex
                                   rfc-mode
