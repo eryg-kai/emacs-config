@@ -87,6 +87,10 @@
                                   ob-typescript
                                   org-edna)
       package-quickstart t)
+
+(when (display-graphic-p)
+  (push 'exwm package-selected-packages))
+
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 
