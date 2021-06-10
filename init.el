@@ -13,6 +13,9 @@
 (setq package-selected-packages '(quelpa
                                   esup
 
+                                  doom-themes
+                                  evil-terminal-cursor-changer
+
                                   fancy-battery
                                   anzu
 
