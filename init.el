@@ -16,6 +16,12 @@
                                   doom-themes
                                   evil-terminal-cursor-changer
 
+                                  ediff
+                                  magit
+                                  git-link
+                                  forge
+                                  git-commit
+
                                   fancy-battery
                                   anzu
 
