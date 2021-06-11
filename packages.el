@@ -2,11 +2,13 @@
 
 ;;; Commentary:
 
-;; This file only configures package installation. To actually install use
-;; `package-install-selected-packages'. To remove packages no longer in the list
-;; use `package-autoremove'.
+;; This file only configures package installation.
+;;   - To install run `package-install-selected-packages'.
+;;   - To remove packages no longer in the list run `package-autoremove'.
+;;   - To update run `package-refresh-contents' then install packages again.
 
 ;; Packages not in MELPA can be installed with Quelpa. (Currently just `osd').
+;;   - For example: (quelpa '(osd :repo "0x0049/osd" :fetcher github))
 
 ;;; Code:
 
