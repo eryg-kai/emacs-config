@@ -64,4 +64,28 @@ When the length is odd the right side will be one longer than the left."
     (apply fn args)
     (bury-buffer buf)))
 
+;; Set PAGER to the following script:
+;;
+;; temp=$(mktemp --suffix .pager)
+;; cat - >> "$temp"
+;; height=$(tput lines)
+;; lines=$(wc -l < "$temp")
+;; if [ "$height" -lt "$lines" ] ; then
+;;   emacsclient --no-wait "$temp"
+;; else
+;;   cat "$temp"
+;; fi
+;; rm -f -- "$temp"
+;;
+;; --no-wait is optional but I prefer to free up the terminal for more work.
+;;
+;; That way long output will use Emacs as a pager. Then `ec-colorize' can be
+;;used to colorize ANSI codes when necessary.
+(defun ec-colorize (beg end)
+  "Colorize ANSI codes from BEG to END or the entire buffer."
+  (interactive (if (use-region-p)
+                   (list (region-beginning) (region-end))
+                 (list (point-min) (point-max))))
+  (ansi-color-apply-on-region beg end))
+
 ;;; funcs.el ends here
