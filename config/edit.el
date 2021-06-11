@@ -34,7 +34,7 @@
   (sp-local-pair 'prog-mode "[" nil :post-handlers '((ec--indent-between-pair "RET")))
   (sp-local-pair 'prog-mode "(" nil :post-handlers '((ec--indent-between-pair "RET"))))
 
-(add-hook 'emacs-startup-hook #'smartparens-global-mode)
+(add-hook 'emacs-startup-hook #'smartparens-global-strict-mode)
 
 ;; Undo tree.
 (setq undo-tree-history-directory-alist

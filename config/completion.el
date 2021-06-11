@@ -75,7 +75,22 @@
 ;; Snippets.
 (with-eval-after-load 'yasnippet
   (define-key yas-minor-mode-map (kbd "TAB") #'hippie-expand)
-  (push #'yas-hippie-try-expand hippie-expand-try-functions-list))
+  (push #'yas-hippie-try-expand hippie-expand-try-functions-list)
+
+  ;; In the terminal smartparens-strict-mode causes some weirdness with
+  ;; parenthesis in snippets so disable it while expanding.
+  (defvar ec--smartparens-mode)
+
+  (defun ec--disable-smartparens (&rest _)
+    (setq ec--smartparens-mode smartparens-mode)
+    (setq smartparens-mode nil))
+
+  (advice-add 'yas-hippie-try-expand :after #'ec--disable-smartparens)
+
+  (defun ec--reset-smartparens (&rest _)
+    (setq smartparens-mode ec--smartparens-mode))
+
+  (advice-add 'hippie-expand :after #'ec--reset-smartparens '((depth . -100))))
 
 ;; Company.
 (setq-default company-frontends '(company-preview-frontend
