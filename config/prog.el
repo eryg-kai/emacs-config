@@ -16,12 +16,12 @@
 
 (defun ec--setup-tide ()
   "Set up tide."
-  (message "set up tide")
   (when (or (eq major-mode 'typescript-mode)
             (and (eq major-mode 'web-mode)
                  (string-equal "tsx" (file-name-extension buffer-file-name))))
     (tide-setup)
     (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
     (eldoc-mode)
     (tide-hl-identifier-mode)))
 
@@ -31,9 +31,9 @@
 ;; Flycheck.
 (setq flycheck-indication-mode nil)
 
-(defun ec--find-node-module-binary (name)
-  "Travel upward looking for NAME in node_modules directories."
-  (let* ((root default-directory)
+(defun ec--find-node-module-binary (name &optional directory)
+  "Travel upward from DIRECTORY looking for NAME in node_modules."
+  (let* ((root (or directory default-directory))
          (binary (and root (expand-file-name (concat "node_modules/.bin/" name) root))))
     (cond ((and binary (file-executable-p binary)) binary)
           ((string-equal root "/") nil)
