@@ -9,91 +9,6 @@
 (setq lexical-binding t ; Only affects evaluating code.
       delete-by-moving-to-trash nil)
 
-;; Manage with `package-install-selected-packages' and `package-autoremove'.
-(setq package-selected-packages '(quelpa
-                                  esup
-
-                                  doom-themes
-                                  evil-terminal-cursor-changer
-
-                                  ediff
-                                  magit
-                                  git-link
-                                  forge
-                                  git-commit
-
-                                  ripgrep
-                                  projectile
-
-                                  persistent-scratch
-
-                                  smartparens
-                                  evil-string-inflection
-                                  hl-todo
-                                  undo-tree
-
-                                  winum
-
-                                  docker
-                                  magit-annex
-                                  rfc-mode
-                                  pinentry
-                                  speed-type
-                                  pdf-tools
-
-                                  markdown-mode
-                                  nix-mode
-                                  web-mode
-                                  yaml-mode
-                                  yarn-mode
-                                  lsp-mode
-                                  go-mode
-                                  css-mode
-                                  tide
-                                  typescript-mode
-                                  flycheck
-                                  dash-docs
-                                  editorconfig
-
-                                  fancy-battery
-                                  anzu
-
-                                  eshell-prompt-extras
-                                  eshell-z
-
-                                  evil
-                                  evil-collection
-                                  evil-snipe
-                                  evil-surround
-                                  evil-commentary
-                                  evil-exchange
-                                  evil-escape
-                                  evil-org
-                                  avy
-
-                                  which-key
-                                  yasnippet
-                                  yasnippet-snippets
-                                  company
-                                  ispell
-                                  flimenu
-
-                                  typo
-                                  org-bullets
-                                  ob-async
-                                  ob-go
-                                  ob-http
-                                  ob-restclient
-                                  ob-typescript
-                                  org-edna)
-      package-quickstart t)
-
-(when (display-graphic-p)
-  (push 'exwm package-selected-packages))
-
-(with-eval-after-load 'package
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-
 ;; Directories.
 (defconst ec-dir (file-name-directory load-file-name))
 (defconst ec-test-dir (expand-file-name "test" ec-dir))
@@ -105,6 +20,9 @@
 (defconst ec-org-dir (or (getenv "ORG_HOME") (expand-file-name "~/org")))
 (defconst ec-log-dir (expand-file-name user-login-name ec-org-dir))
 (defconst ec-theme-dir (expand-file-name "themes" ec-dir))
+
+;; Load package list.
+(load (expand-file-name "packages" ec-dir) nil t)
 
 ;; Load configuration.
 (push ec-theme-dir custom-theme-load-path)
@@ -126,6 +44,8 @@
   "Test configuration."
   (interactive)
   (ec--load-directory ec-test-dir)
-  (ert t))
+  (if noninteractive
+      (ert-run-tests-batch-and-exit)
+    (ert t)))
 
 ;;; init.el ends here

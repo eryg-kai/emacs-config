@@ -45,7 +45,8 @@
 
 (defun ec--try-load-theme (theme &optional no-confirm no-enable)
   "Call `load-theme' with THEME, NO-CONFIRM, and NO-ENABLE if THEME exists."
-  (when ec-debug-p (message (format "=== ec--try-load-theme %s" theme)))
+  (when (bound-and-true-p ec-debug-p)
+    (message (format "=== ec--try-load-theme %s" theme)))
   (when (ec-theme-p theme)
     (load-theme theme no-confirm no-enable)))
 
