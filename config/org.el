@@ -101,49 +101,84 @@
 (add-hook 'org-blocker-hook #'ec--prevent-duplicate-states)
 
 ;; Capturing.
-(setq org-default-notes-file (expand-file-name "refile.org" ec-org-dir)
-      org-capture-templates
-      `(("t" "task" entry (function ec-maybe-goto-capture-file)
-         (file ,(expand-file-name "org/task" ec-tmpl-dir)))
-        ("s" "start task" entry (function ec-maybe-goto-capture-file)
-         (file ,(expand-file-name "org/task" ec-tmpl-dir))
-         :clock-in t
-         :clock-resume t)
-        ("r" "respond" entry (function ec-maybe-goto-capture-file)
-         (file ,(expand-file-name "org/respond" ec-tmpl-dir))
-         :immediate-finish t)
-        ("n" "note" entry (function ec-maybe-goto-capture-file)
-         (file ,(expand-file-name "org/note" ec-tmpl-dir)))
-        ("j" "journal" entry
-         (file+olp+datetree ,(expand-file-name "journal.org" ec-log-dir))
-         (file ,(expand-file-name "org/journal" ec-tmpl-dir)))
-        ("d" "dream" entry
-         (file+olp+datetree ,(expand-file-name "dreams.org" ec-log-dir))
-         (file ,(expand-file-name "org/dream" ec-tmpl-dir)))
-        ("M" "meeting" entry (function ec-maybe-goto-capture-file)
-         (file ,(expand-file-name "org/meeting" ec-tmpl-dir))
-         :clock-in t
-         :clock-resume t)
-        ("c" "call" entry (function ec-maybe-goto-capture-file)
-         (file ,(expand-file-name "org/call" ec-tmpl-dir))
-         :clock-in t
-         :clock-resume t)
-        ("h" "habit" entry (function ec-maybe-goto-capture-file)
-         (file ,(expand-file-name "org/habit" ec-tmpl-dir)))
-        ("m" "measure" table-line
-         (file+headline
-          ,(expand-file-name (format "%s/log.org" user-login-name) ec-org-dir)
-          "Measurements")
-         (file ,(expand-file-name "org/measure" ec-tmpl-dir))
-         :immediate-finish t)))
+(defun ec-capture-user (file &optional user)
+  "Return the path to FILE for USER or the current user."
+  (expand-file-name
+   (format "%s/%s" (or user user-login-name) file)
+   ec-org-dir))
 
-(defun ec-maybe-goto-capture-file ()
-  "If not in an org file move to the default notes file, otherwise stay put.
+(defun ec-get-template (name)
+  "Return the path to capture template NAME."
+  (expand-file-name (format "org/%s" name) ec-tmpl-dir))
 
-This is meant to be used with capture templates so you can
-capture to the current file."
+(defun ec-capture-default ()
+  "Capture to the current org file or the default."
   (unless (derived-mode-p 'org-mode)
     (set-buffer (org-capture-target-buffer org-default-notes-file))))
+
+(setq org-default-notes-file (expand-file-name "refile.org" ec-org-dir)
+      org-capture-templates
+      `(("t" "task")
+        ("tt" "task" entry
+         (function ec-capture-default)
+         (file ,(ec-get-template "task")))
+        ("ts" "start" entry
+         (function ec-capture-default)
+         (file ,(ec-get-template "task"))
+         :clock-in t
+         :clock-resume t)
+        ("tr" "respond" entry
+         (function ec-capture-default)
+         (file ,(ec-get-template "respond"))
+         :immediate-finish t)
+        ("th" "habit" entry
+         (file ,(ec-capture-user "habits.org"))
+         (file ,(ec-get-template "habit")))
+        ("n" "note" entry
+         (function ec-capture-default)
+         (file ,(ec-get-template "note")))
+        ("c" "clock")
+        ("cm" "meeting" entr
+         (function ec-capture-default)
+         (file ,(ec-get-template "meeting"))
+         :clock-in t
+         :clock-resume t)
+        ("cc" "call" entry
+         (function ec-capture-default)
+         (file ,(ec-get-template "call"))
+         :clock-in t
+         :clock-resume t)
+        ("p" "personal")
+        ("pj" "journal" entry
+         (file+olp+datetree ,(ec-capture-user "journal.org"))
+         (file ,(ec-get-template "journal")))
+        ("pd" "dream" entry
+         (file+olp+datetree ,(ec-capture-user "dreams.org"))
+         (file ,(ec-get-template "dream")))
+        ("pm" "measure" table-line
+         (file+headline ,(ec-capture-user "log.org") "Measurements")
+         (file ,(ec-get-template "measure"))
+         :immediate-finish t)
+        ("f" "flashcards")
+        ("fv" "vocab" entry
+         (function ec-capture-vocab)
+         (file ,(ec-get-template "vocab"))
+         :prepend t
+         :no-save t
+         :immediate-finish t)
+        ("fr" "reading")
+        ("frk" "kanji" entry
+         (function ec-capture-reading)
+         (file ,(ec-get-template "reading-kanji"))
+         :prepend t
+         :no-save t
+         :immediate-finish t)
+        ("frw" "word" entry
+         (function ec-capture-reading)
+         (file ,(ec-get-template "reading-word"))
+         :prepend t
+         :no-save t
+         :immediate-finish t)))
 
 ;; Babel.
 (setq org-src-tab-acts-natively t
@@ -261,31 +296,65 @@ capture to the current file."
 
 (add-hook 'org-log-buffer-setup-hook #'ec--log-adjust-fill-column)
 
-;; (use-package org-fc
-;;   :load-path "~/.config/emacs/git/org-fc"
-;;   :commands (org-fc-type-double-init org-fc-type-normal-init org-fc-type-cloze-init)
-;;   :config
-;;   (setq org-fc-directories
-;;         (cl-remove-if-not #'file-directory-p
-;;                           (directory-files
-;;                            (or (getenv "ORG_FC_HOME")
-;;                                (concat org-directory "/research/languages"))
-;;                            t
-;;                            "^[^.]")))
+;; Flashcards.
+(defun ec-get-lang-fc-dirs ()
+  "Get language flashcard directories."
+  (mapcar #'file-name-as-directory
+          (cl-remove-if-not
+           #'file-directory-p
+           (directory-files
+            (or (getenv "ORG_FC_HOME")
+                (expand-file-name "research/languages" ec-org-dir))
+            t "^[^.]"))))
 
-;;   (evil-define-minor-mode-key '(normal insert emacs) 'org-fc-review-flip-mode
-;;     (kbd "RET") 'org-fc-review-flip
-;;     (kbd "n") 'org-fc-review-flip
-;;     (kbd "s") 'org-fc-review-suspend-card
-;;     (kbd "q") 'org-fc-review-quit)
+(defun ec--capture-language (file)
+  "Capture to FILE in the selected language or current if already visiting."
+  (let* ((dirs (ec-get-lang-fc-dirs))
+         (dir (if (member default-directory dirs)
+                  default-directory
+                (completing-read "Language: " dirs nil t))))
+    (set-buffer (org-capture-target-buffer (expand-file-name file dir))))
+  (goto-char (point-min)))
 
-;;   (evil-define-minor-mode-key '(normal insert emacs) 'org-fc-review-rate-mode
-;;     (kbd "a") 'org-fc-review-rate-again
-;;     (kbd "h") 'org-fc-review-rate-hard
-;;     (kbd "g") 'org-fc-review-rate-good
-;;     (kbd "e") 'org-fc-review-rate-easy
-;;     (kbd "s") 'org-fc-review-suspend-card
-;;     (kbd "q") 'org-fc-review-quit))
+(defun ec-capture-reading ()
+  "Capture reading for the selected language or current if already visiting."
+  (ec--capture-language "readings.org"))
+
+(defun ec-capture-vocab ()
+  "Capture vocab for the selected language or current if already visiting."
+  (ec--capture-language "vocab.org"))
+
+(defun ec-init-fc ()
+  "Initialize a captured flashcard."
+  (pcase (plist-get org-capture-plist :description)
+    ("kanji" (org-fc-type-cloze-init 'enumeration))
+    ("word" (org-fc-type-normal-init))
+    ("vocab" (org-fc-type-double-init))))
+
+(add-hook 'org-capture-before-finalize-hook #'ec-init-fc)
+
+(setq org-fc-directories (ec-get-lang-fc-dirs))
+
+(define-key global-map (kbd "C-c of") #'org-fc-dashboard)
+
+(with-eval-after-load 'org-fc
+  ;; org-fc-keymap-hint has no autoloads.
+  (require 'org-fc-keymap-hint))
+
+(with-eval-after-load 'evil
+  (evil-define-minor-mode-key '(normal insert emacs) 'org-fc-review-flip-mode
+    (kbd "RET") 'org-fc-review-flip
+    (kbd "n") 'org-fc-review-flip
+    (kbd "s") 'org-fc-review-suspend-card
+    (kbd "q") 'org-fc-review-quit)
+
+  (evil-define-minor-mode-key '(normal insert emacs) 'org-fc-review-rate-mode
+    (kbd "a") 'org-fc-review-rate-again
+    (kbd "h") 'org-fc-review-rate-hard
+    (kbd "g") 'org-fc-review-rate-good
+    (kbd "e") 'org-fc-review-rate-easy
+    (kbd "s") 'org-fc-review-suspend-card
+    (kbd "q") 'org-fc-review-quit))
 
 ;; REVIEW: See if I can send upstream?
 (defvar ec-mks-expert t
@@ -368,7 +437,7 @@ is selected, only the bare key is returned."
                 (when body (setq body (concat body "}")))
                 ;; Insert special entries, if any.
                 (setq special-body nil)
-                (when specials
+                (when (and (not ec-mks-expert) specials)
                   (when buffer (insert "----------------------------------------------------\
 ---------------------------\n"))
                   (pcase-dolist (`(,key ,description) specials)

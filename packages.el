@@ -7,13 +7,16 @@
 ;;   - To remove packages no longer in the list run `package-autoremove'.
 ;;   - To update run `package-refresh-contents' then install packages again.
 
-;; Packages not in MELPA can be installed with Quelpa. (Currently just `osd').
+;; Packages not in MELPA can be installed with Quelpa.
 ;;   - For example: (quelpa '(osd :repo "0x0049/osd" :fetcher github))
+;;                  (quelpa '(org-fc :repo "l3kn/org-fc" :fetcher github :files (:defaults "awk")))
 
 ;;; Code:
 
 (setq package-selected-packages '(quelpa
                                   esup
+
+                                  osd
 
                                   doom-themes
                                   evil-terminal-cursor-changer
@@ -87,7 +90,8 @@
                                   ob-http
                                   ob-restclient
                                   ob-typescript
-                                  org-edna)
+                                  org-edna
+                                  org-fc)
       package-quickstart t)
 
 (when (display-graphic-p)

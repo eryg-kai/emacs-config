@@ -1,0 +1,2 @@
+* %^{漢字|%(replace-regexp-in-string org-link-bracket-re "\\2" "%a")}
+  %^{読み}

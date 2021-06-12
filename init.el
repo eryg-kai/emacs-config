@@ -14,11 +14,11 @@
 (defconst ec-test-dir (expand-file-name "test" ec-dir))
 (defconst ec-lib-dir (expand-file-name "lib" ec-dir))
 (defconst ec-config-dir (expand-file-name "config" ec-dir))
-(defconst ec-cache-dir (or (getenv "XDG_CACHE_HOME") (expand-file-name "~/.cache")))
+(defconst ec-cache-dir (or (getenv "XDG_CACHE_HOME")
+                           (expand-file-name "~/.cache")))
 (defconst ec-mail-dir (or (getenv "MAIL_HOME") (expand-file-name "~/com")))
 (defconst ec-tmpl-dir (expand-file-name "templates" ec-dir))
 (defconst ec-org-dir (or (getenv "ORG_HOME") (expand-file-name "~/org")))
-(defconst ec-log-dir (expand-file-name user-login-name ec-org-dir))
 (defconst ec-theme-dir (expand-file-name "themes" ec-dir))
 
 ;; Load package list.

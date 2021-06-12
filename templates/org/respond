@@ -1,4 +1,4 @@
-* NEXT Respond to %:from on %:subject
+* NEXT Respond to %^{Name|%:fromname} on %^{Subject|%:subject}
   SCHEDULED: %t
   :PROPERTIES:
   :See:  %a
