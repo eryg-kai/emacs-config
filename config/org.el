@@ -120,7 +120,7 @@
         ("d" "dream" entry
          (file+olp+datetree ,(expand-file-name "dreams.org" ec-log-dir))
          (file ,(expand-file-name "org/dream" ec-tmpl-dir)))
-        ("m" "meeting" entry (function ec-maybe-goto-capture-file)
+        ("M" "meeting" entry (function ec-maybe-goto-capture-file)
          (file ,(expand-file-name "org/meeting" ec-tmpl-dir))
          :clock-in t
          :clock-resume t)
@@ -129,7 +129,13 @@
          :clock-in t
          :clock-resume t)
         ("h" "habit" entry (function ec-maybe-goto-capture-file)
-         (file ,(expand-file-name "org/habit" ec-tmpl-dir)))))
+         (file ,(expand-file-name "org/habit" ec-tmpl-dir)))
+        ("m" "measure" table-line
+         (file+headline
+          ,(expand-file-name (format "%s/log.org" user-login-name) ec-org-dir)
+          "Measurements")
+         (file ,(expand-file-name "org/measure" ec-tmpl-dir))
+         :immediate-finish t)))
 
 (defun ec-maybe-goto-capture-file ()
   "If not in an org file move to the default notes file, otherwise stay put.
