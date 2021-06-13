@@ -79,8 +79,8 @@ If THEME is an override theme (ends in `override'), do nothing."
         (dolist (sep (if (display-graphic-p) '("-") '("-" "-tty-")))
           (ec--try-load-theme
            (intern (concat theme-prefix sep ec-override-suffix))
-           no-confirm no-enable)))))
-  (ec--evil-set-cursor-faces-soon))
+           no-confirm no-enable)))
+      (ec--evil-set-cursor-faces))))
 
 (advice-add 'load-theme :after #'ec--load-overrides)
 
@@ -117,10 +117,6 @@ If THEME is an override theme (ends in `override'), do nothing."
       (when (boundp cursor-symbol)
         (set (intern (format "evil-%s-state-cursor" state)) `(,color ,cursor)))))
   (when (fboundp 'evil-refresh-cursor) (evil-refresh-cursor)))
-
-(defun ec--evil-set-cursor-faces-soon ()
-  "Set cursor faces for `evil-mode' after idling for a bit."
-  (timer-idle-debounce #'ec--evil-set-cursor-faces 1))
 
 (with-eval-after-load 'evil
   (dolist (state '(normal insert visual replace motion operator emacs))
