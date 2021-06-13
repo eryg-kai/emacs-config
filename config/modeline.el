@@ -38,9 +38,6 @@
   (let ((state (and (bound-and-true-p evil-local-mode) (bound-and-true-p evil-state))))
     (if state (intern (format "evil-%s-state" state)) 'mode-line)))
 
-(with-eval-after-load "evil"
-  (ec--set-mode-line))
-
 ;; Selection.
 (defun ec--column-number-at-pos (pos)
   "Column number at POS.  Analog to `line-number-at-pos'."
@@ -162,7 +159,7 @@
       (propertize " " 'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve))))
       right-f))))
 
-(defun ec--set-mode-line ()
+(defun ec-set-mode-line ()
   "Customize the mode line."
   (setq-default
    mode-line-format
@@ -205,14 +202,16 @@
            (:eval (when active (list " " (propertize (format-time-string "%H:%M") 'face 'mode-line-emphasis))))
            (:eval (when (and active ec--load-average-supported) (list " " (format "%.2f" (car (load-average t))))))
            " " (-3 "%p")
-           " ")))))))
+           " "))))))
+  (ec--refresh-mode-line))
 
 (defun ec--refresh-mode-line ()
+  "Refresh the mode line in all existing buffers."
   (dolist (buffer (buffer-list))
     (when (get-buffer buffer)
       (with-current-buffer buffer
         (setq mode-line-format (default-value 'mode-line-format))))))
 
-(add-hook 'emacs-startup-hook #'ec--set-mode-line)
+(add-hook 'emacs-startup-hook #'ec-set-mode-line)
 
 ;;; modeline.el ends here

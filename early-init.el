@@ -62,6 +62,7 @@
 (when (bound-and-true-p scroll-bar-mode) (scroll-bar-mode -1))
 (when (bound-and-true-p tooltip-mode) (tooltip-mode -1))
 (setq use-dialog-box nil)
+(setq-default mode-line-format nil)
 
 ;; Temorarily disable file name handler alist. This can make `load' and
 ;; `require' a bit faster.
