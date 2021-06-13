@@ -4,6 +4,16 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(typo
+                                   org-bullets
+                                   ob-async
+                                   ob-go
+                                   ob-http
+                                   ob-restclient
+                                   ob-typescript
+                                   org-edna
+                                   org-fc))
+
 (add-hook 'org-mode-hook #'typo-mode)
 
 (add-hook 'org-mode-hook #'org-bullets-mode)

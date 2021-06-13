@@ -5,6 +5,12 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(docker
+                                   magit-annex
+                                   rfc-mode
+                                   speed-type
+                                   pdf-tools))
+
 ;; Dired.
 (setq dired-listing-switches "-Fahvl --si --group-directories-first")
 

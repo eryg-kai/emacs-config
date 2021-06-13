@@ -4,9 +4,12 @@
 
 ;;; Code:
 
-(defcustom ec-monitor-xrandr-alist nil "Xrandr flags for each monitor.")
+(when (display-graphic-p)
+  (push 'exwm package-selected-packages))
 
 (define-key global-map (kbd "C-c r") #'ec-exec)
+
+(defcustom ec-monitor-xrandr-alist nil "Xrandr flags for each monitor.")
 
 (defun ec-exec (&rest args)
   "Execute ARGS asynchronously without a buffer.
@@ -110,7 +113,9 @@ If no ARGS are provided, prompt for the command."
 
 (add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens-soon)
 
-(with-eval-after-load 'exwm
+(defun ec-exwm ()
+  "Start EXWM."
+  (require 'exwm)
   (require 'exwm-randr)
   (require 'exwm-systemtray)
   (require 'exwm-config)
@@ -127,6 +132,7 @@ If no ARGS are provided, prompt for the command."
 (with-eval-after-load 'evil
   (evil-set-initial-state 'exwm-mode 'emacs))
 
-(when (display-graphic-p) (require 'exwm))
+(when (display-graphic-p)
+  (add-hook 'emacs-startup-hook #'ec-exwm))
 
 ;;; exwm.el ends here

@@ -6,6 +6,16 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(evil
+                                   evil-collection
+                                   evil-snipe
+                                   evil-surround
+                                   evil-commentary
+                                   evil-exchange
+                                   evil-escape
+                                   evil-org
+                                   avy))
+
 (setq evil-want-C-u-scroll t
       evil-want-fine-undo t
       ;; Required for evil-collection.

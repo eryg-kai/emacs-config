@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(persistent-scratch))
+
 (define-key global-map (kbd "C-c sb") #'ec-scratch-buffer)
 (define-key global-map (kbd "C-c sB") #'ec-global-scratch-buffer)
 

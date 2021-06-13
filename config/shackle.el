@@ -87,34 +87,34 @@ Options are:
   (advice-add 'quit-restore-window :around #'ec--with-restore)
 
   (ec-shackle '(
-     ;; Split to the right.
-     ("^\\*Shell Command Output\\*"
-      (display-buffer-in-direction))
+                ;; Split to the right.
+                ("^\\*Shell Command Output\\*"
+                 (display-buffer-in-direction))
 
-     ;; Split below selected.
-     ((compilation-mode shell-mode
-                        "^\\*Completions\\*$" "^\\*lsp-help\\*"
-                        "^\\*Bookmark Annotation\\*$")
-      (display-buffer-below-selected) :height 0.2)
+                ;; Split below selected.
+                ((compilation-mode shell-mode
+                                   "^\\*Completions\\*$" "^\\*lsp-help\\*"
+                                   "^\\*Bookmark Annotation\\*$")
+                 (display-buffer-below-selected) :height 0.2)
 
-     ;; Split below selected and also focus.
-     (("^\\*dig" "^\\*Flycheck" "^\\*Ping")
-      (display-buffer-below-selected) :height 0.2 :focus t)
+                ;; Split below selected and also focus.
+                (("^\\*dig" "^\\*Flycheck" "^\\*Ping")
+                 (display-buffer-below-selected) :height 0.2 :focus t)
 
-     ;; Bottom in a side window.
-     ("\\*Notifications\\*"
-      (display-buffer-in-side-window) :height 0.1 :side bottom)
+                ;; Bottom in a side window.
+                ("\\*Notifications\\*"
+                 (display-buffer-in-side-window) :height 0.1 :side bottom)
 
-     ;; Display at the bottom.
-     (("^\\*Error\\*$" "^\\*Calendar\\*" "^\\*Disabled Command\\*$")
-      (display-buffer-at-bottom) :height 0.3)
+                ;; Display at the bottom.
+                (("^\\*Error\\*$" "^\\*Calendar\\*" "^\\*Disabled Command\\*$")
+                 (display-buffer-at-bottom) :height 0.3)
 
-     ;; Dedicated temporary state (like how `org-agenda' works by default).
-     (("^\\*Help\\*$" "^\\*ripgrep-search\\*$" "^\\*Man" "^\\*grep\\*$"
-       "^\\*Process List\\*$" "^\\*Password-Store\\*$"
-       "^\\*tide-references\\*" "^\\*xref\\*")
-      (display-buffer-in-direction) :only t :focus t :width 0.5))
-   t))
+                ;; Dedicated temporary state (like how `org-agenda' works by default).
+                (("^\\*Help\\*$" "^\\*ripgrep-search\\*$" "^\\*Man" "^\\*grep\\*$"
+                  "^\\*Process List\\*$" "^\\*Password-Store\\*$"
+                  "^\\*tide-references\\*" "^\\*xref\\*")
+                 (display-buffer-in-direction) :only t :focus t :width 0.5))
+              t))
 
 (add-hook 'emacs-startup-hook #'ec--setup-shackle)
 

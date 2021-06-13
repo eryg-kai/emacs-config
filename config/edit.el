@@ -6,6 +6,11 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(smartparens
+                                   evil-string-inflection
+                                   hl-todo
+                                   undo-tree))
+
 ;; General settings.
 (setq-default fill-column 80
               indent-tabs-mode nil

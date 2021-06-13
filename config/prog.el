@@ -4,6 +4,20 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(markdown-mode
+                                   nix-mode
+                                   web-mode
+                                   yaml-mode
+                                   yarn-mode
+                                   lsp-mode
+                                   go-mode
+                                   css-mode
+                                   tide
+                                   typescript-mode
+                                   flycheck
+                                   dash-docs
+                                   editorconfig))
+
 ;; LSP
 (setq lsp-enable-file-watchers nil ; Call `lsp-workspace-restart' if necessary
       lsp-keymap-prefix "C-c l")

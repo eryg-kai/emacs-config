@@ -6,6 +6,13 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(which-key
+                                   yasnippet
+                                   yasnippet-snippets
+                                   company
+                                   ispell
+                                   flimenu))
+
 (setq history-delete-duplicates t)
 
 ;; Apropos.

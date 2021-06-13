@@ -6,6 +6,9 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(eshell-prompt-extras
+                                   eshell-z))
+
 ;; Comint.
 (setq comint-input-ignoredups t
       comint-input-history-ignore "^ ")

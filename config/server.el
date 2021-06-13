@@ -4,6 +4,9 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(osd
+                                   pinentry))
+
 ;; Pinentry.
 (setq epa-pinentry-mode 'loopback
       pinentry-popup-prompt-window nil)

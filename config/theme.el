@@ -4,6 +4,9 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(doom-themes
+                                   evil-terminal-cursor-changer))
+
 (setq window-divider-default-places t
       truncate-lines t
       scroll-margin 8
@@ -106,11 +109,11 @@ If THEME is an override theme (ends in `override'), do nothing."
   "Set cursor faces for `evil-mode'."
   (dolist (pair ec-evil-cursors)
     (let* ((state (car pair))
-               (cursor (cdr pair))
-               (cursor-symbol (intern (format "evil-%s-state-cursor" state)))
-               (state-symbol (intern (format "evil-%s-state" state)))
-               (color (when (boundp state-symbol)
-                        (face-attribute state-symbol :foreground))))
+           (cursor (cdr pair))
+           (cursor-symbol (intern (format "evil-%s-state-cursor" state)))
+           (state-symbol (intern (format "evil-%s-state" state)))
+           (color (when (boundp state-symbol)
+                    (face-attribute state-symbol :foreground))))
       (when (boundp cursor-symbol)
         (set (intern (format "evil-%s-state-cursor" state)) `(,color ,cursor)))))
   (when (fboundp 'evil-refresh-cursor) (evil-refresh-cursor)))

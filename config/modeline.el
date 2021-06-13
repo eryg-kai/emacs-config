@@ -4,6 +4,9 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(fancy-battery
+                                   anzu))
+
 ;; Selected window.
 (defvar ec-selected-window (selected-window) "Currently selected window.")
 
@@ -169,9 +172,9 @@
          '("%e"
            (:eval (when (fboundp 'winum-get-number)
                     (let ((num (format " %s" (winum-get-number))))
-                    (if active
-                        (propertize num 'face (ec--modeline-state-face))
-                      num))))
+                      (if active
+                          (propertize num 'face (ec--modeline-state-face))
+                        num))))
            (:eval (ec--modeline-selection))
            (:eval (when (and active (bound-and-true-p anzu--state)) (list " " (anzu--update-mode-line))))
            " %[%Z%1*%1+%1@%]"

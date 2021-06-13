@@ -22,7 +22,7 @@ before_install:
 
 install:
   # There is no option to skip confirmation in <= Emacs 27 so override y-or-n-p.
-  - emacs --batch -l ./packages.el --eval "(progn (package-refresh-contents) (defun y-or-n-p (_) t) (package-install-selected-packages))"
+  - emacs --batch -l ./init.el --eval "(progn (package-refresh-contents) (defun y-or-n-p (_) t) (package-install-selected-packages))"
 
 script:
   - mkdir -p ~/.config/emacs && mkdir -p ~/ops/emacs/{.git,config} && mkdir -p ~/org/.git

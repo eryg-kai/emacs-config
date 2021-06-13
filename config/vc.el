@@ -4,6 +4,12 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(ediff
+                                   magit
+                                   git-link
+                                   forge
+                                   git-commit))
+
 ;; Ediff.
 (setq-default ediff-split-window-function #'split-window-horizontally
               ediff-merge-split-window-function #'split-window-horizontally

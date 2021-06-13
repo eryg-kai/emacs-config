@@ -4,6 +4,9 @@
 
 ;;; Code:
 
+(nconc package-selected-packages '(ripgrep
+                                   projectile))
+
 (setq projectile-git-submodule-command nil)
 
 ;; Keymaps can't be autoloaded so here's a workaround. Loads projectile, rebinds
