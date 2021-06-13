@@ -14,9 +14,8 @@
 (add-hook 'org-capture-mode-hook #'evil-insert-state)
 
 ;; Keybindings.
+(define-key global-map (kbd "C-c ol") #'org-store-link)
 (define-key global-map (kbd "C-c oc") #'org-capture)
-(define-key global-map (kbd "C-c oha") #'org-insert-heading-after-current)
-(define-key global-map (kbd "C-c oi") #'org-time-stamp-inactive)
 
 ;; Must set emphasis components before org loads (or use org-set-emph-re).
 (setq org-emphasis-regexp-components
