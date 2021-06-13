@@ -1,0 +1,2 @@
+* %^{Word|%(replace-regexp-in-string org-link-bracket-re "\\2" "%a")}
+  %^{Reading}

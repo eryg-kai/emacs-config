@@ -165,16 +165,21 @@
          :prepend t
          :no-save t
          :immediate-finish t)
-        ("fr" "reading")
-        ("frk" "kanji" entry
+        ("fk" "kanji" entry
          (function ec-capture-reading)
-         (file ,(ec-get-template "reading-kanji"))
+         (file ,(ec-get-template "kanji"))
          :prepend t
          :no-save t
          :immediate-finish t)
-        ("frw" "word" entry
+        ("fr" "reading" entry
          (function ec-capture-reading)
-         (file ,(ec-get-template "reading-word"))
+         (file ,(ec-get-template "reading"))
+         :prepend t
+         :no-save t
+         :immediate-finish t)
+        ("fR" "radical" entry
+         (function ec-capture-radical)
+         (file ,(ec-get-template "radical"))
          :prepend t
          :no-save t
          :immediate-finish t)))
@@ -311,9 +316,13 @@
   (let* ((dirs (ec-get-lang-fc-dirs))
          (dir (if (member default-directory dirs)
                   default-directory
-                (completing-read "Language: " dirs nil t))))
+                (completing-read "Target: " dirs nil t))))
     (set-buffer (org-capture-target-buffer (expand-file-name file dir))))
   (goto-char (point-min)))
+
+(defun ec-capture-radical ()
+  "Capture radical for the selected language or current if already visiting."
+  (ec--capture-language "radicals.org"))
 
 (defun ec-capture-reading ()
   "Capture reading for the selected language or current if already visiting."
@@ -327,7 +336,8 @@
   "Initialize a captured flashcard."
   (pcase (plist-get org-capture-plist :description)
     ("kanji" (org-fc-type-cloze-init 'enumeration))
-    ("word" (org-fc-type-normal-init))
+    ("reading" (org-fc-type-normal-init))
+    ("radical" (org-fc-type-double-init))
     ("vocab" (org-fc-type-double-init))))
 
 (add-hook 'org-capture-before-finalize-hook #'ec-init-fc)
