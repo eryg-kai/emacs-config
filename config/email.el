@@ -5,11 +5,11 @@
 ;;; Code:
 
 (setq mail-user-agent 'mu4e-user-agent
-      mu4e-mu-home (expand-file-name "/mu" ec-cache-dir)
-      mu4e-attachment-dir (expand-file-name "/mu4e" ec-cache-dir)
+      mu4e-mu-home (expand-file-name "mu" ec-cache-dir)
+      mu4e-attachment-dir (expand-file-name "mu4e" ec-cache-dir)
       mu4e-get-mail-command (concat "mbsync --config "
-                                    (expand-file-name "/.mbsyncrc" ec-mail-dir)
-                                    "--all")
+                                    (expand-file-name ".mbsyncrc" ec-mail-dir)
+                                    " --all")
       mu4e-user-agent-string nil
       mu4e-use-fancy-chars nil
       mu4e-change-filenames-when-moving t ; Need this or mbsync won't work.
@@ -41,7 +41,7 @@
       smtpmail-stream-type 'starttls
       message-send-mail-function 'smtpmail-send-it)
 
-(defun ec--register-email-account (label address letvars)
+(defun ec-register-email-account (label address letvars)
   "Register ADDRESS with name LABEL for use with mu4e.
 
 LETVARS is an alist of variables that will be set when this
@@ -82,9 +82,9 @@ account is activated."
         '(lambda (docid msg target)
            (mu4e~proc-move docid (mu4e~mark-check-target target) "-N")))
 
-  ;; This file should call `ec--register-email-account' for each email account.
+  ;; This file should call `ec-register-email-account' for each email account.
   ;; For example:
-  ;; (ec--register-email-account
+  ;; (ec-register-email-account
   ;;  "label" "me@domain.com"
   ;;  `((mu4e-refile-folder . "/Archive")
   ;;    (mu4e-sent-folder . "/Sent")

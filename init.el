@@ -23,6 +23,7 @@
 
 ;; Load package list.
 (load (expand-file-name "packages" ec-dir) nil t)
+(autoload 'mu4e "mu4e" "mu for Emacs." t)
 
 ;; Load configuration.
 (push ec-theme-dir custom-theme-load-path)
