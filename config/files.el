@@ -21,7 +21,7 @@
 ;; Recentf.
 (setq recentf-max-menu-items 1000
       recentf-max-saved-items 1000
-      recentf-auto-cleanup 10
+      recentf-auto-cleanup 'never
       recentf-exclude
       `("/git-rebase-todo\\'"
         "/\\(\\(\\(COMMIT\\|NOTES\\|PULLREQ\\|MERGEREQ\\|TAG\\)_EDIT\\|MERGE_\\|\\)MSG\\|\\(BRANCH\\|EDIT\\)_DESCRIPTION\\)\\'"
