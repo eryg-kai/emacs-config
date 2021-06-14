@@ -132,7 +132,4 @@ If no ARGS are provided, prompt for the command."
 (with-eval-after-load 'evil
   (evil-set-initial-state 'exwm-mode 'emacs))
 
-(when (and (display-graphic-p) (fboundp 'exwm))
-  (add-hook 'emacs-startup-hook #'ec-exwm))
-
 ;;; exwm.el ends here

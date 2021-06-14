@@ -18,8 +18,8 @@
 (defun ec-enable-pinentry-soon()
   (run-with-idle-timer 1 nil #'pinentry-start))
 
-(defun ec--maybe-start-server ()
-  "Start server, pinentry, and OSD."
+(defun ec-maybe-start-servers ()
+  "Start servers."
   (require 'server) ; There's no autoload on `server-running-p'.
 
   ;; The goal is to start these things on only one instance of Emacs, so do that
@@ -29,8 +29,9 @@
     (unless (server-running-p) (server-start))
     (when is-server
       (when (fboundp 'pinentry-start) (pinentry-start))
-      (when (fboundp 'osd-start) (osd-start)))))
+      (when (fboundp 'osd-start) (osd-start))
+      (when (and (fboundp 'ec-exwm) (display-graphic-p)) (ec-exwm)))))
 
-(add-hook 'emacs-startup-hook #'ec--maybe-start-server)
+(add-hook 'emacs-startup-hook #'ec-maybe-start-servers)
 
 ;;; server.el ends here
