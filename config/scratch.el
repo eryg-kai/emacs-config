@@ -67,6 +67,7 @@
   "Return non-nil if the BUFFER (defaults to current buffer) is a scratch buffer."
   (string-match-p "^\\*scratch.*\\*$" (buffer-name buffer)))
 
-(add-hook 'emacs-startup-hook #'persistent-scratch-setup-default)
+(when (fboundp 'persistent-scratch-setup-default)
+  (add-hook 'emacs-startup-hook #'persistent-scratch-setup-default))
 
 ;;; scratch.el ends here

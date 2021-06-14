@@ -61,7 +61,8 @@
 
 (add-hook 'flycheck-mode-hook #'ec--find-eslint)
 
-(add-hook 'emacs-startup-hook #'global-flycheck-mode)
+(when (fboundp 'global-flycheck-mode)
+  (add-hook 'emacs-startup-hook #'global-flycheck-mode))
 
 ;; Dash.
 (setq dash-docs-docsets-path (expand-file-name "docsets" ec-cache-dir))
@@ -79,6 +80,8 @@
 
 ;; Editorconfig.
 (setq editorconfig-exclude-modes (list 'emacs-lisp-mode 'lisp-interaction-mode))
-(add-hook 'emacs-startup-hook #'editorconfig-mode)
+
+(when (fboundp 'editorconfig-mode)
+  (add-hook 'emacs-startup-hook #'editorconfig-mode))
 
 ;;; prog.el ends here

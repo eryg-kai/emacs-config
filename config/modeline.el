@@ -30,7 +30,8 @@
 (setq anzu-cons-mode-line-p nil
       anzu-mode-line-update-function #'ec--anzu)
 
-(add-hook 'emacs-startup-hook #'global-anzu-mode)
+(when (fboundp 'global-anzu-mode)
+  (add-hook 'emacs-startup-hook #'global-anzu-mode))
 
 ;; Evil state.
 (defun ec--modeline-state-face ()
@@ -67,7 +68,8 @@
     (concat (substring-no-properties (org-clock-get-clock-string)))))
 
 ;; Battery.
-(add-hook 'emacs-startup-hook #'fancy-battery-mode)
+(when (fboundp 'fancy-battery-mode)
+  (add-hook 'emacs-startup-hook #'fancy-battery-mode))
 
 (defun ec--modeline-battery ()
   "Battery for the mode-line based on `fancy-battery-last-status'."

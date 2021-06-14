@@ -22,7 +22,8 @@
       evil-want-keybinding nil
       evil-undo-system 'undo-tree)
 
-(add-hook 'emacs-startup-hook #'evil-mode)
+(when (fboundp 'evil-mode)
+  (add-hook 'emacs-startup-hook #'evil-mode))
 
 ;; Gate these behind Evil to ensure they don't load until Evil does.
 (with-eval-after-load 'evil

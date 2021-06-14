@@ -147,14 +147,12 @@ faces are simply invisible."
   "Load the current theme'."
   (load-theme (or (bound-and-true-p ec--current-theme) (car ec-themes)) t))
 
-(defun ec--load-theme-soon ()
-  "Load the current theme after idling a bit."
-  (run-with-idle-timer 1 nil #'ec--load-theme))
-
-;; Set theme on new frames. This will make emacsclient invocations themed when
-;; using emacs --daemon.
-(cond ((daemonp) (add-hook 'after-make-frame-functions #'ec--load-theme))
-      (t (add-hook 'emacs-startup-hook #'ec--load-theme)))
+(when (ec-theme-p 'doom-one)
+  ;; Set theme on new frames. This will make emacsclient invocations themed when
+  ;; using emacs --daemon.
+  (cond ((daemonp) (add-hook 'after-make-frame-functions #'ec--load-theme))
+        ;; Otherwise load on startup.
+        (t (add-hook 'emacs-startup-hook #'ec--load-theme))))
 
 (with-eval-after-load 'org
   (defface org-bullet  '((t (:inherit org-priority :height 0.9)))

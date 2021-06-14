@@ -44,7 +44,8 @@
 
 (advice-add 'which-key--maybe-replace :around 'ec--replace-then-run)
 
-(add-hook 'emacs-startup-hook #'which-key-mode)
+(when (fboundp 'which-key-mode)
+  (add-hook 'emacs-startup-hook #'which-key-mode))
 
 (with-eval-after-load 'which-key
   ;; Instead of -0, display 0..9
@@ -162,7 +163,8 @@
 ;; Flimenu.
 (define-key global-map (kbd "C-c bI") #'imenu)
 
-(add-hook 'emacs-startup-hook #'flimenu-global-mode)
+(when (fboundp 'flimenu-global-mode)
+  (add-hook 'emacs-startup-hook #'flimenu-global-mode))
 
 ;; Ask y/n instead of yes/no.
 (defalias 'yes-or-no-p 'y-or-n-p)

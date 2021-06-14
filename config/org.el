@@ -352,11 +352,11 @@
 
 (add-hook 'org-capture-before-finalize-hook #'ec-init-fc)
 
-(setq org-fc-directories (ec-get-lang-fc-dirs))
-
 (define-key global-map (kbd "C-c of") #'org-fc-dashboard)
 
 (with-eval-after-load 'org-fc
+  (setq org-fc-directories (ec-get-lang-fc-dirs))
+
   ;; org-fc-keymap-hint has no autoloads.
   (require 'org-fc-keymap-hint))
 

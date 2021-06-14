@@ -39,7 +39,8 @@
   (sp-local-pair 'prog-mode "[" nil :post-handlers '((ec--indent-between-pair "RET")))
   (sp-local-pair 'prog-mode "(" nil :post-handlers '((ec--indent-between-pair "RET"))))
 
-(add-hook 'emacs-startup-hook #'smartparens-global-strict-mode)
+(when (fboundp 'smartparens-global-strict-mode)
+  (add-hook 'emacs-startup-hook #'smartparens-global-strict-mode))
 
 ;; Undo tree.
 (setq undo-tree-history-directory-alist
@@ -93,7 +94,8 @@
         ("FIXME"    . hl-fixme)
         ("HACK"     . hl-hack)))
 
-(add-hook 'emacs-startup-hook #'global-hl-todo-mode)
+(when (fboundp 'global-hl-todo-mode)
+  (add-hook 'emacs-startup-hook #'global-hl-todo-mode))
 
 ;; Line numbers.
 (defun ec--enable-line-numbers ()

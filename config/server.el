@@ -28,8 +28,8 @@
   (let ((is-server (or (daemonp) (not (server-running-p)))))
     (unless (server-running-p) (server-start))
     (when is-server
-      (pinentry-start)
-      (osd-start))))
+      (when (fboundp 'pinentry-start) (pinentry-start))
+      (when (fboundp 'osd-start) (osd-start)))))
 
 (add-hook 'emacs-startup-hook #'ec--maybe-start-server)
 

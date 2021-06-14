@@ -16,6 +16,7 @@
 ;; Winum.
 (setq winum-auto-setup-mode-line nil)
 
-(add-hook 'emacs-startup-hook #'winum-mode)
+(when (fboundp 'winum-mode)
+  (add-hook 'emacs-startup-hook #'winum-mode))
 
 ;;; windows.el ends here
