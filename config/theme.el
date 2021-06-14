@@ -112,10 +112,10 @@ If THEME is an override theme (ends in `override'), do nothing."
            (cursor (cdr pair))
            (cursor-symbol (intern (format "evil-%s-state-cursor" state)))
            (state-symbol (intern (format "evil-%s-state" state)))
-           (color (when (boundp state-symbol)
+           (color (when (facep state-symbol)
                     (face-attribute state-symbol :foreground))))
       (when (boundp cursor-symbol)
-        (set (intern (format "evil-%s-state-cursor" state)) `(,color ,cursor)))))
+        (set cursor-symbol `(,color ,cursor)))))
   (when (fboundp 'evil-refresh-cursor) (evil-refresh-cursor)))
 
 (with-eval-after-load 'evil
