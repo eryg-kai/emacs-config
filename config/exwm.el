@@ -107,11 +107,7 @@ If no ARGS are provided, prompt for the command."
           (message (format ">>> %s" command)))
         (ec-exec command)))))
 
-(defun ec--exwm-update-screens-soon ()
-  "Update screens after idling for a bit."
-  (timer-idle-debounce #'ec--exwm-update-screens 1))
-
-(add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens-soon)
+(add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens)
 
 (defun ec-exwm ()
   "Start EXWM."
