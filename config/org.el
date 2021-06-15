@@ -313,13 +313,13 @@
 ;; Flashcards.
 (defun ec-get-lang-fc-dirs ()
   "Get language flashcard directories."
-  (mapcar #'file-name-as-directory
-          (cl-remove-if-not
-           #'file-directory-p
-           (directory-files
-            (or (getenv "ORG_FC_HOME")
-                (expand-file-name "research/languages" ec-org-dir))
-            t "^[^.]"))))
+  (let ((dir (or (getenv "ORG_FC_HOME")
+                 (expand-file-name "research/languages" ec-org-dir))))
+    (when (file-exists-p dir)
+      (mapcar #'file-name-as-directory
+              (cl-remove-if-not
+               #'file-directory-p
+               (directory-files dir t "^[^.]"))))))
 
 (defun ec--capture-language (file)
   "Capture to FILE in the selected language or current if already visiting."
@@ -354,23 +354,30 @@
 
 (define-key global-map (kbd "C-c of") #'org-fc-dashboard)
 
-(with-eval-after-load 'org-fc
-  (setq org-fc-directories (ec-get-lang-fc-dirs))
+(setq org-fc-directories (ec-get-lang-fc-dirs))
 
+(with-eval-after-load 'org-fc-core
+  ;; These don't get loaded with everything else.
+  (require 'org-fc-type-double)
+  (require 'org-fc-type-normal)
   ;; org-fc-keymap-hint has no autoloads.
   (require 'org-fc-keymap-hint))
 
 (with-eval-after-load 'evil
-  (evil-define-minor-mode-key '(normal insert emacs) 'org-fc-review-flip-mode
+  (evil-define-key 'normal org-fc-dashboard-mode-map
+    (kbd "r") 'org-fc-dashboard-review)
+
+  (evil-define-minor-mode-key 'normal 'org-fc-review-flip-mode
     (kbd "RET") 'org-fc-review-flip
     (kbd "n") 'org-fc-review-flip
     (kbd "s") 'org-fc-review-suspend-card
     (kbd "q") 'org-fc-review-quit)
 
-  (evil-define-minor-mode-key '(normal insert emacs) 'org-fc-review-rate-mode
+  (evil-define-minor-mode-key 'normal 'org-fc-review-rate-mode
     (kbd "a") 'org-fc-review-rate-again
     (kbd "h") 'org-fc-review-rate-hard
-    (kbd "g") 'org-fc-review-rate-good
+    (kbd "g") 'org-fc-review-rate-good ; TODO: This doesn't work.
+    (kbd "G") 'org-fc-review-rate-good
     (kbd "e") 'org-fc-review-rate-easy
     (kbd "s") 'org-fc-review-suspend-card
     (kbd "q") 'org-fc-review-quit))
