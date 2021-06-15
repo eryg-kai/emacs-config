@@ -28,8 +28,9 @@
 (define-key global-map (kbd "C-c oc") #'org-capture)
 
 ;; Must set emphasis components before org loads (or use org-set-emph-re).
+;; (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 (setq org-emphasis-regexp-components
-      '("-[:space:]('\"{…—/s“"           ; Pre
+      '("-[:space:]('\"{…—/“"            ; Pre
         "-[:space:].,:!?;'\")}\\[…—/’s”" ; Post
         "[:space:]"                      ; Border
         "."                              ; Body-regexp
