@@ -357,10 +357,14 @@
 
 (setq org-fc-directories (ec-get-lang-fc-dirs))
 
+;; Add missing autoloads.
+(autoload 'org-fc-type-double-init "org-fc-type-double")
+(autoload 'org-fc-type-normal-init "org-fc-type-normal")
+(autoload 'org-fc-type-cloze-init "org-fc-type-cloze")
+(autoload 'org-fc-review-data-update "org-fc-review")
+(autoload 'org-fc-algo-sm2-initial-review-data "org-fc-algo-sm2")
+
 (with-eval-after-load 'org-fc-core
-  ;; These don't get loaded with everything else.
-  (require 'org-fc-type-double)
-  (require 'org-fc-type-normal)
   ;; org-fc-keymap-hint has no autoloads.
   (require 'org-fc-keymap-hint))
 
