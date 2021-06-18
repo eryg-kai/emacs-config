@@ -169,4 +169,7 @@
 ;; Ask y/n instead of yes/no.
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+;; Search.
+(setq lazy-highlight-initial-delay 1)
+
 ;;; completion.el ends here
