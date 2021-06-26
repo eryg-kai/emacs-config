@@ -47,10 +47,11 @@
 (setq org-startup-folded t
       org-catch-invisible-edits 'smart)
 
-;; Priorities and tags.
+;; Priorities, tags, and cookies.
 (setq org-highest-priority ?A
       org-lowest-priority ?Z
       org-default-priority ?M
+      org-hierarchical-todo-statistics nil
       org-tags-exclude-from-inheritance '("prj"))
 
 ;; Style and indentation.
