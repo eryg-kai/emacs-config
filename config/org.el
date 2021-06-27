@@ -5,6 +5,7 @@
 ;;; Code:
 
 (nconc package-selected-packages '(typo
+                                   gnuplot
                                    org-bullets
                                    ob-async
                                    ob-go
