@@ -248,7 +248,7 @@
       org-agenda-remove-tags t
       org-agenda-log-mode-items '(closed clock state)
       org-agenda-custom-commands
-      '(("--" "Agenda"
+      '(("--" "Extended agenda"
          ((agenda "" nil)
           (todo "START|\\[-\\]" ((org-agenda-overriding-header "Started")))
           (todo "NEXT|\\[>\\]" ((org-agenda-overriding-header "Next")))
