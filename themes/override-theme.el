@@ -12,7 +12,8 @@
  (region              :foreground nil :distant-foreground nil)
  (highlight           :foreground nil)
  (lazy-highlight      :foreground nil :distant-foreground nil :background 'unspecified :inherit 'highlight)
- (secondary-selection :foreground nil :background nil)
+ (match               :foreground nil :background 'unspecified :bold nil :inherit 'highlight)
+ (secondary-selection :foreground nil :background 'unspecified :inherit 'match)
 
  (lsp-face-highlight-textual :foreground nil :distant-foreground nil :background 'unspecified :weight 'normal :inherit 'highlight)
 
