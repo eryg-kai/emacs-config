@@ -6,10 +6,16 @@
 ;;; Code:
 
 (nconc package-selected-packages '(docker
+                                   elfeed
                                    magit-annex
                                    rfc-mode
                                    speed-type
                                    pdf-tools))
+
+;; Elfeed.
+(define-key global-map (kbd "C-c e") #'elfeed)
+
+(setq elfeed-db-directory (expand-file-name "elfeed" ec-cache-dir))
 
 ;; Dired.
 (setq dired-listing-switches "-Fahvl --si --group-directories-first")
