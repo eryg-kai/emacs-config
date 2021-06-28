@@ -112,7 +112,7 @@ Options are:
                 ;; Dedicated temporary state (like how `org-agenda' works by default).
                 (("^\\*Help\\*$" "^\\*ripgrep-search\\*$" "^\\*Man" "^\\*grep\\*$"
                   "^\\*Process List\\*$" "^\\*Password-Store\\*$"
-                  "^\\*tide-references\\*" "^\\*xref\\*")
+                  "^\\*tide-references\\*" "^\\*xref\\*" "^\\*Occur\\*$")
                  (display-buffer-in-direction) :only t :focus t :width 0.5))
               t))
 
