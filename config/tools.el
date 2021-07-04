@@ -7,6 +7,7 @@
 
 (nconc package-selected-packages '(docker
                                    elfeed
+                                   ledger-mode
                                    magit-annex
                                    rfc-mode
                                    speed-type
