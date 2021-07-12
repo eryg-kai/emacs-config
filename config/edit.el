@@ -52,6 +52,7 @@
 
 (add-hook 'text-mode-hook #'undo-tree-mode)
 (add-hook 'prog-mode-hook #'undo-tree-mode)
+(add-hook 'beancount-mode-hook #'undo-tree-mode)
 
 ;; Filling and unfilling.
 (defun ec--prog-auto-fill-mode ()
