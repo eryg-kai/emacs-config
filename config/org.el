@@ -150,7 +150,7 @@
          (function ec-capture-default)
          (file ,(ec-get-template "note")))
         ("c" "clock")
-        ("cm" "meeting" entr
+        ("cm" "meeting" entry
          (function ec-capture-default)
          (file ,(ec-get-template "meeting"))
          :clock-in t
