@@ -50,9 +50,10 @@
       undo-strong-limit 3000000 undo-tree-strong-limit 3000000
       undo-outer-limit  3000000 undo-tree-outer-limit  3000000)
 
-(add-hook 'text-mode-hook #'undo-tree-mode)
-(add-hook 'prog-mode-hook #'undo-tree-mode)
-(add-hook 'beancount-mode-hook #'undo-tree-mode)
+(with-eval-after-load 'undo-tree
+  (add-hook 'text-mode-hook #'undo-tree-mode)
+  (add-hook 'prog-mode-hook #'undo-tree-mode)
+  (add-hook 'beancount-mode-hook #'undo-tree-mode))
 
 ;; Filling and unfilling.
 (defun ec--prog-auto-fill-mode ()

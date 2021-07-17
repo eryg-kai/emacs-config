@@ -77,9 +77,6 @@
     "C-c l r" "rename"
     "C-c l s" "server"))
 
-(add-hook 'text-mode-hook #'yas-minor-mode)
-(add-hook 'prog-mode-hook #'yas-minor-mode)
-
 ;; Snippets.
 (with-eval-after-load 'yasnippet
   (define-key yas-minor-mode-map (kbd "TAB") #'hippie-expand)
@@ -98,7 +95,10 @@
   (defun ec--reset-smartparens (&rest _)
     (setq smartparens-mode ec--smartparens-mode))
 
-  (advice-add 'hippie-expand :after #'ec--reset-smartparens '((depth . -100))))
+  (advice-add 'hippie-expand :after #'ec--reset-smartparens '((depth . -100)))
+
+  (add-hook 'text-mode-hook #'yas-minor-mode)
+  (add-hook 'prog-mode-hook #'yas-minor-mode))
 
 ;; Company.
 (setq-default company-frontends '(company-preview-frontend
@@ -117,10 +117,10 @@
   (define-key company-active-map (kbd "RET") nil)
 
   (setq company-backends
-        (mapcar #'ec--company-add-snippet-backend company-backends)))
+        (mapcar #'ec--company-add-snippet-backend company-backends))
 
-(add-hook 'text-mode-hook #'company-mode)
-(add-hook 'prog-mode-hook #'company-mode)
+  (add-hook 'text-mode-hook #'company-mode)
+  (add-hook 'prog-mode-hook #'company-mode))
 
 ;; Man pages.
 (setq Man-notify-method 'aggressive)
