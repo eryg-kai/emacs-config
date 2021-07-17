@@ -11,6 +11,7 @@
 
   (should (equal '(doom-one-tty-override
                    doom-one-override
+                   doom-tty-override
                    doom-override
                    override
                    doom-one)
@@ -25,6 +26,7 @@
   (should (eq 'doom-one ec--current-theme))
   (should (equal '(doom-one-tty-override
                    doom-one-override
+                   doom-tty-override
                    doom-override
                    override
                    doom-one)
@@ -36,7 +38,9 @@
 
   (ec-cycle-theme)
   (should (eq 'doom-solarized-light ec--current-theme))
-  (should (equal '(doom-solarized-light-override
+  (should (equal '(doom-solarized-light-tty-override
+                   doom-solarized-light-override
+                   doom-tty-override
                    doom-override
                    override
                    doom-solarized-light)
@@ -47,6 +51,7 @@
   (should (eq 'doom-one ec--current-theme))
   (should (equal '(doom-one-tty-override
                    doom-one-override
+                   doom-tty-override
                    doom-override
                    override
                    doom-one)
