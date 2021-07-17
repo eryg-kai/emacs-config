@@ -111,5 +111,20 @@
     (kbd "<tab>") 'outline-cycle
     (kbd "g TAB") 'outline-cycle
     (kbd "<backtab>") 'outline-cycle-buffer))
+(add-hook 'outline-minor-mode-hook #'(lambda () (hide-sublevels 1)))
+(add-hook 'beancount-mode-hook #'outline-minor-mode)
+
+(defun ec--beancount-run (fn prog &rest args)
+  "Run FN with PROG, ARGS, and the cache env var set."
+  (let ((process-environment
+         `(,(concat "BEANCOUNT_LOAD_CACHE_FILENAME="
+                    (expand-file-name
+                     (file-relative-name buffer-file-name)
+                     ec-cache-dir)
+                    ".cache")
+           ,@process-environment)))
+    (apply fn prog args)))
+
+(advice-add 'beancount--run :around #'ec--beancount-run)
 
 ;;; tools.el ends here
