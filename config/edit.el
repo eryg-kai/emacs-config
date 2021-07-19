@@ -8,8 +8,7 @@
 
 (nconc package-selected-packages '(smartparens
                                    evil-string-inflection
-                                   hl-todo
-                                   undo-tree))
+                                   hl-todo))
 
 ;; General settings.
 (setq-default fill-column 80
@@ -41,19 +40,6 @@
 
 (when (fboundp 'smartparens-global-strict-mode)
   (add-hook 'emacs-startup-hook #'smartparens-global-strict-mode))
-
-;; Undo tree.
-(setq undo-tree-history-directory-alist
-      `((".*" . ,(expand-file-name "undo-tree/" user-emacs-directory)))
-      undo-tree-auto-save-history t
-      undo-limit        400000  undo-tree-limit        400000
-      undo-strong-limit 3000000 undo-tree-strong-limit 3000000
-      undo-outer-limit  3000000 undo-tree-outer-limit  3000000)
-
-(with-eval-after-load 'undo-tree
-  (add-hook 'text-mode-hook #'undo-tree-mode)
-  (add-hook 'prog-mode-hook #'undo-tree-mode)
-  (add-hook 'beancount-mode-hook #'undo-tree-mode))
 
 ;; Filling and unfilling.
 (defun ec--prog-auto-fill-mode ()

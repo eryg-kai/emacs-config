@@ -20,7 +20,7 @@
       evil-want-fine-undo t
       ;; Required for evil-collection.
       evil-want-keybinding nil
-      evil-undo-system 'undo-tree)
+      evil-undo-system 'undo-redo)
 
 (when (fboundp 'evil-mode)
   (add-hook 'emacs-startup-hook #'evil-mode))
