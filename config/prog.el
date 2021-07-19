@@ -22,6 +22,9 @@
 (setq lsp-enable-file-watchers nil ; Call `lsp-workspace-restart' if necessary
       lsp-keymap-prefix "C-c l")
 
+;; Go.
+(add-hook 'go-mode-hook #'lsp-deferred)
+
 ;; Elisp.
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
