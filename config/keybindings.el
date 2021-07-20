@@ -17,7 +17,6 @@
                                    avy))
 
 (setq evil-want-C-u-scroll t
-      evil-want-fine-undo t
       ;; Required for evil-collection.
       evil-want-keybinding nil
       evil-undo-system 'undo-redo)
