@@ -128,6 +128,44 @@
   (unless (derived-mode-p 'org-mode)
     (set-buffer (org-capture-target-buffer org-default-notes-file))))
 
+(defun ec-capture-log ()
+  "Capture a note into the logbook."
+  (let ((marker (if (eq major-mode 'org-agenda-mode)
+                    (org-get-at-bol 'org-marker)
+                  org-clock-marker)))
+    (cond ((derived-mode-p 'org-mode)
+           (goto-char (org-entry-beginning-position)))
+          ((and (markerp marker)
+                (marker-buffer marker))
+           (set-buffer (marker-buffer marker))
+           (goto-char marker))
+          (t (user-error "No suitable capture target"))))
+  (let* ((template (split-string (string-trim-right (org-capture-get :template)) "\n"))
+         (offset (if org-adapt-indentation (+ (org-current-level) 1) 2))
+         (indentation (make-string offset ? ))
+         (drawer (org-log-into-drawer)))
+    (goto-char (org-log-beginning nil))
+    (when (and drawer
+               (not (save-excursion (forward-line -1) (looking-at-p org-logbook-drawer-re))))
+      (setq template (append `(,(concat ":" drawer ":"))
+                             template
+                             '(":END:"))))
+    (org-capture-put :template (mapconcat
+                                (lambda (line) (concat indentation line))
+                                template "\n"))))
+
+(defun ec-add-note ()
+  "Replacement for `org-note-add'."
+  (interactive)
+  (org-capture nil "cn"))
+
+;; Replace `org-add-note' with a version that uses capture templates.
+(define-key global-map (kbd "C-c C-z") #'ec-add-note)
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c C-z") #'ec-add-note))
+(with-eval-after-load 'org-agenda
+  (define-key org-agenda-mode-map (kbd "C-c C-z") #'ec-add-note))
+
 (setq org-default-notes-file (expand-file-name "refile.org" ec-org-dir)
       org-capture-templates
       `(("t" "task")
@@ -160,6 +198,9 @@
          (file ,(ec-get-template "call"))
          :clock-in t
          :clock-resume t)
+        ("cn" "clock note" plain
+         (function ec-capture-log)
+         (file ,(ec-get-template "log")))
         ("p" "personal")
         ("pj" "journal" entry
          (file+olp+datetree ,(ec-capture-user "journal.org"))
@@ -294,24 +335,6 @@
   (add-hook 'before-save-hook #'ec--appt-schedule t t))
 
 (add-hook 'org-mode-hook #'ec--hook-appt-schedule)
-
-;; HACK: Make sure notes don't exceed the column where they will be inserted. It
-;; doesn't seem to always work when used from the agenda. Ideally this would use
-;; narrowing instead like capture templates.
-(defvar ec--log-current-level nil)
-
-(defun ec--log-set-current-level (&optional _)
-  "Store the current entry level."
-  (setq ec--log-current-level (org-current-level)))
-
-(advice-add 'org-add-log-note :before #'ec--log-set-current-level)
-
-(defun ec--log-adjust-fill-column ()
-  "Adjust the fill column so the note will be correct wrapped when inserted."
-  (let ((offset (if org-adapt-indentation (+ ec--log-current-level 3) 2)))
-    (setq fill-column (- fill-column offset))))
-
-(add-hook 'org-log-buffer-setup-hook #'ec--log-adjust-fill-column)
 
 ;; Flashcards.
 (defun ec-get-lang-fc-dirs ()
