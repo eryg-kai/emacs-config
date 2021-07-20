@@ -11,7 +11,7 @@
       truncate-lines t
       scroll-margin 8
       hscroll-margin 8
-      hscroll-step 1
+      hscroll-step 50
       scroll-conservatively 101)
 
 (blink-cursor-mode 0)
