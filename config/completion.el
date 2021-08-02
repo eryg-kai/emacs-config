@@ -172,4 +172,24 @@
 ;; Search.
 (setq lazy-highlight-initial-delay 1)
 
+;; Find file at point.
+(define-key global-map (kbd "C-x C-f") #'ec-ffap)
+
+(defun ec-ffap ()
+  "Like `find-file-at-point' but handles line numbers."
+  (interactive)
+  (let* ((str (ffap-string-at-point))
+         (index (string-match ":[0-9]+$" str))
+         (file (if index (substring str 0 index) str))
+         (line (when index (substring str (1+ index)))))
+    (if (not line)
+        ;; Without a line we can just fall back to the default behavior.
+        (find-file-at-point)
+      ;; Otherwise provide the real file since in some cases the line number
+      ;; gets included as part of the file name. Use the prompter to provide a
+      ;; chance to verify.
+      (find-file-at-point (ffap-prompter (unless (string= "" file) file)))
+      (goto-char (point-min))
+      (forward-line (1- (string-to-number line))))))
+
 ;;; completion.el ends here

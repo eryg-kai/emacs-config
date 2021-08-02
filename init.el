@@ -35,7 +35,7 @@
 ;; Packages not in MELPA can be installed with Quelpa.
 ;;   - For example: (quelpa '(osd :repo "0x0049/osd" :fetcher github))
 ;;                  (quelpa '(org-fc :repo "l3kn/org-fc" :fetcher github :files (:defaults "awk")))
-(setq package-selected-packages '(quelpa esup)
+(setq package-selected-packages '(quelpa esup with-simulated-input)
       package-quickstart t)
 
 (with-eval-after-load 'package ; Won't load immediately when using quickstart.

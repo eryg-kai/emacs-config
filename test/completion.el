@@ -40,4 +40,43 @@
   (ec--replace-then-run 'ec-test--spy '("SPC 1" . "ec-spy"))
   (should (equal '(("SPC 1" . "spy") nil) ec-test--spy-value)))
 
+(ert-deftest ec-test-ffap ()
+  (require 'ffap)
+
+  (defun ec-test--ffap-run (file line)
+    "Run `ec-ffap' and ensure FILE is opened to LINE then kill the buffer."
+    (with-simulated-input "RET" (ec-ffap))
+    (should (string= file (buffer-name)))
+    (should (equal line (line-number-at-pos)))
+    (kill-this-buffer))
+
+  (switch-to-buffer (get-buffer-create "ffap test"))
+
+  (dolist (dir `(,ec-dir
+                 "./config/../"
+                 ,(concat "../" (file-name-base (directory-file-name ec-dir)) "/")
+                 "./"))
+    (dolist (file '("init.el" ".travis.yml"))
+      (insert (concat dir file) ":10")
+
+      ;; Beginning of the line always works.
+      (beginning-of-line)
+      (ec-test--ffap-run file 10)
+
+      ;; For relative paths having the point on the first slash always works.
+      (forward-char 1)
+      (ec-test--ffap-run file 10)
+
+      ;; At this point relative paths only fail if there is one slash and the
+      ;; file does not start with a dot.
+      (forward-char 1)
+      (ec-test--ffap-run file 10)
+
+      ;; Now all one-slash relative paths will fail including those that start
+      ;; with a dot.
+      (end-of-line)
+      (ec-test--ffap-run file 10)
+
+      (insert "\n"))))
+
 ;;; completion.el ends here
