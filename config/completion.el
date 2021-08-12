@@ -32,15 +32,15 @@
                  (or (match-string 3 name) (match-string 5 name))
                  (match-string 6 name))))))
 
-(defun ec--replace-then-run (fn key-binding &optional prefix)
-  "Call FN with stripped KEY-BINDING and PREFIX."
+(defun ec--replace-then-run (fn key-binding)
+  "Call FN with stripped KEY-BINDING."
   (let* ((name (cdr key-binding))
          (split (ec--split-name name)))
     (if (and split
              (or (equal (nth 0 split) "ec")
                  (featurep (intern (nth 0 split)))))
-        (apply fn `(,(car key-binding) . ,(nth 2 split)) prefix nil)
-      (apply fn key-binding prefix nil))))
+        (apply fn `(,(car key-binding) . ,(nth 2 split)) nil)
+      (apply fn key-binding nil))))
 
 (advice-add 'which-key--maybe-replace :around 'ec--replace-then-run)
 
