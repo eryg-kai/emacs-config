@@ -40,7 +40,8 @@
   "Save recent file list soon."
   (timer-idle-debounce #'recentf-save-list))
 
-(add-hook 'find-file-hook #'ec--recentf-save-list-soon)
+(with-eval-after-load 'recentf
+  (add-hook 'find-file-hook #'ec--recentf-save-list-soon))
 
 (add-hook 'emacs-startup-hook #'recentf-mode)
 
