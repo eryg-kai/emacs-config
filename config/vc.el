@@ -26,6 +26,7 @@
 (setq magit-delete-by-moving-to-trash nil
       magit-module-sections-nested nil
       magit-diff-refine-hunk t
+      magit-bury-buffer-function #'magit-restore-window-configuration
       magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
 
 (with-eval-after-load 'magit
