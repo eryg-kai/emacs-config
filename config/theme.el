@@ -12,7 +12,8 @@
       scroll-margin 8
       hscroll-margin 8
       hscroll-step 50
-      scroll-conservatively 101)
+      scroll-conservatively 101
+      truncate-string-ellipsis "…")
 
 (blink-cursor-mode 0)
 
