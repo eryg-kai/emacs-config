@@ -28,6 +28,11 @@
       mu4e-headers-date-format "%F"
       mu4e-view-show-addresses t
       mu4e-context-policy 'pick-first
+      ;; TODO: After updating:
+      ;; maildir-shortcuts
+      ;; mu4e-headers-precise-alignment
+      ;; regexp-based personal addresses? --my-address
+      ;; This var doesn't apply with new viewer?
       mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
 
 (defun ec--mu4e-account (msg)
@@ -100,6 +105,6 @@ account is activated."
   ;;    (browse-url-firefox-arguments . ("--profile" ,(expand-file-name "~/.mozilla/firefox/profile")))
   ;;    (mu4e-maildir-shortcuts . (("/Inbox" . ?i)
   ;;                               ("/Archive" . ?a)))))
-  (load (concat ec-mail-dir "/accounts.el") nil t))
+  (load (expand-file-name "accounts.el" ec-mail-dir) nil t))
 
 ;;; email.el ends here

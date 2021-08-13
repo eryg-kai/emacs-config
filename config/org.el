@@ -339,13 +339,11 @@
 ;; Flashcards.
 (defun ec-get-lang-fc-dirs ()
   "Get language flashcard directories."
-  (let ((dir (or (getenv "ORG_FC_HOME")
-                 (expand-file-name "research/languages" ec-org-dir))))
-    (when (file-exists-p dir)
-      (mapcar #'file-name-as-directory
-              (cl-remove-if-not
-               #'file-directory-p
-               (directory-files dir t "^[^.]"))))))
+  (when (file-exists-p ec-lang-dir)
+    (mapcar #'file-name-as-directory
+            (cl-remove-if-not
+             #'file-directory-p
+             (directory-files ec-lang-dir t "^[^.]")))))
 
 (defun ec--capture-language (file)
   "Capture to FILE in the selected language or current if already visiting."
