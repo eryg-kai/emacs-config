@@ -72,7 +72,7 @@
 
 ;; Refiling.
 (setq org-refile-use-cache t
-      org-refile-targets '((org-agenda-files :maxlevel . 5)
+      org-refile-targets '((org-agenda-files :maxlevel . 1)
                            (nil :maxlevel . 5))
       org-outline-path-complete-in-steps nil
       org-refile-use-outline-path t
