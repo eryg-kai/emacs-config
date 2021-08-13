@@ -350,7 +350,14 @@
   (let* ((dirs (ec-get-lang-fc-dirs))
          (dir (if (member default-directory dirs)
                   default-directory
-                (completing-read "Target: " dirs nil t))))
+                (expand-file-name
+                 (completing-read "Target: "
+                                  (mapcar
+                                   (lambda (dir)
+                                     (string-remove-prefix ec-lang-dir dir))
+                                   dirs)
+                                  nil t)
+                 ec-lang-dir))))
     (set-buffer (org-capture-target-buffer (expand-file-name file dir))))
   (goto-char (point-min)))
 
