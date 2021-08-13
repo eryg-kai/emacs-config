@@ -184,9 +184,16 @@
         ("th" "habit" entry
          (file ,(ec-capture-user "habits.org"))
          (file ,(ec-get-template "habit")))
-        ("n" "note" entry
+        ("n" "note")
+        ("nn" "note" entry
          (function ec-capture-default)
          (file ,(ec-get-template "note")))
+        ("nl" "link" entry
+         (function ec-capture-default)
+         (file ,(ec-get-template "link")))
+        ("nc" "clock" plain ; Same as C-c C-z
+         (function ec-capture-log)
+         (file ,(ec-get-template "log")))
         ("c" "clock")
         ("cm" "meeting" entry
          (function ec-capture-default)
@@ -198,7 +205,7 @@
          (file ,(ec-get-template "call"))
          :clock-in t
          :clock-resume t)
-        ("cn" "clock note" plain
+        ("cn" "note" plain ; Same as C-c C-z
          (function ec-capture-log)
          (file ,(ec-get-template "log")))
         ("p" "personal")
