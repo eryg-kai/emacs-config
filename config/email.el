@@ -27,13 +27,10 @@
       mu4e-headers-time-format "%T"
       mu4e-headers-date-format "%F"
       mu4e-view-show-addresses t
-      mu4e-context-policy 'pick-first
-      ;; TODO: After updating:
-      ;; maildir-shortcuts
-      ;; mu4e-headers-precise-alignment
-      ;; regexp-based personal addresses? --my-address
-      ;; This var doesn't apply with new viewer?
-      mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
+      mu4e-context-policy 'pick-first)
+
+(with-eval-after-load 'mm-decode
+  (add-to-list 'mm-discouraged-alternatives "text/html"))
 
 (defun ec--mu4e-account (msg)
   "Return the account and folder name that MSG belongs to."
