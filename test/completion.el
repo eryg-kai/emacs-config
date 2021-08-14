@@ -41,8 +41,6 @@
   (should (equal '(("SPC 1" . "spy")) ec-test--spy-value)))
 
 (ert-deftest ec-test-ffap ()
-  (require 'ffap)
-
   (defun ec-test--ffap-run (file line)
     "Run `ec-ffap' and ensure FILE is opened to LINE then kill the buffer."
     (with-simulated-input "RET" (ec-ffap))

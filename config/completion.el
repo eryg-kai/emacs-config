@@ -175,6 +175,10 @@
 ;; Find file at point.
 (define-key global-map (kbd "C-x C-f") #'ec-ffap)
 
+;; `ffap-string-at-point' doesn't have an autoload so `ec-ffap' will fail
+;; without this (or without manually loading `ffap').
+(autoload 'ffap-string-at-point "ffap")
+
 (defun ec-ffap ()
   "Like `find-file-at-point' but handles line numbers."
   (interactive)
