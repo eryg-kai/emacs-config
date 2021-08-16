@@ -94,8 +94,9 @@
   (defun ec--reset-smartparens (&rest _)
     (setq smartparens-mode ec--smartparens-mode))
 
-  (advice-add 'hippie-expand :after #'ec--reset-smartparens '((depth . -100)))
+  (advice-add 'hippie-expand :after #'ec--reset-smartparens '((depth . -100))))
 
+(when (fboundp 'yas-minor-mode)
   (add-hook 'text-mode-hook #'yas-minor-mode)
   (add-hook 'prog-mode-hook #'yas-minor-mode))
 
