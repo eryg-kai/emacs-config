@@ -101,7 +101,7 @@ Options are:
                  (display-buffer-below-selected) :height 0.1 :focus t)
 
                 ;; Split below selected and also focus.
-                (("^\\*dig" "^\\*Flycheck" "^\\*Ping")
+                (("^\\*dig" "^\\*Ping")
                  (display-buffer-below-selected) :height 0.2 :focus t)
 
                 ;; Bottom in a side window.
@@ -112,9 +112,11 @@ Options are:
                 (("^\\*Error\\*$" "^\\*Calendar\\*" "^\\*Disabled Command\\*$")
                  (display-buffer-at-bottom) :height 0.3)
 
-                ;; Dedicated temporary state (like how `org-agenda' works by default).
+                ;; Dedicated temporary/branch state (like how `org-agenda' works
+                ;; by default).
                 (("^\\*Help\\*$" "^\\*ripgrep-search\\*$" "^\\*Man" "^\\*grep\\*$"
                   "^\\*Process List\\*$" "^\\*Password-Store\\*$"
+                  "^\\*Flycheck"
                   "^\\*tide-references\\*" "^\\*xref\\*" "^\\*Occur\\*$")
                  (display-buffer-in-direction) :only t :focus t :width 0.5))
               t))
