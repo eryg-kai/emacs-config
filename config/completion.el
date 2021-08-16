@@ -10,7 +10,8 @@
                                    yasnippet
                                    yasnippet-snippets
                                    ispell
-                                   flimenu))
+                                   consult
+                                   consult-flycheck))
 
 (setq history-delete-duplicates t)
 
@@ -138,13 +139,37 @@
 
 (add-hook 'emacs-startup-hook #'fido-mode)
 
-;; Flimenu.
-(define-key global-map (kbd "C-c bI") #'imenu)
+;; Consult.
+(define-key global-map (kbd "C-c fr") #'consult-recent-file)
+(define-key global-map (kbd "M-s r") #'consult-ripgrep)
 
-(when (fboundp 'flimenu-global-mode)
-  (add-hook 'emacs-startup-hook #'flimenu-global-mode))
+(define-key global-map (kbd "C-x b") #'consult-buffer)    ;; original: switch-to-buffer
+(define-key global-map (kbd "C-x rb") #'consult-bookmark) ;; original: bookmark-jump
+(define-key global-map (kbd "C-x ri") #'consult-register) ;; original: insert-register
 
-;; Ask y/n instead of yes/no.
+(define-key global-map (kbd "M-g o") #'consult-outline)
+(define-key global-map (kbd "M-g i") #'consult-imenu)
+(define-key global-map (kbd "M-g I") #'consult-imenu-multi)
+(with-eval-after-load 'org-mode
+  (define-key org-mode-map (kbd "M-g o") #'consult-org-heading)
+  (define-key org-mode-map (kbd "M-g O") #'consult-org-agenda))
+(define-key global-map (kbd "M-g g") #'consult-goto-line)    ;; original: goto-line
+(define-key global-map (kbd "M-g M-g") #'consult-goto-line)  ;; original: goto-line
+(define-key global-map (kbd "M-g m") #'consult-mark)
+(define-key global-map (kbd "M-g M") #'consult-global-mark)
+
+(with-eval-after-load 'flycheck
+  (define-key flycheck-mode-map (kbd "M-g f") #'consult-flycheck))
+
+(setq register-preview-delay 0
+      register-preview-function #'consult-register-format
+      completion-in-region-function #'consult-completion-in-region)
+
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "C-y") #'consult-yank-from-kill-ring)
+  (define-key evil-insert-state-map (kbd "C-y") #'consult-yank-from-kill-ring))
+
+;; Ask y/n instcad of yes/no.
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Search.

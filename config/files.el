@@ -27,15 +27,6 @@
         "/\\(\\(\\(COMMIT\\|NOTES\\|PULLREQ\\|MERGEREQ\\|TAG\\)_EDIT\\|MERGE_\\|\\)MSG\\|\\(BRANCH\\|EDIT\\)_DESCRIPTION\\)\\'"
         "COMMIT_EDITMSG\\'" ,(expand-file-name user-emacs-directory)))
 
-(define-key global-map (kbd "C-c fr") #'ec-recentf-find-file)
-
-(defun ec-recentf-find-file ()
-  "Find a recent file."
-  (interactive)
-  (let ((file (completing-read "Find recent file: " recentf-list nil t)))
-    (when file
-      (find-file file))))
-
 (defun ec--recentf-save-list-soon ()
   "Save recent file list soon."
   (timer-idle-debounce #'recentf-save-list))
