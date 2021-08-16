@@ -30,9 +30,6 @@
 
  (dired-marked        :foreground 'unspecified :background 'unspecified :inverse-video nil)
 
- (company-preview     :inherit 'hl-line)
- (company-echo-common :inherit 'company-tooltip-common :background 'unspecified :foreground 'unspecified :weight 'normal)
-
  (whitespace-tab                                      :background 'unspecified)
  (whitespace-space           :foreground 'unspecified :background 'unspecified :inherit 'whitespace-tab)
  (whitespace-trailing        :foreground 'unspecified :background 'unspecified :inherit 'error)

@@ -26,7 +26,6 @@
 
 ;; Gate these behind Evil to ensure they don't load until Evil does.
 (with-eval-after-load 'evil
-  (setq evil-collection-company-use-tng nil)
   (evil-collection-init)
 
   (setq evil-snipe-scope 'whole-visible)

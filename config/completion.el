@@ -9,7 +9,6 @@
 (nconc package-selected-packages '(which-key
                                    yasnippet
                                    yasnippet-snippets
-                                   company
                                    ispell
                                    flimenu))
 
@@ -99,28 +98,6 @@
 
   (add-hook 'text-mode-hook #'yas-minor-mode)
   (add-hook 'prog-mode-hook #'yas-minor-mode))
-
-;; Company.
-(setq-default company-frontends '(company-preview-frontend
-                                  company-echo-frontend)
-              company-minimum-prefix-length 1
-              company-idle-delay 0.2)
-
-(defun ec--company-add-snippet-backend(backend)
-  (if (and (listp backend) (member 'company-yasnippet backend))
-      backend
-    (append (if (consp backend) backend (list backend))
-            '(:with company-yasnippet))))
-
-(with-eval-after-load 'company
-  (define-key company-active-map [return] nil)
-  (define-key company-active-map (kbd "RET") nil)
-
-  (setq company-backends
-        (mapcar #'ec--company-add-snippet-backend company-backends))
-
-  (add-hook 'text-mode-hook #'company-mode)
-  (add-hook 'prog-mode-hook #'company-mode))
 
 ;; Man pages.
 (setq Man-notify-method 'aggressive)
