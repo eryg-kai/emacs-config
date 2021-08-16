@@ -339,7 +339,7 @@
 
 (defun ec--hook-appt-schedule ()
   "Regenerate appointments when saving the current file."
-  (add-hook 'before-save-hook #'ec--appt-schedule t t))
+  (add-hook 'before-save-hook #'ec--appt-schedule nil t))
 
 (add-hook 'org-mode-hook #'ec--hook-appt-schedule)
 

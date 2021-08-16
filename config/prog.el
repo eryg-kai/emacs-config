@@ -25,6 +25,12 @@
 ;; Go.
 (add-hook 'go-mode-hook #'lsp-deferred)
 
+(defun ec--hook-go-fmt ()
+  "Run gofmt when saving the current file."
+  (add-hook 'before-save-hook #'gofmt nil t))
+
+(add-hook 'go-mode-hook #'ec--hook-go-fmt)
+
 ;; Elisp.
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
