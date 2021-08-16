@@ -93,9 +93,12 @@ Options are:
 
                 ;; Split below selected.
                 ((compilation-mode shell-mode
-                                   "^\\*Completions\\*$" "^\\*lsp-help\\*"
+                                   "^\\*lsp-help\\*"
                                    "^\\*Bookmark Annotation\\*$")
                  (display-buffer-below-selected) :height 0.2)
+
+                (("^\\*Completions\\*$" )
+                 (display-buffer-below-selected) :height 0.1 :focus t)
 
                 ;; Split below selected and also focus.
                 (("^\\*dig" "^\\*Flycheck" "^\\*Ping")

@@ -35,6 +35,7 @@
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
 ;; Typescript and Tide.
+;; TODO: Can lsp replace Tide?
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 
 (defun ec--setup-tide ()
@@ -46,7 +47,23 @@
     (setq flycheck-check-syntax-automatically '(save mode-enabled))
     (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
     (eldoc-mode)
-    (tide-hl-identifier-mode)))
+    (tide-hl-identifier-mode)
+
+    (make-local-variable 'completion-at-point-functions)
+    (push (lambda () 'ec--tide-completion-at-point) completion-at-point-functions)))
+
+;; Tide doesn't support completion-at-point (yet at least).
+;; https://github.com/ananthakumaran/tide/issues/62
+(defun ec--tide-completion-at-point ()
+  "Provide completions via Tide."
+  (let ((prefix (progn (looking-back "[a-zA-Z_$]\*" 50 t) (match-string 0))))
+    (tide-command:completions
+     prefix
+     `(lambda (response)
+        (completion-in-region (- (point) (length ',prefix)) (point)
+                              (cl-loop for completion in response
+                                       if (string-prefix-p ',prefix completion)
+                                       collect completion))))))
 
 (add-hook 'typescript-mode-hook #'ec--setup-tide)
 (add-hook 'web-mode-hook #'ec--setup-tide)
