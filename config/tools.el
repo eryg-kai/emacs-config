@@ -127,4 +127,11 @@
 
 (advice-add 'beancount--run :around #'ec--beancount-run)
 
+;; Some things like `ping' don't enable `net-utils-mode'.
+(defun ec--net-utils-mode (&rest _)
+  "Enable `net-utils-mode'."
+  (net-utils-mode))
+
+(advice-add 'net-utils-run-program :after #'ec--net-utils-mode)
+
 ;;; tools.el ends here

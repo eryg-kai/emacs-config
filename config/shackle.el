@@ -102,7 +102,7 @@ Options are:
 
                 ;; Split below selected and also focus.
                 (("^\\*dig" "^\\*Ping")
-                 (display-buffer-below-selected) :height 0.2 :focus t)
+                 (display-buffer-below-selected) :height 0.3 :focus t)
 
                 ;; Bottom in a side window.
                 ("\\*Notifications\\*"
