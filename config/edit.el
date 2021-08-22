@@ -91,6 +91,7 @@
 (add-hook 'conf-mode-hook #'ec--enable-line-numbers) ; No parent?
 (add-hook 'yaml-mode-hook #'ec--enable-line-numbers) ; Parent is text-mode.
 (add-hook 'prog-mode-hook #'ec--enable-line-numbers)
+(add-hook 'rfc-edit-mode-hook #'ec--enable-line-numbers) ; Parent is text-mode.
 
 ;; Subword and superword.
 (add-hook 'go-mode-hook #'subword-mode)

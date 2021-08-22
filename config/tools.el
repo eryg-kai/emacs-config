@@ -30,7 +30,13 @@
   (setq auth-sources `(,auth-source)))
 
 ;; RFCs.
-(setq rfc-mode-directory (expand-file-name "/rfc/" ec-cache-dir))
+(setq rfc-mode-directory (expand-file-name "rfc" ec-cache-dir))
+
+(define-derived-mode rfc-edit-mode text-mode "RFC-edit"
+  "Mode for editing RFCs."
+  (setq fill-column 72))
+
+(add-to-list 'auto-mode-alist '("\\.rfc\\'" . rfc-edit-mode))
 
 ;; Typing practice.
 (defun ec--evil-insert (&rest _)
