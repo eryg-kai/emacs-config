@@ -18,9 +18,7 @@
               c-basic-offset 2
               standard-indent 2)
 
-(setq sentence-end-double-space nil
-
-      select-enable-primary t
+(setq select-enable-primary t
 
       mode-require-final-newline t
       require-final-newline t)
