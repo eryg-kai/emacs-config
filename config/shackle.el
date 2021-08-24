@@ -39,7 +39,10 @@ Special behavior will be exhibited based on PLIST options."
     ;; Don't mess with the layout if the buffer is already visible.
     (unless (get-buffer-window buffer) (delete-other-windows)))
   (when-let (window (cl-some (lambda (a) (funcall a buffer alist)) actions))
-    (when (plist-get plist :focus) (select-window window))))
+    (when (plist-get plist :focus)
+      (select-window window)
+      (when (fboundp 'evil-local-set-key)
+        (evil-local-set-key 'normal "q" 'quit-window)))))
 
 (defun ec--shackle (conditions actions plist)
   "Display buffer matching CONDITIONS using ACTIONS and PLIST."
@@ -70,7 +73,7 @@ take multiple conditions.
 
 Options are:
   `:height' -- Number or function, defaults to `fit-window-to-buffer'.
-  `:focus'  -- Focus the buffer after display.
+  `:focus'  -- Focus the buffer after display and bind q to `quit-window'.
   `:width'  -- Number or function, defaults to 2 + `fill-column'.
   `:side'   -- Side for directional displays.
   `:only'   -- Delete other windows temporarily (like `org-agenda')."
