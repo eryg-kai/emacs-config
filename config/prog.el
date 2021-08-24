@@ -9,22 +9,23 @@
                                    web-mode
                                    yaml-mode
                                    yarn-mode
-                                   lsp-mode
                                    go-mode
                                    css-mode
-                                   tide
                                    typescript-mode
                                    elixir-mode
+                                   eglot
                                    flycheck
                                    dash-docs
                                    editorconfig))
 
-;; LSP
-(setq lsp-enable-file-watchers nil ; Call `lsp-workspace-restart' if necessary
-      lsp-keymap-prefix "C-c l")
+;; Eglot.
+(with-eval-after-load 'eglot
+  (define-key eglot-mode-map (kbd "C-c ar") 'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-c ao") 'eglot-code-action-organize-imports)
+  (define-key eglot-mode-map (kbd "C-c ad") 'xref-find-definitions))
 
 ;; Go.
-(add-hook 'go-mode-hook #'lsp-deferred)
+(add-hook 'go-mode-hook #'eglot-ensure)
 
 (defun ec--hook-go-fmt ()
   "Run gofmt when saving the current file."
@@ -35,58 +36,21 @@
 ;; Elisp.
 (setq flycheck-emacs-lisp-load-path 'inherit)
 
-;; Typescript and Tide.
-;; TODO: Can lsp replace Tide?
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
-
-(defun ec--setup-tide ()
-  "Set up tide."
-  (when (or (eq major-mode 'typescript-mode)
-            (and (eq major-mode 'web-mode)
-                 (string-equal "tsx" (file-name-extension buffer-file-name))))
-    (tide-setup)
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
-    (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
-    (eldoc-mode)
-    (tide-hl-identifier-mode)
-
-    (make-local-variable 'completion-at-point-functions)
-    (push (lambda () 'ec--tide-completion-at-point) completion-at-point-functions)))
-
-;; Tide doesn't support completion-at-point (yet at least).
-;; https://github.com/ananthakumaran/tide/issues/62
-(defun ec--tide-completion-at-point ()
-  "Provide completions via Tide."
-  (let ((prefix (progn (looking-back "[a-zA-Z_$]\*" 50 t) (match-string 0))))
-    (tide-command:completions
-     prefix
-     `(lambda (response)
-        (completion-in-region (- (point) (length ',prefix)) (point)
-                              (cl-loop for completion in response
-                                       if (string-prefix-p ',prefix completion)
-                                       collect completion))))))
-
-(add-hook 'typescript-mode-hook #'ec--setup-tide)
-(add-hook 'web-mode-hook #'ec--setup-tide)
+;; JavaScript and TypeScript.
+(add-hook 'js-mode-hook #'eglot-ensure)
+(add-hook 'typescript-mode-hook #'eglot-ensure)
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 
 ;; Flycheck.
 (setq flycheck-indication-mode nil)
 
-(defun ec--find-node-module-binary (name &optional directory)
-  "Travel upward from DIRECTORY looking for NAME in node_modules."
-  (let* ((root (or directory default-directory))
-         (binary (and root (expand-file-name (concat "node_modules/.bin/" name) root))))
-    (cond ((and binary (file-executable-p binary)) binary)
-          ((string-equal root "/") nil)
-          (t (ec--find-node-module-binary name (directory-file-name (file-name-directory root)))))))
-
 (defun ec--find-eslint ()
   "Travel upward to find eslint in node_modules."
-  (when (or (eq major-mode 'js-mode) (eq major-mode 'typescript-mode))
-    (let ((eslint (ec--find-node-module-binary "eslint")))
-      (setq-local flycheck-javascript-eslint-executable eslint))))
+  (setq-local flycheck-javascript-eslint-executable
+              (ec-find-node-module-binary "eslint")))
 
-(add-hook 'flycheck-mode-hook #'ec--find-eslint)
+(add-hook 'js-mode-hook #'ec--find-eslint)
+(add-hook 'typescript-mode-hook #'ec--find-eslint)
 
 (when (fboundp 'global-flycheck-mode)
   (add-hook 'emacs-startup-hook #'global-flycheck-mode))
@@ -112,6 +76,8 @@
   (add-hook 'emacs-startup-hook #'editorconfig-mode))
 
 ;; Elixir.
+(add-hook 'elixir-mode-hook #'eglot-ensure)
+
 (defun ec--hook-elixir-fmt ()
   "Run `elixir-format' when saving the current file."
   (when-let (dir (locate-dominating-file buffer-file-name ".formatter.exs"))
@@ -123,4 +89,8 @@
 (add-hook 'elixir-mode-hook #'ec--hook-elixir-fmt)
 
 (add-to-list 'auto-mode-alist '("\\.eex\\'" . web-mode))
+
+(with-eval-after-load 'eglot
+ (add-to-list 'eglot-server-programs '(elixir-mode "elixir-ls")))
+
 ;;; prog.el ends here

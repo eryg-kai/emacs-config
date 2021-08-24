@@ -88,4 +88,12 @@ When the length is odd the right side will be one longer than the left."
                  (list (point-min) (point-max))))
   (ansi-color-apply-on-region beg end))
 
+(defun ec-find-node-module-binary (name &optional directory)
+  "Travel upward from DIRECTORY looking for NAME in node_modules."
+  (let* ((root (or directory default-directory))
+         (binary (and root (expand-file-name (concat "node_modules/.bin/" name) root))))
+    (cond ((and binary (file-executable-p binary)) binary)
+          ((string-equal root "/") nil)
+          (t (ec-find-node-module-binary name (directory-file-name (file-name-directory root)))))))
+
 ;;; funcs.el ends here

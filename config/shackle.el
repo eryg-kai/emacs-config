@@ -116,7 +116,7 @@ Options are:
                 ;; by default).
                 (("^\\*Help\\*$" "^\\*ripgrep-search\\*$" "^\\*Man" "^\\*grep\\*$"
                   "^\\*Process List\\*$" "^\\*Password-Store\\*$"
-                  "^\\*Flycheck"
+                  "^\\*Flycheck" "^\\*eldoc\\*$"
                   "^\\*tide-references\\*" "^\\*xref\\*" "^\\*Occur\\*$")
                  (display-buffer-in-direction) :only t :focus t :width 0.5))
               t))
