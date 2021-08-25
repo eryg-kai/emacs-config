@@ -7,6 +7,8 @@
 (ec-def-theme
  doom-tty-override "Doom TTY theme overrides"
 
+ (highlight :background (doom-blend (doom-color 'red) (doom-color 'bg) 0.07))
+
  (mode-line           :background 'unspecified)
  (mode-line-inactive  :background 'unspecified)
  (vertical-border     :background 'unspecified)
