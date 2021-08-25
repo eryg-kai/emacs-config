@@ -13,6 +13,7 @@
       hscroll-margin 8
       hscroll-step 50
       scroll-conservatively 101
+      max-mini-window-height 1
       truncate-string-ellipsis "…")
 
 (blink-cursor-mode 0)
