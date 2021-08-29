@@ -333,15 +333,9 @@
   (when (member (buffer-file-name) (org-agenda-files))
     (ec--agenda-to-appt-with-timer)))
 
-;; Regenerate appointments when the day changes.
-(with-eval-after-load 'org
-  (run-at-time "00:01" (* 60 60 24) #'ec--agenda-to-appt-with-timer))
-
 (defun ec--hook-appt-schedule ()
   "Regenerate appointments when saving the current file."
   (add-hook 'before-save-hook #'ec--appt-schedule nil t))
-
-(add-hook 'org-mode-hook #'ec--hook-appt-schedule)
 
 ;; Flashcards.
 (defun ec-get-lang-fc-dirs ()
