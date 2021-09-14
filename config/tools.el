@@ -99,9 +99,7 @@
       erc-prompt-for-password nil)
 
 ;; Tramp.
-(setq tramp-ssh-controlmaster-options (concat "-o ControlMaster=auto "
-                                              "-o ControlPath='tramp.%%C' "
-                                              "-o ControlPersist=yes"))
+(setq tramp-use-ssh-controlmaster-options nil)
 
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
