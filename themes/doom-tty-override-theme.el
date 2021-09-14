@@ -12,7 +12,6 @@
  (mode-line           :background 'unspecified)
  (mode-line-inactive  :background 'unspecified)
  (vertical-border     :background 'unspecified)
- (bookmark-face       :background 'unspecified)
 
  (magit-diff-context  :background 'unspecified)
 

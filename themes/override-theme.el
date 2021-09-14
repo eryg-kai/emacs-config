@@ -52,6 +52,8 @@
 
  (sp-pair-overlay-face :background nil)
 
+ (bookmark-face :background 'unspecified)
+
  (org-headline-done :strike-through t)
 
  (org-block            :background 'unspecified)
