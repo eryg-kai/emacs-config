@@ -15,6 +15,8 @@
 (setq appt-display-format 'window
       appt-disp-window-function 'osd-org-appt-display)
 
+(define-key global-map (kbd "C-c n") #'osd-show-notifications)
+
 (defun ec-enable-pinentry-soon()
   (run-with-idle-timer 1 nil #'pinentry-start))
 
