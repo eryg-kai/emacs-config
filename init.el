@@ -68,6 +68,11 @@
 (ec--load-directory ec-lib-dir)
 (ec--load-directory ec-config-dir)
 
+;; Emacs might write the package list to the custom file and somehow customized
+;; variables seem to get reset back to their customized values. I want the code
+;; here to be the source of truth for the package list so overwrite it.
+(customize-set-variable 'package-selected-packages package-selected-packages)
+
 ;; Tests.
 (defun ec-test()
   "Test configuration."
