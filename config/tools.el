@@ -99,7 +99,8 @@
       erc-prompt-for-password nil)
 
 ;; Tramp.
-(setq tramp-use-ssh-controlmaster-options nil)
+(setq tramp-use-ssh-controlmaster-options nil
+      tramp-histfile-override "~/.local/share/tramp/history")
 
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
