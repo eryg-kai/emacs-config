@@ -28,7 +28,8 @@
 
  (line-number-current-line :background nil :inherit 'hl-line)
 
- (dired-marked        :foreground 'unspecified :background 'unspecified :inverse-video nil)
+ (dired-marked          :foreground 'unspecified :background 'unspecified :inverse-video nil)
+ (dired-broken-symlink  :foreground 'unspecified :background 'unspecified :inherit 'error)
 
  (whitespace-tab                                      :background 'unspecified)
  (whitespace-space           :foreground 'unspecified :background 'unspecified :inherit 'whitespace-tab)
