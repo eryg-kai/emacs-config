@@ -7,8 +7,9 @@
 (nconc package-selected-packages '(doom-themes
                                    evil-terminal-cursor-changer))
 
+(setq-default truncate-lines t)
+
 (setq window-divider-default-places t
-      truncate-lines t
       scroll-margin 8
       hscroll-margin 8
       hscroll-step 50
