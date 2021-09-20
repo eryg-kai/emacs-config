@@ -34,6 +34,11 @@ If no ARGS are provided, prompt for the command."
         (,(kbd "s-l") . (lambda () (interactive) (ec-windmove 'right)))
         (,(kbd "s-h") . (lambda () (interactive) (ec-windmove 'left)))
 
+        (,(kbd "s-J") . evil-window-decrease-height)
+        (,(kbd "s-K") . evil-window-increase-height)
+        (,(kbd "s-L") . evil-window-increase-width)
+        (,(kbd "s-H") . evil-window-decrease-width)
+
         (,(kbd "<XF86MonBrightnessUp>")   . (lambda () (interactive) (ec-exec "brightness -- +5%")))
         (,(kbd "<XF86MonBrightnessDown>") . (lambda () (interactive) (ec-exec "brightness -- -5%")))
         (,(kbd "<XF86AudioLowerVolume>")  . (lambda () (interactive) (ec-exec "amixer set Master unmute 1%-")))
