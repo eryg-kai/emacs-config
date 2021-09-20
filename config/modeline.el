@@ -98,34 +98,6 @@
         ("-"  'fancy-battery-discharging)
         (_ 'fancy-battery-discharging)))))
 
-;; Errors and warnings.
-(defvar-local ec-modeline-flycheck nil)
-
-(defun ec--set-modeline-flycheck (&optional status)
-  "Set `ec-modeline-flycheck' against STATUS."
-  (setq ec-modeline-flycheck
-        (pcase status
-          (`finished
-           (let-alist (flycheck-count-errors flycheck-current-errors)
-             (let ((error (or .error 0))
-                   (warning (or .warning 0))
-                   (info (or .info 0)))
-               (format " %s %s %s"
-                       (propertize (number-to-string error)
-                                   'face (if (> error 0) 'error 'shadow))
-                       (propertize (number-to-string warning)
-                                   'face (if (> warning 0) 'warning 'shadow))
-                       (propertize (number-to-string info)
-                                   'face  (if (> info 0) 'success 'shadow))))))
-          ('running ec-modeline-flycheck)
-          ('no-checker "")
-          ('errored (propertize " error" 'face 'error))
-          ('interrupted (propertize " interrupted " 'face 'shadow))
-          (_ ec-modeline-flycheck))))
-
-(add-hook 'flycheck-status-changed-functions #'ec--set-modeline-flycheck)
-(add-hook 'flycheck-mode-hook #'ec--set-modeline-flycheck)
-
 ;; Appointment information.
 (defun ec--appt-mode-line (min-to-app &optional abbrev)
   "Appointment string using list of strings MIN-TO-APP; ABBREV is ignored."
@@ -192,7 +164,7 @@
            " " mode-name
            (:eval (when mode-line-process (list " " mode-line-process)))
            (vc-mode vc-mode)
-           (:eval (when (bound-and-true-p flycheck-mode) ec-modeline-flycheck))
+           (:eval (when (bound-and-true-p flymake-mode) (list " " flymake-mode-line-counters)))
            (:eval (when active (ec--modeline-org-clock)))
            " %n")
          '((:eval (when (and active (bound-and-true-p appt-mode-string))

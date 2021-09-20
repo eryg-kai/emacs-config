@@ -99,8 +99,6 @@ Options are:
                                    "^\\*lsp-help\\*"
                                    "^\\*Bookmark Annotation\\*$")
                  (display-buffer-below-selected) :height 0.2)
-                (("^\\*Flycheck")
-                 (display-buffer-below-selected) :height 0.1)
 
                 (("^\\*Completions\\*$" )
                  (display-buffer-below-selected) :height 0.1 :focus t)

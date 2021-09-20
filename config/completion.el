@@ -10,8 +10,7 @@
                                    yasnippet
                                    yasnippet-snippets
                                    ispell
-                                   consult
-                                   consult-flycheck))
+                                   consult))
 
 (setq history-delete-duplicates t)
 
@@ -55,7 +54,6 @@
   (push '((nil . "select-window-[1-9]") . t) which-key-replacement-alist)
 
   (which-key-add-key-based-replacements
-    "C-c !" "flycheck"
     "C-c o" "org"
     "C-c oh" "heading"
     "C-c f" "files"
@@ -142,6 +140,7 @@
 ;; Consult.
 (define-key global-map (kbd "C-c fr") #'consult-recent-file)
 (define-key global-map (kbd "M-s r") #'consult-ripgrep)
+(define-key global-map (kbd "M-g f") #'consult-flymake)
 
 (define-key global-map (kbd "C-x b") #'consult-buffer)    ;; original: switch-to-buffer
 (define-key global-map (kbd "C-x rb") #'consult-bookmark) ;; original: bookmark-jump
@@ -157,9 +156,6 @@
 (define-key global-map (kbd "M-g M-g") #'consult-goto-line)  ;; original: goto-line
 (define-key global-map (kbd "M-g m") #'consult-mark)
 (define-key global-map (kbd "M-g M") #'consult-global-mark)
-
-(with-eval-after-load 'flycheck
-  (define-key flycheck-mode-map (kbd "M-g f") #'consult-flycheck))
 
 (setq register-preview-delay 0
       register-preview-function #'consult-register-format

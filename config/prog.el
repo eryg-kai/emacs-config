@@ -14,7 +14,6 @@
                                    typescript-mode
                                    elixir-mode
                                    eglot
-                                   flycheck
                                    dash-docs
                                    editorconfig))
 
@@ -34,26 +33,12 @@
 (add-hook 'go-mode-hook #'ec--hook-go-fmt)
 
 ;; Elisp.
-(setq flycheck-emacs-lisp-load-path 'inherit)
+(add-hook 'emacs-lisp-mode-hook #'flymake-mode)
 
 ;; JavaScript and TypeScript.
 (add-hook 'js-mode-hook #'eglot-ensure)
 (add-hook 'typescript-mode-hook #'eglot-ensure)
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-
-;; Flycheck.
-(setq flycheck-indication-mode nil)
-
-(defun ec--find-eslint ()
-  "Travel upward to find eslint in node_modules."
-  (setq-local flycheck-javascript-eslint-executable
-              (ec-find-node-module-binary "eslint")))
-
-(add-hook 'js-mode-hook #'ec--find-eslint)
-(add-hook 'typescript-mode-hook #'ec--find-eslint)
-
-(when (fboundp 'global-flycheck-mode)
-  (add-hook 'emacs-startup-hook #'global-flycheck-mode))
 
 ;; Dash.
 (setq dash-docs-docsets-path (expand-file-name "docsets" ec-cache-dir))
