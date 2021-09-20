@@ -81,6 +81,11 @@
 ;; Compilation.
 (setq compilation-scroll-output 'first-error)
 
+(with-eval-after-load "compile"
+  ;; This seems to result in false positives especially around timestamps in
+  ;; brackets like [HH:MM:DD].
+  (delete 'ant compilation-error-regexp-alist))
+
 (defun ec--colorize-compile-buffer ()
   "Colorize ANSI codes in a compilation buffer."
   (ansi-color-apply-on-region compilation-filter-start (point)))
