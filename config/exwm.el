@@ -29,10 +29,10 @@ If no ARGS are provided, prompt for the command."
         (,(kbd "<s-tab>")         . (lambda () (interactive) (ec--exwm-workspace-switch 1)))
         (,(kbd "<s-iso-lefttab>") . (lambda () (interactive) (ec--exwm-workspace-switch -1)))
 
-        (,(kbd "s-j") . (lambda () (interactive) (ec-windmove 'down)))
-        (,(kbd "s-k") . (lambda () (interactive) (ec-windmove 'up)))
-        (,(kbd "s-l") . (lambda () (interactive) (ec-windmove 'right)))
-        (,(kbd "s-h") . (lambda () (interactive) (ec-windmove 'left)))
+        (,(kbd "s-j") . evil-window-down)
+        (,(kbd "s-k") . evil-window-up)
+        (,(kbd "s-l") . evil-window-right)
+        (,(kbd "s-h") . evil-window-left)
 
         (,(kbd "s-J") . evil-window-decrease-height)
         (,(kbd "s-K") . evil-window-increase-height)
@@ -62,16 +62,6 @@ If no ARGS are provided, prompt for the command."
 
 (setq exwm-input-line-mode-passthrough t
       exwm-manage-configurations '((t char-mode t)))
-
-;; TODO: handle screen edges.
-(defun ec-windmove (direction)
-  "Move to the window in DIRECTION."
-  (interactive)
-  (pcase direction
-    ('left (windmove-left))
-    ('right (windmove-right))
-    ('up (windmove-up))
-    ('down (windmove-down))))
 
 (defun ec--exwm-update-title ()
   "Rename the buffer to `exwm-title'."
