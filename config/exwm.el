@@ -5,7 +5,9 @@
 ;;; Code:
 
 (when (display-graphic-p)
-  (push 'exwm package-selected-packages))
+  (nconc package-selected-packages '(exwm exwm-edit)))
+
+(setq exwm-edit-bind-default-keys nil)
 
 (define-key global-map (kbd "C-c r") #'ec-exec)
 
@@ -114,6 +116,7 @@ If no ARGS are provided, prompt for the command."
   (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
   (define-key exwm-mode-map (kbd "i") #'exwm-input-release-keyboard)
   (define-key exwm-mode-map (kbd ":") #'evil-ex)
+  (define-key exwm-mode-map (kbd "s-e") #'exwm-edit--compose)
 
   (ec--exwm-update-screens)
 
