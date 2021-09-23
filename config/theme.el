@@ -9,6 +9,12 @@
 
 (setq-default truncate-lines t)
 
+(defun ec--disable-truncation ()
+  "Disable truncation in the current buffer."
+  (setq-local truncate-lines nil))
+
+(add-hook 'eshell-mode-hook #'ec--disable-truncation)
+
 (setq window-divider-default-places t
       scroll-margin 8
       hscroll-margin 8
