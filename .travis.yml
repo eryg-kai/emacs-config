@@ -25,7 +25,7 @@ install:
   - emacs --batch -l ./init.el --eval "(progn (package-refresh-contents) (defun y-or-n-p (_) t) (package-install-selected-packages))"
 
 script:
-  - mkdir -p ~/.config/emacs && mkdir -p ~/ops/emacs/{.git,config} && mkdir -p ~/org/.git
+  - mkdir -p ~/.config/emacs && mkdir -p ~/ops/emacs/{.git,config} && mkdir -p ~/ops/.git
   - emacs --batch -l ./init.el --eval "(progn (package-initialize))" -f ec-test
 
 notifications:
