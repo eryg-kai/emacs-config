@@ -75,6 +75,11 @@
       (end-of-line)
       (ec-test--ffap-run file 10)
 
-      (insert "\n"))))
+      (insert "\n")))
+
+  ;; Should be disabled in dired.
+  (dired-jump)
+  (with-simulated-input "new-file RET" (ec-ffap))
+  (should (string= "new-file" (buffer-name))))
 
 ;;; completion.el ends here

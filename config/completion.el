@@ -185,14 +185,17 @@
          (index (string-match ":[0-9]+$" str))
          (file (if index (substring str 0 index) str))
          (line (when index (substring str (1+ index)))))
-    (if (not line)
-        ;; Without a line we can just fall back to the default behavior.
-        (find-file-at-point)
-      ;; Otherwise provide the real file since in some cases the line number
-      ;; gets included as part of the file name. Use the prompter to provide a
-      ;; chance to verify.
-      (find-file-at-point (ffap-prompter (unless (string= "" file) file)))
-      (goto-char (point-min))
-      (forward-line (1- (string-to-number line))))))
+    ;; In dired this gets in the way of using C-x C-f to create files. You can
+    ;; just hit RET instead to go to the file at point.
+    (cond ((eq major-mode 'dired-mode) (call-interactively ffap-file-finder))
+          ;; Without a line fall back to the default behavior.
+          ((not line) (call-interactively 'find-file-at-point))
+          (t
+           ;; Otherwise provide the real file since in some cases the line number
+           ;; gets included as part of the file name. Use the prompter to provide a
+           ;; chance to verify.
+           (find-file-at-point (ffap-prompter (unless (string= "" file) file)))
+           (goto-char (point-min))
+           (forward-line (1- (string-to-number line)))))))
 
 ;;; completion.el ends here
