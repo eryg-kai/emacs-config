@@ -40,18 +40,19 @@ The default for SECS is `timer-default-timeout'."
      `(,action
        .
        ,(apply (if idle #'run-with-idle-timer #'run-with-timer)
-         (or secs timer-default-timeout)
-         nil
-         #'(lambda ()
-             ;; Only display a message for idle timers.
-             (when idle (message (format "Running delayed function %s"
-                              (ec-center-truncate function 30))))
-             (timer--unschedule action)
-             (if buffer
-                 (when (buffer-live-p buffer)
-                   (with-current-buffer buffer (funcall function)))
-               (funcall function)))
-         nil))
+               (or secs timer-default-timeout)
+               nil
+               #'(lambda ()
+                   ;; Only display a message for idle timers.
+                   (when (and (bound-and-true-p ec-debug-p) idle)
+                     (message (format "Running delayed function %s"
+                                      (ec-center-truncate function 30))))
+                   (timer--unschedule action)
+                   (if buffer
+                       (when (buffer-live-p buffer)
+                         (with-current-buffer buffer (funcall function)))
+                     (funcall function)))
+               nil))
      timer--scheduled-actions)))
 
 (defun timer-debounce (function &optional secs per-buffer)
