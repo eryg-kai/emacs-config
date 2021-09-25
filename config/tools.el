@@ -109,7 +109,8 @@
 (setq bookmark-save-flag 1)
 
 ;; Beancount.
-(setq beancount-number-alignment-column 52)
+(setq beancount-number-alignment-column 52
+      beancount-mode-map-prefix [(control c) (\')])
 (add-to-list 'auto-mode-alist '("\\.beancount\\'" . beancount-mode))
 (with-eval-after-load 'evil
   (evil-define-key 'normal beancount-mode-map

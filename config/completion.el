@@ -59,6 +59,7 @@
     "C-c f" "files"
     "C-c &" "snippet"
     "C-c b" "buffer"
+    "C-c '" "mode"
     "C-c p" "projectile"
     "C-c s" "scratch"
     "C-c w" "window"
