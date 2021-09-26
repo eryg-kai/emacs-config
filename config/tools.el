@@ -95,7 +95,16 @@
 ;; ERC.
 (setq erc-modules '(pcomplete netsplit fill button match track completion
                               readonly networks ring noncommands irccontrols
-                              move-to-prompt stamp list)
+                              move-to-prompt stamp list notifications log)
+      erc-header-line-format nil
+      erc-mode-line-format "%n%a"
+      erc-mode-line-away-status-format "{%Y-%m-%d %a %H:%M}"
+      erc-log-channels-directory (expand-file-name "erc" ec-cache-dir)
+      erc-save-buffer-on-part nil
+      erc-save-queries-on-quit nil
+      erc-log-write-after-send t
+      erc-log-write-after-insert t
+      erc-log-insert-log-on-open t
       erc-prompt-for-password nil)
 
 ;; Tramp.

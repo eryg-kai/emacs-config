@@ -162,8 +162,11 @@
                              (ec-center-truncate (format-mode-line "%b") 20)
                              'face 'mode-line-buffer-id)))
            " " mode-name
-           (:eval (when mode-line-process (list " " mode-line-process)))
+           (:eval (when (and mode-line-process
+                             (not (equal '("") mode-line-process)))
+                    (list " " mode-line-process)))
            (vc-mode vc-mode)
+           (:eval (when (eq major-mode 'erc-mode) (list " " mode-line-buffer-identification)))
            (:eval (when (bound-and-true-p flymake-mode) (list " " flymake-mode-line-counters)))
            (:eval (when active (ec--modeline-org-clock)))
            " %n")
