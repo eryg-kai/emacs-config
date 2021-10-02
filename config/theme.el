@@ -21,7 +21,8 @@
       hscroll-step 50
       scroll-conservatively 101
       max-mini-window-height 1
-      truncate-string-ellipsis "…")
+      truncate-string-ellipsis "…"
+      vc-annotate-background-mode nil)
 
 (blink-cursor-mode 0)
 
@@ -89,6 +90,7 @@ If THEME is an override theme (ends in `override'), do nothing."
           (ec--try-load-theme
            (intern (concat theme-prefix sep ec-override-suffix))
            no-confirm no-enable)))
+      (setq vc-annotate-background nil)
       (ec--evil-set-cursor-faces))))
 
 (advice-add 'load-theme :after #'ec--load-overrides)
