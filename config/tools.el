@@ -113,7 +113,8 @@
 
 ;; Tramp.
 (setq tramp-use-ssh-controlmaster-options nil
-      tramp-histfile-override "~/.local/share/tramp/history")
+      tramp-histfile-override "~/.local/share/tramp/history"
+      tramp-connection-timeout 2)
 
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
