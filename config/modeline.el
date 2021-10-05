@@ -65,7 +65,10 @@
 (defun ec--modeline-org-clock ()
   "Org clock for the mode-line."
   (when (and (fboundp 'org-clocking-p) (org-clocking-p))
-    (concat (substring-no-properties (org-clock-get-clock-string)))))
+    (concat
+     (ec-center-truncate
+      (substring-no-properties (org-clock-get-clock-string))
+      19))))
 
 ;; Battery.
 (when (fboundp 'fancy-battery-mode)
