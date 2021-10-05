@@ -174,6 +174,7 @@
                     (propertize appt-mode-string 'face 'mode-line-emphasis)))
            (:eval (when (and active (or defining-kbd-macro executing-kbd-macro))
                     (propertize "•REC" 'face 'mode-line-emphasis)))
+           (:eval (when erc-modified-channels-alist (list " " erc-modified-channels-object)))
            (:eval (when active (ec--modeline-battery)))
            " %l:%C"
            (:eval (when active (list " " (propertize (format-time-string "%H:%M") 'face 'mode-line-emphasis))))

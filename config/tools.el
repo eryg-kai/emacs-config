@@ -105,7 +105,10 @@
       erc-log-write-after-send t
       erc-log-write-after-insert t
       erc-log-insert-log-on-open t
-      erc-prompt-for-password nil)
+      erc-prompt-for-password nil
+      erc-track-exclude '("&bitlbee")
+      erc-query-display 'buffer
+      erc-auto-query 'bury)
 
 ;; Tramp.
 (setq tramp-use-ssh-controlmaster-options nil
