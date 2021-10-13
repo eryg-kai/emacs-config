@@ -89,8 +89,8 @@
 ;; emacs -q --eval='(message "%s" (emacs-init-time))'
 (defun ec--report-startup-time ()
   "Report init and startup time."
-  (message "Init in %ss and startup in %.2fs with %d garbage collection%s."
-           (emacs-init-time "%.2f")
+  (message "Init in %.2fs and startup in %.2fs with %d garbage collection%s."
+           (float-time (time-subtract after-init-time before-init-time))
            (float-time (time-subtract (current-time) before-init-time))
            gcs-done
            (if (= 1 gcs-done) "" "s")))
