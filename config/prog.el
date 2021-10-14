@@ -24,8 +24,6 @@
   (define-key eglot-mode-map (kbd "C-c ad") 'xref-find-definitions))
 
 ;; Go.
-(add-hook 'go-mode-hook #'eglot-ensure)
-
 (defun ec--hook-go-fmt ()
   "Run gofmt when saving the current file."
   (add-hook 'before-save-hook #'gofmt nil t))
@@ -36,8 +34,6 @@
 (add-hook 'emacs-lisp-mode-hook #'flymake-mode)
 
 ;; JavaScript and TypeScript.
-(add-hook 'js-mode-hook #'eglot-ensure)
-(add-hook 'typescript-mode-hook #'eglot-ensure)
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 
 ;; Dash.
@@ -61,8 +57,6 @@
   (add-hook 'emacs-startup-hook #'editorconfig-mode))
 
 ;; Elixir.
-(add-hook 'elixir-mode-hook #'eglot-ensure)
-
 (defun ec--hook-elixir-fmt ()
   "Run `elixir-format' when saving the current file."
   (when-let (dir (locate-dominating-file buffer-file-name ".formatter.exs"))
