@@ -35,6 +35,7 @@ If no ARGS are provided, prompt for the command."
         (,(kbd "s-k") . evil-window-up)
         (,(kbd "s-l") . evil-window-right)
         (,(kbd "s-h") . evil-window-left)
+        (,(kbd "s-r") . ec-exwm-update-screens)
 
         (,(kbd "s-J") . evil-window-decrease-height)
         (,(kbd "s-K") . evil-window-increase-height)
@@ -76,7 +77,6 @@ If no ARGS are provided, prompt for the command."
 
 (defun ec--exwm-workspace-switch (n)
   "Switch to the workspace N away from the current."
-  (interactive)
   (let* ((workspaceCount (exwm-workspace--count))
          (targetIndex (+ n exwm-workspace-current-index))
          (over? (>= targetIndex workspaceCount))
@@ -85,13 +85,14 @@ If no ARGS are provided, prompt for the command."
           (under? (exwm-workspace-switch (- workspaceCount 1)))
           (t (exwm-workspace-switch targetIndex)))))
 
-(defun ec--exwm-update-screens ()
+(defun ec-exwm-update-screens ()
   "Update screens when they change."
+  (interactive)
   (let ((monitors
          (split-string
           (shell-command-to-string
            "xrandr 2>/dev/null | grep ' connected' | cut -d' ' -f1"))))
-    (unless (equal ec--connected-monitors monitors)
+    (unless (and (not (called-interactively-p)) (equal ec--connected-monitors monitors))
       (setq ec--connected-monitors monitors)
       (let ((command (concat
                       "xrandr "
@@ -103,11 +104,11 @@ If no ARGS are provided, prompt for the command."
                                           (cdr (assoc monitor ec-monitor-xrandr-alist))))
                        ec--connected-monitors
                        " "))))
-        (when (bound-and-true-p ec-debug-p)
+        (when (or (bound-and-true-p ec-debug-p) (called-interactively-p))
           (message (format ">>> %s" command)))
         (ec-exec command)))))
 
-(add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens)
+(add-hook 'exwm-randr-screen-change-hook #'ec-exwm-update-screens)
 
 (with-eval-after-load 'exwm
   (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
@@ -115,7 +116,7 @@ If no ARGS are provided, prompt for the command."
   (define-key exwm-mode-map (kbd ":") #'evil-ex)
   (define-key exwm-mode-map (kbd "s-e") #'exwm-edit--compose)
 
-  (ec--exwm-update-screens)
+  (ec-exwm-update-screens)
 
   (require 'exwm-randr)
   (exwm-randr-enable))
