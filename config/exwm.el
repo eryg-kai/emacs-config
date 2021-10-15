@@ -46,7 +46,10 @@ If no ARGS are provided, prompt for the command."
         (,(kbd "<XF86AudioLowerVolume>")  . (lambda () (interactive) (ec-exec "amixer set Master unmute 1%-")))
         (,(kbd "<XF86AudioRaiseVolume>")  . (lambda () (interactive) (ec-exec "amixer set Master unmute 1%+")))
         (,(kbd "<XF86AudioMute>")         . (lambda () (interactive) (ec-exec "amixer set Master toggle")))
-        (,(kbd "<XF86AudioMicMute>")      . (lambda () (interactive) (ec-exec "amixer set Capture toggle")))))
+        (,(kbd "<XF86AudioMicMute>")      . (lambda () (interactive) (ec-exec "amixer set Capture toggle")))
+        (,(kbd "<XF86AudioPlay>")         . (lambda () (interactive) (ec-exec "playerctl play-pause")))
+        (,(kbd "<XF86AudioPrev>")         . (lambda () (interactive) (ec-exec "playerctl previous")))
+        (,(kbd "<XF86AudioNext>")         . (lambda () (interactive) (ec-exec "playerctl next")))))
 
 (setq exwm-input-simulation-keys
       `((,(kbd "j")        . [down])
