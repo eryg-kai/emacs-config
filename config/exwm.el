@@ -109,13 +109,7 @@ If no ARGS are provided, prompt for the command."
 
 (add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens)
 
-(defun ec-exwm ()
-  "Start EXWM."
-  (require 'exwm)
-  (require 'exwm-randr)
-  (require 'exwm-systemtray)
-  (require 'exwm-config)
-
+(with-eval-after-load 'exwm
   (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
   (define-key exwm-mode-map (kbd "i") #'exwm-input-release-keyboard)
   (define-key exwm-mode-map (kbd ":") #'evil-ex)
@@ -123,8 +117,8 @@ If no ARGS are provided, prompt for the command."
 
   (ec--exwm-update-screens)
 
-  (exwm-randr-enable)
-  (exwm-systemtray-enable))
+  (require 'exwm-randr)
+  (exwm-randr-enable))
 
 (with-eval-after-load 'evil
   (evil-set-initial-state 'exwm-mode 'emacs))

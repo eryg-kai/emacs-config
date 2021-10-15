@@ -34,8 +34,7 @@
       (when (fboundp 'osd-start) (osd-start))
       (with-eval-after-load 'org ; Regen appts when the day changes.
         (run-at-time "00:01" (* 60 60 24) #'ec--agenda-to-appt-with-timer))
-      (add-hook 'org-mode-hook #'ec--hook-appt-schedule)
-      (when (and (fboundp 'ec-exwm) (display-graphic-p)) (ec-exwm)))))
+      (add-hook 'org-mode-hook #'ec--hook-appt-schedule))))
 
 (add-hook 'emacs-startup-hook #'ec-maybe-start-servers)
 
