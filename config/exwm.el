@@ -109,7 +109,11 @@ If no ARGS are provided, prompt for the command."
           (message (format ">>> %s" command)))
         (ec-exec command)))))
 
-(add-hook 'exwm-randr-screen-change-hook #'ec-exwm-update-screens)
+(defun ec--exwm-update-screens-soon ()
+  "Update screens soon."
+  (timer-idle-debounce #'ec-exwm-update-screens 5))
+
+(add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens-soon)
 
 (with-eval-after-load 'exwm
   (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
