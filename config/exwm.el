@@ -107,6 +107,7 @@ If no ARGS are provided, prompt for the command."
         (setq ec--connected-monitors monitors)
         (when (or (bound-and-true-p ec-debug-p) (called-interactively-p))
           (message (format ">>> %s" command)))
+        (unless monitors (error "Refusing to turn off all monitors"))
         (ec-exec command)))))
 
 (defun ec--exwm-update-screens-soon ()
