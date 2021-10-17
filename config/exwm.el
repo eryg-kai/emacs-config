@@ -1,4 +1,4 @@
-;;; exwm.el --- EXWM configuration.-*- lexical-binding: t -*-
+;;; exwm.el --- EXWM configuration. -*- lexical-binding: t -*-
 
 ;;; Commentary:
 

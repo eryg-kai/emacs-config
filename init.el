@@ -1,4 +1,4 @@
-;;; init.el --- Emacs init.-*- lexical-binding: t -*-
+;;; init.el --- Emacs init. -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
