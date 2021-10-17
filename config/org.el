@@ -99,8 +99,9 @@
 (defvar ec-start-states '("START" "MEET" "CALL" "[-]" "HABIT") "List of start states.")
 
 (defun ec--clock-in-switch-to-state (state)
-  "Switch to the first start state if STATE is not already a start state."
-  (when (and state (not (seq-contains-p ec-start-states state))) (car ec-start-states)))
+  "Switch to the appropriate start state if STATE is not already a start state."
+  (when (and state (not (seq-contains-p ec-start-states state)))
+    (if (string-prefix-p "[" state) "[-]" "START")))
 
 (defun ec--prevent-duplicate-states (change-plist)
   "Return nil if the :from and :to properties of CHANGE-PLIST match."
