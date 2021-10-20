@@ -155,4 +155,10 @@
 
 (advice-add 'net-utils-run-program :after #'ec--net-utils-mode)
 
+;; Save registers.
+(setq desktop-restore-frames nil
+      desktop-dirname user-emacs-directory
+      desktop-files-not-to-save ".")
+(add-hook 'emacs-startup-hook #'desktop-save-mode)
+
 ;;; tools.el ends here
