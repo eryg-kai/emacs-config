@@ -88,7 +88,8 @@ If no ARGS are provided, prompt for the command."
 (defun ec-exwm-update-screens ()
   "Update screens when they change."
   (interactive)
-  (let* ((xrandr (shell-command-to-string "xrandr"))
+  (let* ((default-directory "~")
+         (xrandr (shell-command-to-string "xrandr"))
          (monitors
           (mapcar (lambda (s) (car (split-string s " ")))
                   (seq-filter (lambda (s) (string-match " connected" s))
