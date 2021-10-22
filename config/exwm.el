@@ -88,10 +88,11 @@ If no ARGS are provided, prompt for the command."
 (defun ec-exwm-update-screens ()
   "Update screens when they change."
   (interactive)
-  (let ((monitors
-         (split-string
-          (shell-command-to-string
-           "xrandr 2>/dev/null | grep ' connected' | cut -d' ' -f1"))))
+  (let* ((xrandr (shell-command-to-string "xrandr"))
+         (monitors
+          (mapcar (lambda (s) (car (split-string s " ")))
+                  (seq-filter (lambda (s) (string-match " connected" s))
+                              (split-string xrandr "\n")))))
     (unless (and (not (called-interactively-p)) (equal ec--connected-monitors monitors))
       (let ((command (concat
                       "xrandr "
@@ -105,8 +106,10 @@ If no ARGS are provided, prompt for the command."
                        (seq-difference ec--connected-monitors monitors)
                        " "))))
         (when (or (bound-and-true-p ec-debug-p) (called-interactively-p))
-          (message (format ">>> %s" command)))
-        (unless monitors (error "Refusing to turn off all monitors"))
+          (message ">>> %s" command))
+        (unless monitors
+          (message ">>> %s" xrandr)
+          (error "Refusing to turn off all monitors"))
         (setq ec--connected-monitors monitors)
         (ec-exec command)))))
 
