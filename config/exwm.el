@@ -35,7 +35,8 @@ If no ARGS are provided, prompt for the command."
         (,(kbd "s-k") . evil-window-up)
         (,(kbd "s-l") . evil-window-right)
         (,(kbd "s-h") . evil-window-left)
-        (,(kbd "s-r") . ec-exwm-update-screens)
+        (,(kbd "s-x") . ec-exwm-update-screens)
+        (,(kbd "s-r") . ec-exwm-rotate-screen)
 
         (,(kbd "s-J") . evil-window-decrease-height)
         (,(kbd "s-K") . evil-window-increase-height)
@@ -98,7 +99,12 @@ If no ARGS are provided, prompt for the command."
       (let ((command (concat
                       "xrandr "
                       (mapconcat
-                       (lambda (m) (format "--output %s %s" m (cdr (assoc m ec-monitor-xrandr-alist))))
+                       (lambda (m)
+                         (format
+                          "--output %s %s %s"
+                          m
+                          (cdr (assoc m ec-monitor-xrandr-alist))
+                          (if (member m ec--monitor-rotations) "--rotate left" "--rotate normal")))
                        monitors
                        " ")
                       " "
@@ -113,6 +119,19 @@ If no ARGS are provided, prompt for the command."
           (error "Refusing to turn off all monitors"))
         (setq ec--connected-monitors monitors)
         (ec-exec command)))))
+
+(defvar ec--monitor-rotations nil "Current monitor rotations.")
+
+(defun ec-exwm-rotate-screen ()
+  "Rotate a connected monitor."
+  (interactive)
+  (let ((monitor (if (= 1 (length ec--connected-monitors))
+                     (car ec--connected-monitors)
+                   (completing-read "Monitor: " ec--connected-monitors nil t))))
+    (if (member monitor ec--monitor-rotations)
+        (setq ec--monitor-rotations (delete monitor ec--monitor-rotations))
+      (push monitor ec--monitor-rotations)))
+  (call-interactively 'ec-exwm-update-screens))
 
 (defun ec--exwm-update-screens-soon ()
   "Update screens soon."
