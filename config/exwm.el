@@ -43,8 +43,8 @@ If no ARGS are provided, prompt for the command."
         (,(kbd "s-L") . evil-window-increase-width)
         (,(kbd "s-H") . evil-window-decrease-width)
 
-        (,(kbd "<XF86MonBrightnessUp>")   . (lambda () (interactive) (ec-exec "brightness -- +5%")))
-        (,(kbd "<XF86MonBrightnessDown>") . (lambda () (interactive) (ec-exec "brightness -- -5%")))
+        (,(kbd "<XF86MonBrightnessUp>")   . (lambda () (interactive) (ec-exec "light -A 5")))
+        (,(kbd "<XF86MonBrightnessDown>") . (lambda () (interactive) (ec-exec "light -U 5")))
         (,(kbd "<XF86AudioLowerVolume>")  . (lambda () (interactive) (ec-exec "amixer set Master unmute 1%-")))
         (,(kbd "<XF86AudioRaiseVolume>")  . (lambda () (interactive) (ec-exec "amixer set Master unmute 1%+")))
         (,(kbd "<XF86AudioMute>")         . (lambda () (interactive) (ec-exec "amixer set Master toggle")))
