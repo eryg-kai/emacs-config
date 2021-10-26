@@ -40,7 +40,7 @@
 
 ;; Typing practice.
 (defun ec--evil-insert (&rest _)
-  "Enter insert state, ignoring arguments"
+  "Enter insert state, ignoring arguments."
   (evil-insert-state))
 
 (advice-add #'speed-type--setup :after #'ec--evil-insert)
