@@ -11,7 +11,9 @@
 
 (define-key global-map (kbd "C-c r") #'ec-exec)
 
-(defcustom ec-monitor-xrandr-alist nil "Xrandr flags for each monitor.")
+(defcustom ec-monitor-xrandr-alist nil "Xrandr flags for each monitor."
+  :type '(alist :key-type string :value-type string)
+  :group 'exwm)
 
 (defun ec-exec (&rest args)
   "Execute ARGS asynchronously without a buffer.
@@ -36,7 +38,10 @@ If no ARGS are provided, prompt for the command."
         (,(kbd "s-l") . evil-window-right)
         (,(kbd "s-h") . evil-window-left)
         (,(kbd "s-x") . ec-exwm-update-screens)
-        (,(kbd "s-r") . ec-exwm-rotate-screen)
+        (,(kbd "<s-left>") . (lambda () (interactive) (ec-exwm-rotate-screen 'left)))
+        (,(kbd "<s-up>") . (lambda () (interactive) (ec-exwm-rotate-screen 'inverted)))
+        (,(kbd "<s-right>") . (lambda () (interactive) (ec-exwm-rotate-screen 'right)))
+        (,(kbd "<s-down>") . (lambda () (interactive) (ec-exwm-rotate-screen 'normal)))
 
         (,(kbd "s-J") . evil-window-decrease-height)
         (,(kbd "s-K") . evil-window-increase-height)
@@ -99,12 +104,7 @@ If no ARGS are provided, prompt for the command."
       (let ((command (concat
                       "xrandr "
                       (mapconcat
-                       (lambda (m)
-                         (format
-                          "--output %s %s %s"
-                          m
-                          (cdr (assoc m ec-monitor-xrandr-alist))
-                          (if (member m ec--monitor-rotations) "--rotate left" "--rotate normal")))
+                       (lambda (m) (format "--output %s %s" m (cdr (assoc m ec-monitor-xrandr-alist))))
                        monitors
                        " ")
                       " "
@@ -120,18 +120,38 @@ If no ARGS are provided, prompt for the command."
         (setq ec--connected-monitors monitors)
         (ec-exec command)))))
 
-(defvar ec--monitor-rotations nil "Current monitor rotations.")
+(defcustom ec-touchscreen-plist nil "Xrandr and xinput ids of the touchscreen."
+  :type '(plist :key-type (choice (const :xrandr) (const :xinput)) :value-type string)
+  :group 'exwm)
 
-(defun ec-exwm-rotate-screen ()
-  "Rotate a connected monitor."
+(defvar ec--monitor-rotation-transformations '((normal . "1 0 0 0 1 0 0 0 1")
+                                               (inverted . "-1 0 1 0 -1 1 0 0 1")
+                                               (left . "0 -1 1 1 0 0 0 0 1")
+                                               (right . "0 1 0 -1 0 1 0 0 1"))
+  "Transformation matrices for monitor rotations.")
+
+(defun ec-exwm-rotate-screen (new-rotation)
+  "Rotate a connected monitor to NEW-ROTATION.
+
+If the monitor is a touchscreen also adjust the touch input."
   (interactive)
-  (let ((monitor (if (= 1 (length ec--connected-monitors))
-                     (car ec--connected-monitors)
-                   (completing-read "Monitor: " ec--connected-monitors nil t))))
-    (if (member monitor ec--monitor-rotations)
-        (setq ec--monitor-rotations (delete monitor ec--monitor-rotations))
-      (push monitor ec--monitor-rotations)))
-  (call-interactively 'ec-exwm-update-screens))
+  (let* ((monitor (if (= 1 (length ec--connected-monitors))
+                      (car ec--connected-monitors)
+                    (completing-read "Monitor: " ec--connected-monitors nil t)))
+         (default-directory "~")
+         (xrandr (shell-command-to-string "xrandr"))
+         (command (format "xrandr --output %s --rotate %s"
+                          monitor
+                          new-rotation)))
+    (message ">>> %s" command)
+    (ec-exec command)
+    (when (string= monitor (plist-get ec-touchscreen-plist :xrandr))
+      (let ((command (format
+                      "xinput set-prop '%s' 'Coordinate Transformation Matrix' %s"
+                      (plist-get ec-touchscreen-plist :xinput)
+                      (alist-get new-rotation ec--monitor-rotation-transformations))))
+        (message ">>> %s" command)
+        (ec-exec command)))))
 
 (defun ec--exwm-update-screens-soon ()
   "Update screens soon."
