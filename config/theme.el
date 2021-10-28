@@ -232,4 +232,13 @@ faces are simply invisible."
   (unless (display-graphic-p)
     (evil-terminal-cursor-changer-activate)))
 
+;; HACK: Set mouse color to what it is already set to in each frame.  For some
+;; reason the cursor on all startup frames other than the first have a white
+;; outline (new frames are unaffected).  Setting the color again fixes it.
+(add-hook 'exwm-init-hook
+          #'(lambda ()
+              (dolist (frame (frame-list))
+                (set-frame-parameter frame 'mouse-color (frame-parameter frame 'mouse-color)))))
+
+
 ;;; theme.el ends here
