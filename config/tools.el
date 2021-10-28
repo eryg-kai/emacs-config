@@ -86,9 +86,11 @@
                  (args comm))))
 
 (defun ec--proced-format-args (fn &rest args)
-  "Run FN with ARGS then return only the process without the path."
-  (let ((parts (split-string (apply fn args) " ")))
-    (file-name-nondirectory (car parts))))
+  "Strip full paths from the result of FN ran with ARGS when using the short format."
+  (let ((str (apply fn args)))
+    (if (string= proced-format "short")
+        (mapconcat #'file-name-nondirectory (split-string str " ") " ")
+      str)))
 
 (advice-add 'proced-format-args :around #'ec--proced-format-args)
 
