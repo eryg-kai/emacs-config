@@ -8,6 +8,7 @@
 
 (setq browse-url-handlers
       '(("github" . browse-url-firefox)
+        ("melpa" . browse-url-firefox)
         ("google" . browse-url-chrome)
         ("." . eww-browse-url)))
 
