@@ -7,10 +7,7 @@
 ;;; Code:
 
 (setq browse-url-handlers
-      '(("github" . browse-url-firefox)
-        ("melpa" . browse-url-firefox)
-        ("google" . browse-url-chrome)
-        ("." . eww-browse-url)))
+      '(("." . browse-url-firefox)))
 
 ;; TODO: When going back it doesn't update.
 (defun ec--eww-set-buffer-title ()
