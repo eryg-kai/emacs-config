@@ -29,6 +29,17 @@
       mu4e-view-show-addresses t
       mu4e-context-policy 'pick-first)
 
+
+(defun ec-email ()
+  "Run `mu4e' in the mail directory.
+
+This ensures mu runs locally when the current buffer is
+remote (or vice-versa)."
+  (interactive)
+  (let ((default-directory ec-mail-dir)) (call-interactively 'mu4e)))
+
+(define-key global-map (kbd "C-c E") #'ec-email)
+
 (with-eval-after-load 'mm-decode
   (add-to-list 'mm-discouraged-alternatives "text/html"))
 
