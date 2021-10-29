@@ -91,7 +91,8 @@ If THEME is an override theme (ends in `override'), do nothing."
            (intern (concat theme-prefix sep ec-override-suffix))
            no-confirm no-enable)))
       (setq vc-annotate-background nil)
-      (ec--evil-set-cursor-faces))))
+      (ec--evil-set-cursor-faces)
+      (ec--set-gtk-theme))))
 
 (advice-add 'load-theme :after #'ec--load-overrides)
 
@@ -128,6 +129,40 @@ If THEME is an override theme (ends in `override'), do nothing."
       (when (boundp cursor-symbol)
         (set cursor-symbol `(,color ,cursor)))))
   (when (fboundp 'evil-refresh-cursor) (evil-refresh-cursor)))
+
+;; This is based on Adwaita dark; it might not work as well with other bases.
+(defun ec--set-gtk-theme ()
+  "Set a GTK theme that matches Emacs."
+  (let ((dir (file-name-as-directory (expand-file-name
+                                      "gtk-3.0"
+                                      (or (getenv "XDG_CONFIG_HOME")
+                                          (expand-file-name "~/.config"))))))
+    (make-directory dir t)
+    (with-temp-file (expand-file-name "gtk.css" dir)
+      (insert
+       (mapconcat
+        #'(lambda (g)
+            (format "%s {\n%s\n}"
+                    (car g)
+                    (mapconcat
+                     #'(lambda (p)
+                         (format "  %s: %s;" (car p) (cdr p)))
+                     (cdr g)
+                     "\n")))
+        `(("window, treeview, button, header, stack, toolbar, entry, menu, placessidebar, dialog, messagedialog, widget, headerbar"
+           (color . ,(face-attribute 'default :foreground))
+           (background . ,(face-attribute 'default :background)))
+          ("*:hover"
+           (background . ,(face-attribute 'region :background)))
+          ("label"
+           (color . ,(face-attribute 'default :foreground)))
+          ("*:disabled"
+           (color . ,(face-attribute 'line-number :foreground)))
+          ("*:selected"
+           (background . ,(face-attribute 'region :background)))
+          (".separator"
+           (color . ,(face-attribute 'fill-column-indicator :foreground))))
+        "\n")))))
 
 (with-eval-after-load 'evil
   (dolist (state '(normal insert visual replace motion operator emacs))
