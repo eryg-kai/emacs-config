@@ -121,7 +121,8 @@ If no ARGS are provided, prompt for the command."
         (ec-exec command)))))
 
 (defcustom ec-touchscreen-plist nil "Xrandr and xinput ids of the touchscreen."
-  :type '(plist :key-type (choice (const :xrandr) (const :xinput)) :value-type string)
+  :type '(plist :key-type (choice (const :xrandr) (const :xinput))
+                :value-type (choice string (repeat string)))
   :group 'exwm)
 
 (defvar ec--monitor-rotation-transformations '((normal . "1 0 0 0 1 0 0 0 1")
@@ -142,16 +143,18 @@ If the monitor is a touchscreen also adjust the touch input."
          (xrandr (shell-command-to-string "xrandr"))
          (command (format "xrandr --output %s --rotate %s"
                           monitor
-                          new-rotation)))
+                          new-rotation))
+         (rotation (alist-get new-rotation ec--monitor-rotation-transformations)))
     (message ">>> %s" command)
     (ec-exec command)
     (when (string= monitor (plist-get ec-touchscreen-plist :xrandr))
-      (let ((command (format
-                      "xinput set-prop '%s' 'Coordinate Transformation Matrix' %s"
-                      (plist-get ec-touchscreen-plist :xinput)
-                      (alist-get new-rotation ec--monitor-rotation-transformations))))
-        (message ">>> %s" command)
-        (ec-exec command)))))
+      (dolist (device (plist-get ec-touchscreen-plist :xinput))
+        (let ((command (format
+                        "xinput set-prop '%s' 'Coordinate Transformation Matrix' %s"
+                        device
+                        rotation)))
+          (message ">>> %s" command)
+          (ec-exec command))))))
 
 (defun ec--exwm-update-screens-soon ()
   "Update screens soon."
