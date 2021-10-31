@@ -1,2 +1,5 @@
-* %^{Word|%(replace-regexp-in-string org-link-bracket-re "\\2" "%a")}
-  %^{Reading}
+* Reading :drill:
+  :PROPERTIES:
+  :CREATED:  %U
+  :END:
+  %^{Word|%(replace-regexp-in-string org-link-bracket-re "\\2" "%a")} [%^{Reading}]

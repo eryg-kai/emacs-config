@@ -13,7 +13,7 @@
                                    ob-restclient
                                    ob-typescript
                                    org-edna
-                                   org-fc))
+                                   org-drill))
 
 (add-hook 'org-mode-hook #'typo-mode)
 
@@ -246,6 +246,16 @@
          :no-save t
          :immediate-finish t)))
 
+(defun ec-init-capture ()
+  "Initialize a capture."
+  (pcase (plist-get org-capture-plist :description)
+    ("kanji" (org-align-tags) (org-id-get-create))
+    ("reading" (org-align-tags) (org-id-get-create))
+    ("radical" (org-align-tags) (org-id-get-create))
+    ("vocab" (org-align-tags) (org-id-get-create))))
+
+(add-hook 'org-capture-before-finalize-hook #'ec-init-capture)
+
 ;; Babel.
 (setq org-src-tab-acts-natively t
       org-src-window-setup 'other-window)
@@ -339,7 +349,12 @@
   (add-hook 'before-save-hook #'ec--appt-schedule nil t))
 
 ;; Flashcards.
-(defun ec-get-lang-fc-dirs ()
+(setq org-drill-use-visible-cloze-face-p t
+      org-drill-maximum-items-per-session 150
+      org-drill-maximum-duration 30
+      org-drill-save-buffers-after-drill-sessions-p nil)
+
+(defun ec-get-language-dirs ()
   "Get language flashcard directories."
   (when (file-exists-p ec-lang-dir)
     (mapcar #'file-name-as-directory
@@ -349,7 +364,7 @@
 
 (defun ec--capture-language (file)
   "Capture to FILE in the selected language or current if already visiting."
-  (let* ((dirs (ec-get-lang-fc-dirs))
+  (let* ((dirs (ec-get-language-dirs))
          (dir (if (member default-directory dirs)
                   default-directory
                 (expand-file-name
@@ -374,50 +389,6 @@
 (defun ec-capture-vocab ()
   "Capture vocab for the selected language or current if already visiting."
   (ec--capture-language "vocab.org"))
-
-(defun ec-init-fc ()
-  "Initialize a captured flashcard."
-  (pcase (plist-get org-capture-plist :description)
-    ("kanji" (org-fc-type-cloze-init 'enumeration))
-    ("reading" (org-fc-type-normal-init))
-    ("radical" (org-fc-type-double-init))
-    ("vocab" (org-fc-type-double-init))))
-
-(add-hook 'org-capture-before-finalize-hook #'ec-init-fc)
-
-(define-key global-map (kbd "C-c of") #'org-fc-dashboard)
-
-(setq org-fc-directories (ec-get-lang-fc-dirs))
-
-;; Add missing autoloads.
-(autoload 'org-fc-type-double-init "org-fc-type-double")
-(autoload 'org-fc-type-normal-init "org-fc-type-normal")
-(autoload 'org-fc-type-cloze-init "org-fc-type-cloze")
-(autoload 'org-fc-review-data-update "org-fc-review")
-(autoload 'org-fc-algo-sm2-initial-review-data "org-fc-algo-sm2")
-
-(with-eval-after-load 'org-fc-core
-  ;; org-fc-keymap-hint has no autoloads.
-  (require 'org-fc-keymap-hint))
-
-(with-eval-after-load 'evil
-  (evil-define-key 'normal org-fc-dashboard-mode-map
-    (kbd "r") 'org-fc-dashboard-review)
-
-  (evil-define-minor-mode-key 'normal 'org-fc-review-flip-mode
-    (kbd "RET") 'org-fc-review-flip
-    (kbd "n") 'org-fc-review-flip
-    (kbd "s") 'org-fc-review-suspend-card
-    (kbd "q") 'org-fc-review-quit)
-
-  (evil-define-minor-mode-key 'normal 'org-fc-review-rate-mode
-    (kbd "a") 'org-fc-review-rate-again
-    (kbd "h") 'org-fc-review-rate-hard
-    (kbd "g") 'org-fc-review-rate-good ; TODO: This doesn't work.
-    (kbd "G") 'org-fc-review-rate-good
-    (kbd "e") 'org-fc-review-rate-easy
-    (kbd "s") 'org-fc-review-suspend-card
-    (kbd "q") 'org-fc-review-quit))
 
 ;; REVIEW: See if I can send upstream?
 (defvar ec-mks-expert t

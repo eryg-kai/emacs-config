@@ -15,6 +15,8 @@
  (match               :foreground nil :background 'unspecified :bold nil :inherit 'highlight)
  (secondary-selection :foreground nil :background 'unspecified :inherit 'match)
 
+ (org-drill-hidden-cloze-face :foreground 'unspecified :background 'unspecified)
+
  (lsp-face-highlight-textual :foreground nil :distant-foreground nil :background 'unspecified :weight 'normal :inherit 'highlight)
 
  (mode-line-highlight :foreground 'unspecified :inherit 'highlight)

@@ -1,5 +1,10 @@
-* %^{漢字|%(replace-regexp-in-string org-link-bracket-re "\\2" "%a")}
-  英語: {{%^{英語}}@0}
-  音読: {{%^{音読}}@1}
-  訓読: {{%^{訓読}}@2}
-  部首: {{%^{部首}}@3}
+* Kanji
+  :PROPERTIES:
+  :CREATED:  %U
+  :DRILL_CARD_TYPE: hide1_firstmore
+  :END:
+  漢字: [%^{漢字|%(replace-regexp-in-string org-link-bracket-re "\\2" "%a")}]
+  英語: [%^{英語}]
+  音読: [%^{音読}]
+  訓読: [%^{訓読}]
+  部首: [%^{部首}]
