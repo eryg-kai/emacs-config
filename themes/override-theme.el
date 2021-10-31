@@ -10,7 +10,7 @@
  (default :height 120)
 
  (region              :foreground nil :distant-foreground nil)
- (highlight           :foreground nil)
+ (highlight           :foreground nil :distant-foreground nil)
  (lazy-highlight      :foreground nil :distant-foreground nil :background 'unspecified :inherit 'highlight)
  (match               :foreground nil :background 'unspecified :bold nil :inherit 'highlight)
  (secondary-selection :foreground nil :background 'unspecified :inherit 'match)
