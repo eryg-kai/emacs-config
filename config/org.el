@@ -222,25 +222,25 @@
          :immediate-finish t)
         ("f" "flashcards")
         ("fv" "vocab" entry
-         (function ec-capture-vocab)
+         (function ec-capture-language)
          (file ,(ec-get-template "vocab"))
          :prepend t
          :no-save t
          :immediate-finish t)
         ("fk" "kanji" entry
-         (function ec-capture-reading)
+         (function ec-capture-language)
          (file ,(ec-get-template "kanji"))
          :prepend t
          :no-save t
          :immediate-finish t)
-        ("fr" "reading" entry
-         (function ec-capture-reading)
+        ("fr" "readings" entry
+         (function ec-capture-language)
          (file ,(ec-get-template "reading"))
          :prepend t
          :no-save t
          :immediate-finish t)
-        ("fR" "radical" entry
-         (function ec-capture-radical)
+        ("fR" "radicals" entry
+         (function ec-capture-language)
          (file ,(ec-get-template "radical"))
          :prepend t
          :no-save t
@@ -250,8 +250,8 @@
   "Initialize a capture."
   (pcase (plist-get org-capture-plist :description)
     ("kanji" (org-align-tags) (org-id-get-create))
-    ("reading" (org-align-tags) (org-id-get-create))
-    ("radical" (org-align-tags) (org-id-get-create))
+    ("readings" (org-align-tags) (org-id-get-create))
+    ("radicals" (org-align-tags) (org-id-get-create))
     ("vocab" (org-align-tags) (org-id-get-create))))
 
 (add-hook 'org-capture-before-finalize-hook #'ec-init-capture)
@@ -362,9 +362,10 @@
              #'file-directory-p
              (directory-files ec-lang-dir t "^[^.]")))))
 
-(defun ec--capture-language (file)
-  "Capture to FILE in the selected language or current if already visiting."
-  (let* ((dirs (ec-get-language-dirs))
+(defun ec-capture-language ()
+  "Capture to the selected language or current if already visiting."
+  (let* ((file (concat (plist-get org-capture-plist :description) ".org"))
+         (dirs (ec-get-language-dirs))
          (dir (if (member default-directory dirs)
                   default-directory
                 (expand-file-name
@@ -377,18 +378,6 @@
                  ec-lang-dir))))
     (set-buffer (org-capture-target-buffer (expand-file-name file dir))))
   (goto-char (point-min)))
-
-(defun ec-capture-radical ()
-  "Capture radical for the selected language or current if already visiting."
-  (ec--capture-language "radicals.org"))
-
-(defun ec-capture-reading ()
-  "Capture reading for the selected language or current if already visiting."
-  (ec--capture-language "readings.org"))
-
-(defun ec-capture-vocab ()
-  "Capture vocab for the selected language or current if already visiting."
-  (ec--capture-language "vocab.org"))
 
 ;; REVIEW: See if I can send upstream?
 (defvar ec-mks-expert t
