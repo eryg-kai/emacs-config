@@ -252,7 +252,12 @@
     ("kanji" (org-align-tags) (org-id-get-create))
     ("readings" (org-align-tags) (org-id-get-create))
     ("radicals" (org-align-tags) (org-id-get-create))
-    ("vocab" (org-align-tags) (org-id-get-create))))
+    ("vocab" (let ((end (plist-get org-capture-plist :end-marker)))
+               (org-align-tags)
+               (org-id-get-create)
+               (org-next-visible-heading 1) ; Skip to sentences.
+               (evil-indent (point) end)
+               (fill-region (point) end)))))
 
 (add-hook 'org-capture-before-finalize-hook #'ec-init-capture)
 
