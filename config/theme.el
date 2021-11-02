@@ -149,7 +149,7 @@ If THEME is an override theme (ends in `override'), do nothing."
                          (format "  %s: %s;" (car p) (cdr p)))
                      (cdr g)
                      "\n")))
-        `(("window, treeview, button, header, stack, toolbar, entry, menu, placessidebar, dialog, messagedialog, widget, headerbar"
+        `(("window, treeview, button, header, stack, toolbar, entry, menu, placessidebar, dialog, messagedialog, widget, headerbar, popover"
            (color . ,(face-attribute 'default :foreground))
            (background . ,(face-attribute 'default :background)))
           ("*:hover"
