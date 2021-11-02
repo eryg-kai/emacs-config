@@ -41,11 +41,12 @@
   (should (equal '(("SPC 1" . "spy")) ec-test--spy-value)))
 
 (ert-deftest ec-test-ffap ()
-  (defun ec-test--ffap-run (file line)
+  (defun ec-test--ffap-run (file line column)
     "Run `ec-ffap' and ensure FILE is opened to LINE then kill the buffer."
     (with-simulated-input "RET" (ec-ffap))
     (should (string= file (buffer-name)))
     (should (equal line (line-number-at-pos)))
+    (should (equal (1- (or column 1)) (current-column)))
     (kill-this-buffer))
 
   (switch-to-buffer (get-buffer-create "ffap test"))
@@ -55,27 +56,30 @@
                  ,(concat "../" (file-name-base (directory-file-name ec-dir)) "/")
                  "./"))
     (dolist (file '("init.el" ".travis.yml"))
-      (insert (concat dir file) ":10")
+      (dolist (line '(9))
+        (dolist (column '(nil 15))
+          (insert (concat dir file) (format ":%s" line))
+          (when column (insert (format ":%s" column)))
 
-      ;; Beginning of the line always works.
-      (beginning-of-line)
-      (ec-test--ffap-run file 10)
+          ;; Beginning of the line always works.
+          (beginning-of-line)
+          (ec-test--ffap-run file line column)
 
-      ;; For relative paths having the point on the first slash always works.
-      (forward-char 1)
-      (ec-test--ffap-run file 10)
+          ;; For relative paths having the point on the first slash always works.
+          (forward-char 1)
+          (ec-test--ffap-run file line column)
 
-      ;; At this point relative paths only fail if there is one slash and the
-      ;; file does not start with a dot.
-      (forward-char 1)
-      (ec-test--ffap-run file 10)
+          ;; At this point relative paths only fail if there is one slash and the
+          ;; file does not start with a dot.
+          (forward-char 1)
+          (ec-test--ffap-run file line column)
 
-      ;; Now all one-slash relative paths will fail including those that start
-      ;; with a dot.
-      (end-of-line)
-      (ec-test--ffap-run file 10)
+          ;; Now all one-slash relative paths will fail including those that start
+          ;; with a dot.
+          (end-of-line)
+          (ec-test--ffap-run file line column)
 
-      (insert "\n")))
+          (insert "\n")))))
 
   ;; Should be disabled in dired.
   (dired-jump)

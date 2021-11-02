@@ -180,23 +180,25 @@
 (autoload 'ffap-string-at-point "ffap")
 
 (defun ec-ffap ()
-  "Like `find-file-at-point' but handles line numbers."
+  "Like `find-file-at-point' but handles line and column numbers."
   (interactive)
   (let* ((str (ffap-string-at-point))
-         (index (string-match ":[0-9]+$" str))
+         (index (string-match ":[0-9]+\\(:[0-9]+\\)?$" str))
          (file (if index (substring str 0 index) str))
-         (line (when index (substring str (1+ index)))))
+         (position (when index (split-string (substring str (1+ index)) ":"))))
     ;; In dired this gets in the way of using C-x C-f to create files. You can
     ;; just hit RET instead to go to the file at point.
     (cond ((eq major-mode 'dired-mode) (call-interactively ffap-file-finder))
-          ;; Without a line fall back to the default behavior.
-          ((not line) (call-interactively 'find-file-at-point))
+          ;; Without a position fall back to the default behavior.
+          ((not position) (call-interactively 'find-file-at-point))
           (t
-           ;; Otherwise provide the real file since in some cases the line number
-           ;; gets included as part of the file name. Use the prompter to provide a
-           ;; chance to verify.
+           ;; Otherwise provide the real file since in some cases the position
+           ;; gets included as part of the file name. Use the prompter to
+           ;; provide a chance to verify.
            (find-file-at-point (ffap-prompter (unless (string= "" file) file)))
            (goto-char (point-min))
-           (forward-line (1- (string-to-number line)))))))
+           (forward-line (1- (string-to-number (car position))))
+           (when (cadr position)
+             (forward-char (1- (string-to-number (cadr position)))))))))
 
 ;;; completion.el ends here
