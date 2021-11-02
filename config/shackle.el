@@ -4,23 +4,20 @@
 
 ;;; Code:
 
-(defvar ec--wconf nil "Window state before entering a branched flow state.")
-
-(defvar-local ec--restore-wconf nil "Whether to restore state on quit.")
+(defvar ec--wconf nil "Window state alist for branched flows.")
 
 ;; Try to use windows with the same mode.
 (setq display-buffer-base-action '(display-buffer-reuse-mode-window))
 
 (defun ec--with-restore (&optional fn &rest args)
-  "Run FN if provided then restore locally stored window configuration if any.
+  "Run FN if provided then restore stored window configuration if any.
 
 ARGS will be passed directly through to FN."
-  (let ((restore ec--restore-wconf)
-        (conf ec--wconf))
+  (let* ((buffer (current-buffer))
+         (conf (alist-get buffer ec--wconf)))
+    (when conf (setq ec--wconf (assq-delete-all buffer ec--wconf)))
     (when fn (apply fn args))
-    (when (and restore conf)
-      (setq ec--wconf nil)
-      (set-window-configuration conf))))
+    (when conf (set-window-configuration conf))))
 
 (defun ec--shackle-condition (buffer mode)
   "Check if the BUFFER's major mode is MODE."
@@ -33,9 +30,10 @@ Special behavior will be exhibited based on PLIST options."
   (when (plist-get plist :only)
     (with-current-buffer buffer
       ;; Keep the state from when we first entered the temporary branched flow.
-      (unless ec--wconf (setq ec--wconf (current-window-configuration)))
-      ;; Restore the configuration (exit branch state) when this buffer quits.
-      (setq-local ec--restore-wconf t))
+      ;; This uses a global variable rather than a local because some modes
+      ;; (man) set their mode late which wipes local variables.
+      (unless (assq buffer ec--wconf)
+        (push `(,buffer . ,(current-window-configuration)) ec--wconf)))
     ;; Don't mess with the layout if the buffer is already visible.
     (unless (get-buffer-window buffer) (delete-other-windows)))
   (when-let (window (cl-some (lambda (a) (funcall a buffer alist)) actions))
@@ -84,6 +82,7 @@ Options are:
 
 (defun ec--setup-shackle ()
   "Set up shackle rules."
+  (advice-add 'kill-buffer :around #'ec--with-restore)
   (advice-add 'quit-window :around #'ec--with-restore)
   (advice-add 'quit-restore-window :around #'ec--with-restore)
 
