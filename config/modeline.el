@@ -4,19 +4,22 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(fancy-battery
-                                   anzu))
+(nconc package-selected-packages '(anzu
+                                   fancy-battery))
 
 ;; Selected window.
-(defvar ec-selected-window (selected-window) "Currently selected window.")
+(defvar ec-selected-window nil "Currently selected window.")
 
-(defun ec--set-selected-window ()
-  "Set `ec-selected-window'."
-  (when (and (not (minibuffer-window-active-p (selected-window)))
-             (not (eq ec-selected-window (selected-window))))
+(defun ec--set-selected-window (&rest args)
+  "Set `ec-selected-window' ignoring ARGS."
+  (unless (minibuffer-window-active-p (selected-window))
     (setq ec-selected-window (selected-window))))
 
 (add-hook 'buffer-list-update-hook #'ec--set-selected-window)
+
+(defun ec-is-active-window ()
+  "Return t if the selected window is active."
+  (eq ec-selected-window (selected-window)))
 
 ;; Search information.
 (defun ec--anzu (here total)
@@ -122,68 +125,71 @@
 ;; Putting it all together.
 (defun ec--modeline-render (left right)
   "Return mode-line with LEFT and RIGHT aligned appropriately."
-  (let* ((left-f (format-mode-line left))
-         (right-f (format-mode-line right))
-         (reserve (length right-f))
-         (padding 1.4))
-    (replace-regexp-in-string
-     "%" (lambda (s) (apply #'propertize "%%" (text-properties-at 0 s)))
-     (concat
-      ;; HACK: This zero-width character is used to fake vertical padding.
-      (when (display-graphic-p)
-        (propertize "\u200b" 'display `((raise ,(/ (1- padding) -2.0)) (height ,padding))))
-      left-f
-      (propertize " " 'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve))))
-      right-f))))
+  (let ((padding 1.4))
+    (list
+     ;; HACK: This zero-width character is used to fake vertical padding.
+     (when (display-graphic-p)
+       (propertize "\u200b" 'display `((raise ,(/ (1- padding) -2.0)) (height ,padding))))
+     left
+     (propertize " " 'display `((space :align-to
+                                       (- (+ right right-fringe right-margin)
+                                          ,(string-width (format-mode-line right))))))
+     right)))
 
 (defun ec-set-mode-line ()
   "Customize the mode line."
   (setq-default
    mode-line-format
    '((:eval
-      (let ((active (eq ec-selected-window (selected-window))))
-        (ec--modeline-render
-         '("%e"
-           (:eval (when (fboundp 'winum-get-number)
-                    (let ((num (format " %s" (winum-get-number))))
-                      (if active
-                          (propertize num 'face (ec--modeline-state-face))
-                        num))))
-           (:eval (ec--modeline-selection))
-           (:eval (when (and active (bound-and-true-p anzu--state)) (list " " (anzu--update-mode-line))))
-           " %[%Z%1*%1+%1@%]"
-           " %I"
-           (:eval
-            (when active
-              (let ((input-method
-                     (or current-input-method
-                         (and (bound-and-true-p evil-mode)
-                              (bound-and-true-p evil-input-method)))))
-                (when input-method
-                  (list " " (nth 3 (assoc input-method input-method-alist)))))))
-           (:eval (list " " (propertize
-                             (ec-center-truncate (format-mode-line "%b") 20)
-                             'face 'mode-line-buffer-id)))
-           " " mode-name
-           (:eval (when (and mode-line-process
-                             (not (equal '("") mode-line-process)))
-                    (list " " mode-line-process)))
-           (vc-mode vc-mode)
-           (:eval (when (eq major-mode 'erc-mode) (list " " mode-line-buffer-identification)))
-           (:eval (when (bound-and-true-p flymake-mode) (list " " flymake-mode-line-counters)))
-           (:eval (when active (ec--modeline-org-clock)))
-           " %n")
-         '((:eval (when (and active (bound-and-true-p appt-mode-string))
-                    (propertize appt-mode-string 'face 'mode-line-emphasis)))
-           (:eval (when (and active (or defining-kbd-macro executing-kbd-macro))
-                    (propertize "•REC" 'face 'mode-line-emphasis)))
-           (:eval (when (bound-and-true-p erc-modified-channels-alist) (list " " erc-modified-channels-object)))
-           (:eval (when active (ec--modeline-battery)))
-           " %l:%C"
-           (:eval (when active (list " " (propertize (format-time-string "%H:%M") 'face 'mode-line-emphasis))))
-           (:eval (when (and active ec--load-average-supported) (list " " (format "%.2f" (car (load-average t))))))
-           " " (-3 "%p")
-           " "))))))
+      (ec--modeline-render
+       '("%e"
+         (:eval (when (fboundp 'winum-get-number)
+                  (let ((num (format " %s" (winum-get-number))))
+                    (if (ec-is-active-window)
+                        (propertize num 'face (ec--modeline-state-face))
+                      num))))
+         (:eval (ec--modeline-selection))
+         (:eval (when (and (ec-is-active-window) (bound-and-true-p anzu--state))
+                  (list " " (anzu--update-mode-line))))
+         " %[%Z%1*%1+%1@%]"
+         " %I"
+         (:eval
+          (when (ec-is-active-window)
+            (let ((input-method
+                   (or current-input-method
+                       (and (bound-and-true-p evil-mode)
+                            (bound-and-true-p evil-input-method)))))
+              (when input-method
+                (list " " (nth 3 (assoc input-method input-method-alist)))))))
+         (:eval (list " " (propertize
+                           (ec-center-truncate (format-mode-line "%b") 20)
+                           'face 'mode-line-buffer-id)))
+         " " mode-name
+         (:eval (when (and mode-line-process
+                           (not (equal '("") mode-line-process)))
+                  (list " " mode-line-process)))
+         (vc-mode vc-mode)
+         (:eval (when (eq major-mode 'erc-mode)
+                  (list " " mode-line-buffer-identification)))
+         (:eval (when (bound-and-true-p flymake-mode)
+                  (list " " flymake-mode-line-counters)))
+         (:eval (when (ec-is-active-window)
+                  (ec--modeline-org-clock)))
+         " %n")
+       '((:eval (when (and (ec-is-active-window) (bound-and-true-p appt-mode-string))
+                  (propertize appt-mode-string 'face 'mode-line-emphasis)))
+         (:eval (when (and (ec-is-active-window) (or defining-kbd-macro executing-kbd-macro))
+                  (propertize "•REC" 'face 'mode-line-emphasis)))
+         (:eval (when (and (ec-is-active-window) (bound-and-true-p erc-modified-channels-alist))
+                  (list " " erc-modified-channels-object)))
+         (:eval (when (ec-is-active-window) (ec--modeline-battery)))
+         " %l:%C"
+         (:eval (when (ec-is-active-window)
+                  (list " " (propertize (format-time-string "%H:%M") 'face 'mode-line-emphasis))))
+         (:eval (when (and (ec-is-active-window) ec--load-average-supported)
+                  (list " " (format "%.2f" (car (load-average t))))))
+         " " (-3 "%p")
+         " ")))))
   (ec--refresh-mode-line))
 
 (defun ec--refresh-mode-line ()
