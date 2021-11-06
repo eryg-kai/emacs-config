@@ -60,26 +60,25 @@
                  (format " (%d char%s)" chars (if (= 1 chars) "" "s"))))))))
 
 ;; Org clock.
-(defun ec--modeline-org-clock ()
-  "Org clock for the mode-line."
-  (when (and (fboundp 'org-clocking-p) (org-clocking-p))
-    (concat
-     (ec-center-truncate
-      (substring-no-properties (org-clock-get-clock-string))
-      19))))
+(setq org-clock-string-limit 20)
+
+;; The mode-line is not updated by default when clocking out.
+(add-hook 'org-clock-out-hook #'org-clock-update-mode-line)
 
 ;; Battery.
 (when (fboundp 'fancy-battery-mode)
+  (setq fancy-battery-mode-line '(:eval (ec--modeline-battery)))
+
   (add-hook 'emacs-startup-hook #'fancy-battery-mode))
 
 (defun ec--modeline-battery ()
   "Battery for the mode-line based on `fancy-battery-last-status'."
-  (when-let (status (and (bound-and-true-p fancy-battery-last-status)))
+  (when-let (status fancy-battery-last-status)
     (let* ((type (cdr (assq ?L status)))
            (p (cdr (assq ?p status)))
            (percentage (cond ((not p) "")
                              ((string= "N/A" p) "")
-                             (t (concat " " p "%%"))))
+                             (t (concat p "%%"))))
            (time (cdr (assq ?t status)))
            (left (cond ((string= "0:00" time) "")
                        ((string= "N/A"  time) "")
@@ -87,7 +86,11 @@
                        (t (concat " (" time ")")))))
       (cond ((string= "on-line" type) "")
             ((string= ""        type) "")
-            (t (propertize (concat (if (string= "AC" type) " AC" "") percentage left) 'face (ec--modeline-battery-face status)))))))
+            (t (list " "
+                     (propertize (concat (if (string= "AC" type) "AC " "") percentage left)
+                                 'help-echo "Battery"
+                                 'mouse-face 'mode-line-highlight
+                                 'face (ec--modeline-battery-face status))))))))
 
 (defun ec--modeline-battery-face (status)
   "Face for the mode-line battery based on STATUS."
@@ -111,25 +114,45 @@
 
 (advice-add 'appt-mode-line :override #'ec--appt-mode-line)
 
-;; Load average.
-;; TODO: Any way to get this on Android?
-(defvar ec--load-average-supported
-  (ignore-errors (load-average) t)
-  "Whether `load-average' is supported.")
+;; Time and load average.
+(setq display-time-string-forms
+      '(" " (propertize
+             ;; Use this instead of the default to get rid of the space and to
+             ;; move the menu to `mouse-1'.
+             (format "%.2f" (nth (or display-time-load-average 0) (load-average t)))
+             'local-map (make-mode-line-mouse-map
+                         'mouse-1 'display-time-next-load-average)
+             'mouse-face 'mode-line-highlight
+             'help-echo (concat
+                         "System load average for past "
+                         (pcase display-time-load-average
+                           (0 "1 minute")
+                           (1 "5 minutes")
+                           (_ "15 minutes"))
+                         "; mouse-1: next"))
+        ;; Use this instead of the default to customize the help echo.
+        " " (propertize (concat 24-hours ":" minutes)
+                        'help-echo (format-time-string "%Y-%m-%d %a %H:%M" now)
+                        'mouse-face 'mode-line-highlight
+                        'face 'mode-line-emphasis)))
+
+(add-hook 'emacs-startup-hook #'display-time-mode)
+
+;; Position.
+(setq mode-line-position '("%l:%C " (-3 "%p")))
 
 ;; Putting it all together.
-(defun ec--modeline-render (left right)
-  "Return mode-line with LEFT and RIGHT aligned appropriately."
-  (let ((padding 1.4))
-    (list
-     ;; HACK: This zero-width character is used to fake vertical padding.
-     (when (display-graphic-p)
-       (propertize "\u200b" 'display `((raise ,(/ (1- padding) -2.0)) (height ,padding))))
-     left
-     (propertize " " 'display `((space :align-to
-                                       (- (+ right right-fringe right-margin)
-                                          ,(string-width (format-mode-line right))))))
-     right)))
+(defun ec--modeline-render (left right &optional height)
+  "Return mode-line with LEFT and RIGHT aligned and made HEIGHT tall."
+  (list
+   ;; HACK: This zero-width character is used to fake vertical padding.
+   (when (and height (display-graphic-p))
+     (propertize "\u200b" 'display `((raise ,(/ (1- height) -2.0)) (height ,height))))
+   left
+   (propertize " " 'display `((space :align-to
+                                     (- (+ right right-fringe right-margin)
+                                        ,(string-width (format-mode-line right))))))
+   right))
 
 (defun ec-set-mode-line ()
   "Customize the mode line."
@@ -137,54 +160,41 @@
    mode-line-format
    '((:eval
       (ec--modeline-render
-       '("%e"
+       `("%e" ; Error about full memory.
          (:eval (when (fboundp 'winum-get-number)
                   (let ((num (format " %s" (winum-get-number))))
                     (if (ec-is-active-window)
                         (propertize num 'face (ec--modeline-state-face))
                       num))))
          (:eval (ec--modeline-selection))
-         (:eval (when (and (ec-is-active-window) (bound-and-true-p anzu--state))
-                  (list " " (anzu--update-mode-line))))
-         " %[%Z%1*%1+%1@%]"
-         " %I"
-         (:eval
-          (when (ec-is-active-window)
-            (let ((input-method
-                   (or current-input-method
-                       (and (bound-and-true-p evil-mode)
-                            (bound-and-true-p evil-input-method)))))
-              (when input-method
-                (list " " (nth 3 (assoc input-method input-method-alist)))))))
-         (:eval (list " " (propertize
-                           (ec-center-truncate (format-mode-line "%b") 20)
-                           'face 'mode-line-buffer-id)))
-         " " mode-name
-         (:eval (when (and mode-line-process
-                           (not (equal '("") mode-line-process)))
-                  (list " " mode-line-process)))
-         (vc-mode vc-mode)
+         (:eval (when (bound-and-true-p anzu--state)
+                  (list " " anzu--mode-line-format)))
+         " " mode-line-mule-info mode-line-modified mode-line-remote
+         " " (:propertize "%I"
+                          help-echo "Buffer size"
+                          mouse-face mode-line-highlight)
+         " " (:eval (propertized-buffer-identification
+                     (ec-center-truncate (format-mode-line "%b") 20)))
+         " " ,(seq-filter (lambda (m) (not (and (stringp m) (string-blank-p m))))
+                          mode-line-modes)
          (:eval (when (eq major-mode 'erc-mode)
                   (list " " mode-line-buffer-identification)))
          (:eval (when (bound-and-true-p flymake-mode)
                   (list " " flymake-mode-line-counters)))
-         (:eval (when (ec-is-active-window)
-                  (ec--modeline-org-clock)))
-         " %n")
+         (vc-mode vc-mode)
+         (:eval (when (and (ec-is-active-window) (fboundp 'org-clocking-p) (org-clocking-p))
+                  (list " " org-mode-line-string))))
        '((:eval (when (and (ec-is-active-window) (bound-and-true-p appt-mode-string))
-                  (propertize appt-mode-string 'face 'mode-line-emphasis)))
+                  (list " " (org-trim appt-mode-string))))
          (:eval (when (and (ec-is-active-window) (or defining-kbd-macro executing-kbd-macro))
-                  (propertize "•REC" 'face 'mode-line-emphasis)))
+                  (list " " (propertize "•REC" 'face 'mode-line-emphasis))))
          (:eval (when (and (ec-is-active-window) (bound-and-true-p erc-modified-channels-alist))
                   (list " " erc-modified-channels-object)))
-         (:eval (when (ec-is-active-window) (ec--modeline-battery)))
-         " %l:%C"
-         (:eval (when (ec-is-active-window)
-                  (list " " (propertize (format-time-string "%H:%M") 'face 'mode-line-emphasis))))
-         (:eval (when (and (ec-is-active-window) ec--load-average-supported)
-                  (list " " (format "%.2f" (car (load-average t))))))
-         " " (-3 "%p")
-         " ")))))
+         (:eval (when (ec-is-active-window) fancy-battery-mode-line))
+         (:eval (when (ec-is-active-window) display-time-string))
+         " " mode-line-position
+         " ")
+       1.4))))
   (ec--refresh-mode-line))
 
 (defun ec--refresh-mode-line ()
