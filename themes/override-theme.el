@@ -19,8 +19,6 @@
 
  (lsp-face-highlight-textual :foreground nil :distant-foreground nil :background 'unspecified :weight 'normal :inherit 'highlight)
 
- (mode-line-highlight :foreground 'unspecified :inherit 'highlight)
-
  (erc-default-face :inherit 'unspecified)
 
  (hl-todo   :foreground 'unspecified :inherit 'warning :weight 'bold)

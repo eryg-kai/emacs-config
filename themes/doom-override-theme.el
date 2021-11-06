@@ -9,6 +9,8 @@
 
  (mouse :background (doom-color 'red))
 
+ (mode-line-highlight :distant-foreground 'unspecified :underline (doom-color 'blue) :inherit 'unspecified)
+
  (region              :background (doom-blend (doom-color 'blue) (doom-color 'bg) 0.05))
  (highlight           :background (doom-blend (doom-color 'red) (doom-color 'bg) 0.2))
 
