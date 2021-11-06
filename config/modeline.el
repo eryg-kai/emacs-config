@@ -5,7 +5,8 @@
 ;;; Code:
 
 (nconc package-selected-packages '(anzu
-                                   fancy-battery))
+                                   fancy-battery
+                                   minions))
 
 ;; Selected window.
 (defvar ec-selected-window nil "Currently selected window.")
@@ -141,6 +142,12 @@
 ;; Position.
 (setq mode-line-position '("%l:%C " (-3 "%p")))
 
+;; Minions.
+(setq minions-mode-line-delimiters '("" . "")
+      minions-mode-line-lighter "…")
+
+(add-hook 'emacs-startup-hook #'minions-mode)
+
 ;; Putting it all together.
 (defun ec--modeline-render (left right &optional height)
   "Return mode-line with LEFT and RIGHT aligned and made HEIGHT tall."
@@ -176,7 +183,7 @@
          " " (:eval (propertized-buffer-identification
                      (ec-center-truncate (format-mode-line "%b") 20)))
          " " ,(seq-filter (lambda (m) (not (and (stringp m) (string-blank-p m))))
-                          mode-line-modes)
+                          (or (bound-and-true-p minions-mode-line-modes) mode-line-modes))
          (:eval (when (eq major-mode 'erc-mode)
                   (list " " mode-line-buffer-identification)))
          (:eval (when (bound-and-true-p flymake-mode)
