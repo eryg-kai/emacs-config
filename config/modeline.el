@@ -22,16 +22,11 @@
   (eq ec-selected-window (selected-window)))
 
 ;; Search information.
-(defun ec--anzu (here total)
-  (when (bound-and-true-p anzu--state)
-    (let ((status (cl-case anzu--state
-                    (search (format "%d/%d" here total))
-                    (replace-query (format "%d R" total))
-                    (replace (format "%d/%d" here total)))))
-      status)))
+(setq anzu-cons-mode-line-p nil)
 
-(setq anzu-cons-mode-line-p nil
-      anzu-mode-line-update-function #'ec--anzu)
+(with-eval-after-load 'anzu
+  (define-key isearch-mode-map [remap isearch-query-replace]  #'anzu-isearch-query-replace)
+  (define-key isearch-mode-map [remap isearch-query-replace-regexp] #'anzu-isearch-query-replace-regexp))
 
 (when (fboundp 'global-anzu-mode)
   (add-hook 'emacs-startup-hook #'global-anzu-mode))
@@ -59,10 +54,10 @@
            (rect (and (> lines 1) (or (bound-and-true-p rectangle-mark-mode)
                                       (eq 'block evil-selection))))
            (multi-line (or (> lines 1) (eq 'line evil-selection))))
-      (cond (rect (format " %d×%d block" lines (if is-visual cols (1- cols))))
-            (multi-line (format " %d line%s" lines (if (= 1 lines) "" "s")))
+      (cond (rect (format " (%d×%d block)" lines (if is-visual cols (1- cols))))
+            (multi-line (format " (%d line%s)" lines (if (= 1 lines) "" "s")))
             (t (let ((chars (if is-visual chars (1- chars))))
-                 (format " %d char%s" chars (if (= 1 chars) "" "s"))))))))
+                 (format " (%d char%s)" chars (if (= 1 chars) "" "s"))))))))
 
 ;; Org clock.
 (defun ec--modeline-org-clock ()

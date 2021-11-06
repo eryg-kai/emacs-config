@@ -55,6 +55,8 @@
 
  (outline-1 :background nil)
 
+ (anzu-mode-line :foreground 'unspecified :bold nil)
+
  (sp-pair-overlay-face :background nil)
 
  (bookmark-face :background 'unspecified)
