@@ -148,6 +148,18 @@
 
 (add-hook 'emacs-startup-hook #'minions-mode)
 
+;; Flymake.
+(defun ec--mode-line-flymake-face (fn type prop &optional default)
+  "Return face for PROP for diagnostic TYPE.
+
+When PROP is `mode-line-face' and the mode-line is inactive
+return the inactive face.  In all other cases defer to FN."
+  (if (and (eq prop 'mode-line-face) (not (ec-is-active-window)))
+      'mode-line-inactive
+    (apply fn type prop default nil)))
+
+(advice-add 'flymake--lookup-type-property :around #'ec--mode-line-flymake-face)
+
 ;; Putting it all together.
 (defun ec--modeline-render (left right &optional height)
   "Return mode-line with LEFT and RIGHT aligned and made HEIGHT tall."
