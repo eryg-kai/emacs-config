@@ -23,7 +23,13 @@
   (eq ec-selected-window (selected-window)))
 
 ;; Search information.
-(setq anzu-cons-mode-line-p nil)
+(defun ec--mode-line-anzu (&rest args)
+  "Call `anzu--update-mode-line-default' with ARGS then trim parentheses."
+  (replace-regexp-in-string "(\\|)" ""
+                            (apply #'anzu--update-mode-line-default args)))
+
+(setq anzu-cons-mode-line-p nil
+      anzu-mode-line-update-function #'ec--mode-line-anzu)
 
 (with-eval-after-load 'anzu
   (define-key isearch-mode-map [remap isearch-query-replace]  #'anzu-isearch-query-replace)
@@ -55,13 +61,24 @@
            (rect (and (> lines 1) (or (bound-and-true-p rectangle-mark-mode)
                                       (eq 'block evil-selection))))
            (multi-line (or (> lines 1) (eq 'line evil-selection))))
-      (cond (rect (format " (%d×%d block)" lines (if is-visual cols (1- cols))))
-            (multi-line (format " (%d line%s)" lines (if (= 1 lines) "" "s")))
+      (cond (rect (format " %d×%d" lines (if is-visual cols (1- cols))))
+            (multi-line (format " %d" lines))
             (t (let ((chars (if is-visual chars (1- chars))))
-                 (format " (%d char%s)" chars (if (= 1 chars) "" "s"))))))))
+                 (format " %d" chars)))))))
 
 ;; Org clock.
 (setq org-clock-string-limit 20)
+
+(defun ec--org-clock-get-clock-string (fn &rest args)
+  "Call FN with ARGS then customize the returned string."
+  (let* ((str (replace-regexp-in-string "^ \\|(\\|)\\|\\[\\|\\]" "" (apply fn args)))
+         (index (string-match-p " " str))
+         (time (substring str 0 index))
+         (body (substring str (+ 1 index)))
+         (len (- org-clock-string-limit (length time))))
+    (concat time "|" (string-replace " " "" (ec-center-truncate body (- len 1))))))
+
+(advice-add 'org-clock-get-clock-string :around #'ec--org-clock-get-clock-string)
 
 ;; The mode-line is not updated by default when clocking out.
 (add-hook 'org-clock-out-hook #'org-clock-update-mode-line)
@@ -84,14 +101,13 @@
            (left (cond ((string= "0:00" time) "")
                        ((string= "N/A"  time) "")
                        ((string= ""     time) "")
-                       (t (concat " (" time ")")))))
+                       (t (concat "|" time)))))
       (cond ((string= "on-line" type) "")
             ((string= ""        type) "")
-            (t (list " "
-                     (propertize (concat (if (string= "AC" type) "AC " "") percentage left)
-                                 'help-echo "Battery"
-                                 'mouse-face 'mode-line-highlight
-                                 'face (ec--modeline-battery-face status))))))))
+            (t (list " " (propertize (concat percentage left)
+                                     'help-echo "Battery"
+                                     'mouse-face 'mode-line-highlight
+                                     'face (ec--modeline-battery-face status))))))))
 
 (defun ec--modeline-battery-face (status)
   "Face for the mode-line battery based on STATUS."
@@ -149,6 +165,14 @@
 (add-hook 'emacs-startup-hook #'minions-mode)
 
 ;; Flymake.
+(with-eval-after-load 'flymake
+  (setq flymake-mode-line-counter-format
+        (mapcar (lambda (m) (if (and (stringp m)
+                                     (or (string= m "[") (string= m "]")))
+                                ""
+                              m))
+                flymake-mode-line-counter-format)))
+
 (defun ec--mode-line-flymake-face (fn type prop &optional default)
   "Return face for PROP for diagnostic TYPE.
 
@@ -159,6 +183,16 @@ return the inactive face.  In all other cases defer to FN."
     (apply fn type prop default nil)))
 
 (advice-add 'flymake--lookup-type-property :around #'ec--mode-line-flymake-face)
+
+;; Version control.
+(defun ec--mode-line-vc (_ &optional backend)
+  "Remove.BACKEND from the mode-line."
+  (when (and backend (stringp vc-mode))
+    (setq vc-mode (ec-center-truncate
+                   (replace-regexp-in-string (format "^ %s" backend) "" vc-mode)
+                   8))))
+
+(advice-add 'vc-mode-line :after #'ec--mode-line-vc)
 
 ;; Putting it all together.
 (defun ec--modeline-render (left right &optional height)
@@ -194,13 +228,13 @@ return the inactive face.  In all other cases defer to FN."
                           mouse-face mode-line-highlight)
          " " (:eval (propertized-buffer-identification
                      (ec-center-truncate (format-mode-line "%b") 20)))
+         (vc-mode vc-mode)
          " " ,(seq-filter (lambda (m) (not (and (stringp m) (string-blank-p m))))
                           (or (bound-and-true-p minions-mode-line-modes) mode-line-modes))
          (:eval (when (eq major-mode 'erc-mode)
                   (list " " mode-line-buffer-identification)))
          (:eval (when (bound-and-true-p flymake-mode)
                   (list " " flymake-mode-line-counters)))
-         (vc-mode vc-mode)
          (:eval (when (and (ec-is-active-window) (fboundp 'org-clocking-p) (org-clocking-p))
                   (list " " org-mode-line-string))))
        '((:eval (when (and (ec-is-active-window) (bound-and-true-p appt-mode-string))
@@ -208,7 +242,7 @@ return the inactive face.  In all other cases defer to FN."
          (:eval (when (and (ec-is-active-window) (or defining-kbd-macro executing-kbd-macro))
                   (list " " (propertize "•REC" 'face 'mode-line-emphasis))))
          (:eval (when (and (ec-is-active-window) (bound-and-true-p erc-modified-channels-alist))
-                  (list " " erc-modified-channels-object)))
+                  (list " " (org-trim erc-modified-channels-object))))
          (:eval (when (ec-is-active-window) fancy-battery-mode-line))
          (:eval (when (ec-is-active-window) display-time-string))
          " " mode-line-position
