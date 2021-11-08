@@ -1,4 +1,4 @@
-;;; modeline.el --- Modeline customizations. -*- lexical-binding: t -*-
+;;; mode-line.el --- Mode-line customizations. -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -39,7 +39,7 @@
   (add-hook 'emacs-startup-hook #'global-anzu-mode))
 
 ;; Evil state.
-(defun ec--modeline-state-face ()
+(defun ec--mode-line-state-face ()
   "Face for the current evil state (if enabled)."
   (let ((state (and (bound-and-true-p evil-local-mode) (bound-and-true-p evil-state))))
     (if state (intern (format "evil-%s-state" state)) 'mode-line)))
@@ -49,7 +49,7 @@
   "Column number at POS.  Analog to `line-number-at-pos'."
   (save-excursion (goto-char pos) (current-column)))
 
-(defun ec--modeline-selection ()
+(defun ec--mode-line-selection ()
   "Selection information for the mode-line."
   (when (or mark-active (and (bound-and-true-p evil-local-mode) (bound-and-true-p evil-state) (eq 'visual evil-state)))
     (let* ((lines (count-lines (region-beginning) (min (1+ (region-end)) (point-max))))
@@ -85,11 +85,11 @@
 
 ;; Battery.
 (when (fboundp 'fancy-battery-mode)
-  (setq fancy-battery-mode-line '(:eval (ec--modeline-battery)))
+  (setq fancy-battery-mode-line '(:eval (ec--mode-line-battery)))
 
   (add-hook 'emacs-startup-hook #'fancy-battery-mode))
 
-(defun ec--modeline-battery ()
+(defun ec--mode-line-battery ()
   "Battery for the mode-line based on `fancy-battery-last-status'."
   (when-let (status fancy-battery-last-status)
     (let* ((type (cdr (assq ?L status)))
@@ -107,9 +107,9 @@
             (t (list " " (propertize (concat percentage left)
                                      'help-echo "Battery"
                                      'mouse-face 'mode-line-highlight
-                                     'face (ec--modeline-battery-face status))))))))
+                                     'face (ec--mode-line-battery-face status))))))))
 
-(defun ec--modeline-battery-face (status)
+(defun ec--mode-line-battery-face (status)
   "Face for the mode-line battery based on STATUS."
   (let ((type (cdr (assq ?L status))))
     (if (and type (string= "AC" type)) 'fancy-battery-charging
@@ -195,7 +195,7 @@ return the inactive face.  In all other cases defer to FN."
 (advice-add 'vc-mode-line :after #'ec--mode-line-vc)
 
 ;; Putting it all together.
-(defun ec--modeline-render (left right &optional height)
+(defun ec--mode-line-render (left right &optional height)
   "Return mode-line with LEFT and RIGHT aligned and made HEIGHT tall."
   (list
    ;; HACK: This zero-width character is used to fake vertical padding.
@@ -212,14 +212,14 @@ return the inactive face.  In all other cases defer to FN."
   (setq-default
    mode-line-format
    '((:eval
-      (ec--modeline-render
+      (ec--mode-line-render
        `("%e" ; Error about full memory.
          (:eval (when (fboundp 'winum-get-number)
                   (let ((num (format " %s" (winum-get-number))))
                     (if (ec-is-active-window)
-                        (propertize num 'face (ec--modeline-state-face))
+                        (propertize num 'face (ec--mode-line-state-face))
                       num))))
-         (:eval (ec--modeline-selection))
+         (:eval (ec--mode-line-selection))
          (:eval (when (bound-and-true-p anzu--state)
                   (list " " anzu--mode-line-format)))
          " " mode-line-mule-info mode-line-modified mode-line-remote
@@ -259,4 +259,4 @@ return the inactive face.  In all other cases defer to FN."
 
 (add-hook 'emacs-startup-hook #'ec-set-mode-line)
 
-;;; modeline.el ends here
+;;; mode-line.el ends here
