@@ -8,20 +8,6 @@
                                    fancy-battery
                                    minions))
 
-;; Selected window.
-(defvar ec-selected-window nil "Currently selected window.")
-
-(defun ec--set-selected-window (&rest args)
-  "Set `ec-selected-window' ignoring ARGS."
-  (unless (minibuffer-window-active-p (selected-window))
-    (setq ec-selected-window (selected-window))))
-
-(add-hook 'buffer-list-update-hook #'ec--set-selected-window)
-
-(defun ec-is-active-window ()
-  "Return t if the selected window is active."
-  (eq ec-selected-window (selected-window)))
-
 ;; Search information.
 (defun ec--mode-line-anzu (&rest args)
   "Call `anzu--update-mode-line-default' with ARGS then trim parentheses."
