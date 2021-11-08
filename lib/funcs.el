@@ -96,4 +96,8 @@ When the length is odd the right side will be one longer than the left."
           ((string-equal root "/") nil)
           (t (ec-find-node-module-binary name (directory-file-name (file-name-directory root)))))))
 
+(defun ec-column-number-at-pos (pos)
+  "Column number at POS.  Analog to `line-number-at-pos'."
+  (save-excursion (goto-char pos) (current-column)))
+
 ;;; funcs.el ends here

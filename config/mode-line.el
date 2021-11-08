@@ -31,17 +31,13 @@
     (if state (intern (format "evil-%s-state" state)) 'mode-line)))
 
 ;; Selection.
-(defun ec--column-number-at-pos (pos)
-  "Column number at POS.  Analog to `line-number-at-pos'."
-  (save-excursion (goto-char pos) (current-column)))
-
 (defun ec--mode-line-selection ()
   "Selection information for the mode-line."
   (when (or mark-active (and (bound-and-true-p evil-local-mode) (bound-and-true-p evil-state) (eq 'visual evil-state)))
     (let* ((lines (count-lines (region-beginning) (min (1+ (region-end)) (point-max))))
            (chars (- (1+ (region-end)) (region-beginning)))
-           (cols (1+ (abs (- (ec--column-number-at-pos (region-end))
-                             (ec--column-number-at-pos (region-beginning))))))
+           (cols (1+ (abs (- (ec-column-number-at-pos (region-end))
+                             (ec-column-number-at-pos (region-beginning))))))
            (is-visual (and (bound-and-true-p evil-state) (eq 'visual evil-state)))
            (evil-selection (and is-visual (bound-and-true-p evil-visual-selection)))
            (rect (and (> lines 1) (or (bound-and-true-p rectangle-mark-mode)
