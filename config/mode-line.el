@@ -176,6 +176,18 @@ return the inactive face.  In all other cases defer to FN."
 
 (advice-add 'vc-mode-line :after #'ec--mode-line-vc)
 
+;; Windows and buffers.
+(defvar ec-mode-line-window-keymap
+  (let ((map (make-sparse-keymap)))
+    (define-key map [mode-line mouse-1] `(menu-item "Menu Bar" ignore :filter (lambda (_) (mouse-menu-bar-map))))
+    (define-key map [mode-line mouse-2] #'ec-exwm-workspace-prev)
+    (define-key map [mode-line mouse-3] #'ec-exwm-workspace-next)
+    map) "\
+Keymap for managing windows in mode-line.")
+
+(define-key mode-line-buffer-identification-keymap [mode-line mouse-1] #'mouse-buffer-menu)
+(define-key mode-line-buffer-identification-keymap [mode-line mouse-2] #'mode-line-previous-buffer)
+
 ;; Putting it all together.
 (defun ec--mode-line-render (left right &optional height)
   "Return mode-line with LEFT and RIGHT aligned and made HEIGHT tall."
@@ -196,11 +208,13 @@ return the inactive face.  In all other cases defer to FN."
    '((:eval
       (ec--mode-line-render
        `("%e" ; Error about full memory.
-         (:eval (when (fboundp 'winum-get-number)
-                  (let ((num (format " %s" (winum-get-number))))
-                    (if (ec-is-active-window)
-                        (propertize num 'face (ec--mode-line-state-face))
-                      num))))
+         " " (:eval (propertize (if (fboundp 'winum-get-number-string)
+                                    (winum-get-number-string)
+                                  "?")
+                                'face (when (ec-is-active-window) (ec--mode-line-state-face))
+                                'mouse-face 'mode-line-highlight
+                                'local-map ec-mode-line-window-keymap
+                                'help-echo "mouse-1: Display global menu\nmouse-2: Previous frame\nmouse-3: Next frame"))
          (:eval (ec--mode-line-selection))
          (:eval (when (bound-and-true-p anzu--state)
                   (list " " anzu--mode-line-format)))
@@ -208,8 +222,11 @@ return the inactive face.  In all other cases defer to FN."
          " " (:propertize "%I"
                           help-echo "Buffer size"
                           mouse-face mode-line-highlight)
-         " " (:eval (propertized-buffer-identification
-                     (ec-center-truncate (format-mode-line "%b") 20)))
+         " " (:eval (propertize (ec-center-truncate (format-mode-line "%b") 20)
+                                'face 'mode-line-buffer-id
+                                'help-echo "Buffer name mouse-1: Display buffer menu\nmouse-2: Previous buffer\nmouse-3: Next buffer"
+                                'mouse-face 'mode-line-highlight
+                                'local-map mode-line-buffer-identification-keymap))
          (vc-mode vc-mode)
          " " ,(seq-filter (lambda (m) (not (and (stringp m) (string-blank-p m))))
                           (or (bound-and-true-p minions-mode-line-modes) mode-line-modes))

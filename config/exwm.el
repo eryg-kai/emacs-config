@@ -30,8 +30,8 @@ If no ARGS are provided, prompt for the command."
       `((,(kbd "s-q") . exwm-input-send-next-key)
         (,(kbd "s-c") . exwm-input-grab-keyboard)
 
-        (,(kbd "<s-tab>")         . (lambda () (interactive) (ec--exwm-workspace-switch 1)))
-        (,(kbd "<s-iso-lefttab>") . (lambda () (interactive) (ec--exwm-workspace-switch -1)))
+        (,(kbd "<s-tab>")         . ec-exwm-workspace-next)
+        (,(kbd "<s-iso-lefttab>") . ec-exwm-workspace-prev)
 
         (,(kbd "s-j") . evil-window-down)
         (,(kbd "s-k") . evil-window-up)
@@ -90,6 +90,16 @@ If no ARGS are provided, prompt for the command."
     (cond (over? (exwm-workspace-switch 0))
           (under? (exwm-workspace-switch (- workspaceCount 1)))
           (t (exwm-workspace-switch targetIndex)))))
+
+(defun ec-exwm-workspace-prev ()
+  "Move to the previous workspace."
+  (interactive)
+  (ec--exwm-workspace-switch -1))
+
+(defun ec-exwm-workspace-next ()
+  "Move to the next workspace."
+  (interactive)
+  (ec--exwm-workspace-switch 1))
 
 (defun ec-exwm-update-screens ()
   "Update screens when they change."
