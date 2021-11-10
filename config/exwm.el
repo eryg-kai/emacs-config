@@ -9,6 +9,8 @@
 
 (setq exwm-edit-bind-default-keys nil)
 
+(autoload 'exwm-edit "exwm-edit--compose")
+
 (define-key global-map (kbd "C-c r") #'ec-exec)
 
 (defcustom ec-monitor-xrandr-alist nil "Xrandr flags for each monitor."
@@ -29,6 +31,7 @@ If no ARGS are provided, prompt for the command."
 (setq exwm-input-global-keys
       `((,(kbd "s-q") . exwm-input-send-next-key)
         (,(kbd "s-c") . exwm-input-grab-keyboard)
+        (,(kbd "s-e") . exwm-edit--compose)
 
         (,(kbd "<s-tab>")         . ec-exwm-workspace-next)
         (,(kbd "<s-iso-lefttab>") . ec-exwm-workspace-prev)
@@ -176,7 +179,6 @@ If the monitor is a touchscreen also adjust the touch input."
   (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
   (define-key exwm-mode-map (kbd "i") #'exwm-input-release-keyboard)
   (define-key exwm-mode-map (kbd ":") #'evil-ex)
-  (define-key exwm-mode-map (kbd "s-e") #'exwm-edit--compose)
 
   (ec-exwm-update-screens)
 
