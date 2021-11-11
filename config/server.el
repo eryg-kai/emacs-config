@@ -12,8 +12,7 @@
       pinentry-popup-prompt-window nil)
 
 ;; Notifications.
-(setq appt-display-format 'window
-      appt-disp-window-function 'osd-org-appt-display)
+(setq appt-display-format nil)
 
 (define-key global-map (kbd "C-c n") #'osd-show-notifications)
 
