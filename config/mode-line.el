@@ -102,14 +102,24 @@
         (_ 'fancy-battery-discharging)))))
 
 ;; Appointment information.
+(defvar ec-mode-line-agenda-keymap
+  (let ((map (make-sparse-keymap)))
+    (define-key map [mode-line mouse-1] #'org-agenda-list)
+    map) "\
+Keymap for managing appointments in mode-line.")
+
 (defun ec--appt-mode-line (min-to-app &optional abbrev)
   "Appointment string using list of strings MIN-TO-APP; ABBREV is ignored."
   (let* ((multiple (> (length min-to-app) 1))
          (imin (if (or (not multiple)
                        (not (delete (car min-to-app) min-to-app)))
                    (car min-to-app))))
-    (if (equal imin "0") "now"
-      (format "%s min" (or imin (mapconcat #'identity min-to-app ","))))))
+    (propertize
+     (if (equal imin "0") "now"
+       (format "%s min" (or imin (mapconcat #'identity min-to-app ","))))
+     'help-echo "mouse-1: Open agenda"
+     'local-map ec-mode-line-agenda-keymap
+     'mouse-face 'mode-line-highlight)))
 
 (advice-add 'appt-mode-line :override #'ec--appt-mode-line)
 
