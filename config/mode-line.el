@@ -154,7 +154,8 @@ Keymap for managing appointments in mode-line.")
 (setq minions-mode-line-delimiters '("" . "")
       minions-mode-line-lighter "…")
 
-(add-hook 'emacs-startup-hook #'minions-mode)
+(when (fboundp 'minions-mode)
+  (add-hook 'emacs-startup-hook #'minions-mode))
 
 ;; Flymake.
 (with-eval-after-load 'flymake

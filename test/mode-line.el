@@ -1,4 +1,4 @@
-;;; modeline.el --- Test modeline. -*- lexical-binding: t -*-
+;;; mode-line.el --- Test modeline. -*- lexical-binding: t -*-
 
 ;;; Commentary:
 ;;
@@ -11,4 +11,4 @@
   (should (equal (ec--appt-mode-line '("0" "1" "2")) "0,1,2 min"))
   (should (equal (ec--appt-mode-line '("1")) "1 min")))
 
-;;; modeline.el ends here
+;;; mode-line.el ends here
