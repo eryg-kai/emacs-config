@@ -1,0 +1,51 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    paths-ignore:
+      - '**.md'
+      - '**.org'
+      - '.dir-locals.el'
+    branches:
+      - master
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+          # - macos-latest
+        emacs_version:
+          - 27.2
+          - snapshot
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs_version }}
+
+      - uses: pat-s/always-upload-cache@v2.1.5
+        with:
+          path: |
+            ~/.emacs.d
+            ~/.config/emacs
+          key: ${{ matrix.platform }}-${{ matrix.emacs_version }}
+
+      - run: emacs --version
+
+      - name: Install packages
+        run: emacs --batch -l ./init.el --eval "(progn (package-refresh-contents) (defun y-or-n-p (_) t) (package-install-selected-packages))"
+
+      - name: Prepare environment
+        run: mkdir -p ~/.config/emacs && mkdir -p ~/ops/emacs/{.git,config} && mkdir -p ~/ops/.git
+
+      - name: Run tests
+        run: emacs --batch -l ./init.el --eval "(progn (package-initialize))" -f ec-test

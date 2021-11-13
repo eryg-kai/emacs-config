@@ -51,12 +51,12 @@
 
   (switch-to-buffer (get-buffer-create "ffap test"))
 
-  (dolist (dir `(,ec-dir
-                 "./config/../"
-                 ,(concat "../" (file-name-base (directory-file-name ec-dir)) "/")
-                 "./"))
-    (dolist (file '("init.el" ".travis.yml"))
-      (dolist (line '(9))
+  (dolist (dir `(,(concat ec-dir "test/fixtures/")
+                 "./config/../test/fixtures/"
+                 ,(concat "../" (file-name-base (directory-file-name ec-dir)) "/test/fixtures/")
+                 "./test/fixtures/"))
+    (dolist (file '("file" ".file"))
+      (dolist (line '(10))
         (dolist (column '(nil 15))
           (insert (concat dir file) (format ":%s" line))
           (when column (insert (format ":%s" column)))
