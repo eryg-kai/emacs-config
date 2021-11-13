@@ -164,7 +164,7 @@ Keymap for managing appointments in mode-line.")
                                      (or (string= m "[") (string= m "]")))
                                 ""
                               m))
-                flymake-mode-line-counter-format)))
+                (bound-and-true-p flymake-mode-line-counter-format))))
 
 (defun ec--mode-line-flymake-face (fn type prop &optional default)
   "Return face for PROP for diagnostic TYPE.
