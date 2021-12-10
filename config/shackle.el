@@ -14,10 +14,13 @@
 
 ARGS will be passed directly through to FN."
   (let* ((buffer (current-buffer))
-         (conf (alist-get buffer ec--wconf)))
-    (when conf (setq ec--wconf (assq-delete-all buffer ec--wconf)))
+         (conf (and (get-buffer-window buffer)
+                    (buffer-live-p buffer)
+                    (alist-get buffer ec--wconf))))
     (when fn (apply fn args))
-    (when conf (set-window-configuration conf))))
+    (when conf
+      (setq ec--wconf (assq-delete-all buffer ec--wconf))
+      (set-window-configuration conf))))
 
 (defun ec--shackle-condition (buffer mode)
   "Check if the BUFFER's major mode is MODE."
@@ -82,9 +85,11 @@ Options are:
 
 (defun ec--setup-shackle ()
   "Set up shackle rules."
-  (advice-add 'kill-buffer :around #'ec--with-restore)
   (advice-add 'quit-window :around #'ec--with-restore)
   (advice-add 'quit-restore-window :around #'ec--with-restore)
+  ;; TODO: This causes unexpected closures.  Sometimes this appears to trigger
+  ;; for buffers that are still alive.  So far it does not reliably reproduce.
+  (advice-add 'kill-buffer :around #'ec--with-restore)
 
   (ec-shackle '(
                 ;; Split to the right.
