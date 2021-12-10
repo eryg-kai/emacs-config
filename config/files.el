@@ -4,13 +4,12 @@
 ;;
 
 ;;; Code:
-
 (setq create-lockfiles nil
       version-control t
       kept-new-versions most-positive-fixnum
       kept-old-versions 0
       delete-old-versions t
-      make-backup-files t
+      make-backup-files nil
       vc-make-backup-files t
       backup-by-copying t
       backup-directory-alist
@@ -38,10 +37,36 @@
 
 ;; Backups.
 (defun ec--backup-buffer ()
-  "Make a backup of the buffer."
-  (when (and make-backup-files buffer-backed-up)
-    (let ((buffer-backed-up nil))
-      (backup-buffer))))
+  "Make a backup of the file visited by the current buffer.
+
+The backup is made asynchronously via mkdir and cp and is placed on the same
+machine as the file.  The destination for a file's backup can be configured
+through `backup-directory-alist'."
+  (when-let (file (or (file-remote-p (buffer-file-name) 'localname)
+                      (buffer-file-name)))
+    (cl-every (lambda (elt)
+                (when (string-match (car elt) file)
+                  (let ((dest (expand-file-name
+                               (string-remove-prefix
+                                "/"
+                                (concat (file-name-directory file)
+                                        (file-name-base file)
+                                        "-"
+                                        (format-time-string "%FT%T%z")
+                                        "."
+                                        (file-name-extension file)))
+                               (cdr elt))))
+                    (set-process-sentinel
+                     (start-file-process "backup-mkdir" nil "mkdir"
+                                         "-p" (file-name-directory dest))
+                     (lambda (process _)
+                       (pcase (process-status process)
+                         ('exit
+                          (set-process-sentinel
+                           (start-file-process "backup-cp" nil "cp" file dest)
+                           (lambda (_ event)
+                             (message "Backup %s %s" file (string-trim event)))))))))))
+              backup-directory-alist)))
 
 (add-hook 'after-save-hook #'ec--backup-buffer)
 
