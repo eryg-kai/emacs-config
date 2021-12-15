@@ -20,7 +20,7 @@
       hscroll-margin 8
       hscroll-step 50
       scroll-conservatively 101
-      max-mini-window-height 1
+      max-mini-window-height 0.1
       truncate-string-ellipsis "…"
       vc-annotate-background-mode nil)
 
