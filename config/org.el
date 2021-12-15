@@ -219,8 +219,8 @@
          (file+olp+datetree ,(ec-capture-user "dreams.org"))
          (file ,(ec-get-template "dream")))
         ("pm" "measure" table-line
-         (file+headline ,(ec-capture-user "log.org") "Measurements")
-         (file ,(ec-get-template "measure"))
+         (file+function ,(ec-capture-user "log.org") ec-capture-measurement)
+         "|%U|%^{Value}|" ; Temporary stand-in; will be replaced.
          :immediate-finish t)
         ("f" "flashcards")
         ("fv" "vocab" entry
@@ -247,6 +247,30 @@
          :prepend t
          :no-save t
          :immediate-finish t)))
+
+(defun ec-capture-measurement ()
+  "Capture a measurement to the table under the selected heading."
+  (let ((org-refile-targets '((nil :maxlevel . 1))))
+    (goto-char (nth 3 (org-refile-get-location "Heading")))
+    ;; The ideal would be to use this as the template function but that runs
+    ;; before visiting so the table information at point is not available.
+    (org-capture-put :template (ec-measurement-template))))
+
+(defun ec-measurement-template ()
+  "Return a capture template based on first table under the current heading."
+  (let* ((end (save-excursion (outline-next-heading) (point)))
+         (strip "[ \t\n\r|]+")
+         (content (save-excursion
+                    (unless (re-search-forward org-table-dataline-regexp end t)
+                      ;; TODO: Ask for the inputs instead.
+                      (user-error "No table found"))
+                    (string-trim (thing-at-point 'line t) strip strip)))
+         (parts (mapcar 'string-trim (split-string content "|"))))
+    (concat "|" (mapconcat
+                 (lambda (item)
+                   (if (string= item "Date") "%U" (format "%%^{%s}" item)))
+                 parts "|")
+            "|")))
 
 (defun ec-init-capture ()
   "Initialize a capture."
