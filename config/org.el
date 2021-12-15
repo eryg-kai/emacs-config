@@ -63,7 +63,9 @@
       org-fontify-whole-heading-line t
       org-fontify-done-headline t
       org-fontify-quote-and-verse-blocks t
-      org-pretty-entities t)
+      org-pretty-entities t
+      ;; TODO: Too many false positives on sub/superscripts.
+      org-pretty-entities-include-sub-superscripts nil)
 
 ;; Clock.
 (setq org-log-into-drawer t ; Also affects state changes.
