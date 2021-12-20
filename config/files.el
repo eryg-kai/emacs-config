@@ -57,15 +57,13 @@ through `backup-directory-alist'."
                                         (file-name-extension file)))
                                (cdr elt))))
                     (set-process-sentinel
-                     (start-file-process "backup-mkdir" nil "mkdir"
-                                         "-p" (file-name-directory dest))
-                     (lambda (process _)
-                       (pcase (process-status process)
-                         ('exit
-                          (set-process-sentinel
-                           (start-file-process "backup-cp" nil "cp" file dest)
-                           (lambda (_ event)
-                             (message "Backup %s %s" file (string-trim event)))))))))))
+                     (start-file-process "backup" (when ec-debug-p "*backup*") "bash" "-c"
+                                         (format
+                                          "mkdir -p \"%s\" && cp \"%s\" \"%s\""
+                                          (file-name-directory dest)
+                                          file dest))
+                     (lambda (_ event)
+                       (message "Backup %s %s" file (string-trim event)))))))
               backup-directory-alist)))
 
 (add-hook 'after-save-hook #'ec--backup-buffer)
