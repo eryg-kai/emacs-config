@@ -41,22 +41,31 @@
 
 The backup is made asynchronously via mkdir and cp and is placed on the same
 machine as the file.  The destination for a file's backup can be configured
-through `backup-directory-alist'."
+through `backup-directory-alist'.  If the destination includes the local user's
+home directory it will use the remote user's home directory instead."
   (when-let (file (or (file-remote-p (buffer-file-name) 'localname)
                       (buffer-file-name)))
     (cl-every (lambda (elt)
                 (when (string-match (car elt) file)
                   (let* ((ext (file-name-extension file))
-                         (dest (expand-file-name
-                                (string-remove-prefix
-                                 "/"
-                                 (concat (file-name-directory file)
-                                         (file-name-base file)
-                                         "-"
-                                         (format-time-string "%FT%T%z")
-                                         (when ext ".")
-                                         ext))
-                                (cdr elt))))
+                         (dest (string-replace
+                                ;; ~ will be interpreted literally in quotes so
+                                ;; replace it with the HOME environment variable.
+                                "~" "$HOME"
+                                ;; The remote home might not be the same as the
+                                ;; local home so abbreviate in order to convert
+                                ;; the home into ~.
+                                (abbreviate-file-name
+                                 (expand-file-name
+                                  (string-remove-prefix
+                                   "/"
+                                   (concat (file-name-directory file)
+                                           (file-name-base file)
+                                           "-"
+                                           (format-time-string "%FT%T%z")
+                                           (when ext ".")
+                                           ext))
+                                  (cdr elt))))))
                     (set-process-sentinel
                      (start-file-process "backup" (when ec-debug-p "*backup*") "bash" "-c"
                                          (format
