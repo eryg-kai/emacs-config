@@ -60,9 +60,10 @@ through `backup-directory-alist'."
                     (set-process-sentinel
                      (start-file-process "backup" (when ec-debug-p "*backup*") "bash" "-c"
                                          (format
-                                          "mkdir -p \"%s\" && cp \"%s\" \"%s\""
+                                          "mkdir -p \"%s\" && cp \"%s\" \"%s\" && chmod -w \"%s\""
                                           (file-name-directory dest)
-                                          file dest))
+                                          file dest
+                                          dest))
                      (lambda (_ event)
                        (message "Backup %s %s" file (string-trim event)))))))
               backup-directory-alist)))
