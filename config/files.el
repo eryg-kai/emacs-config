@@ -46,16 +46,17 @@ through `backup-directory-alist'."
                       (buffer-file-name)))
     (cl-every (lambda (elt)
                 (when (string-match (car elt) file)
-                  (let ((dest (expand-file-name
-                               (string-remove-prefix
-                                "/"
-                                (concat (file-name-directory file)
-                                        (file-name-base file)
-                                        "-"
-                                        (format-time-string "%FT%T%z")
-                                        "."
-                                        (file-name-extension file)))
-                               (cdr elt))))
+                  (let* ((ext (file-name-extension file))
+                         (dest (expand-file-name
+                                (string-remove-prefix
+                                 "/"
+                                 (concat (file-name-directory file)
+                                         (file-name-base file)
+                                         "-"
+                                         (format-time-string "%FT%T%z")
+                                         (when ext ".")
+                                         ext))
+                                (cdr elt))))
                     (set-process-sentinel
                      (start-file-process "backup" (when ec-debug-p "*backup*") "bash" "-c"
                                          (format
