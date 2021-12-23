@@ -66,8 +66,14 @@
 (add-hook 'org-clock-out-hook #'org-clock-update-mode-line)
 
 ;; Battery.
+(defun ec--battery-notify (alist)
+  "Notify when %b key in ALIST is critical (exclamation mark)."
+  (pcase (cdr (assq ?b alist))
+    ("!" (osd-notify '("Battery critical" "Sleep is imminent")))))
+
 (when (fboundp 'fancy-battery-mode)
-  (setq fancy-battery-mode-line '(:eval (ec--mode-line-battery)))
+  (setq fancy-battery-mode-line '(:eval (ec--mode-line-battery))
+        fancy-battery-status-update-functions #'ec--battery-notify)
 
   (add-hook 'emacs-startup-hook #'fancy-battery-mode))
 
