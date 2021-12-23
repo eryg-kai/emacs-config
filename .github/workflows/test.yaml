@@ -33,15 +33,21 @@ jobs:
           version: ${{ matrix.emacs_version }}
 
       - uses: pat-s/always-upload-cache@v2.1.5
+        id: cache-packages
         with:
           path: |
             ~/.emacs.d
             ~/.config/emacs
-          key: ${{ matrix.platform }}-${{ matrix.emacs_version }}
+          key: emacs-packages-${{ matrix.platform }}-${{ matrix.emacs_version }}-${{ hashFiles('**/package-list') }}
+          restore-keys: |
+            emacs-packages-${{ matrix.platform }}-${{ matrix.emacs_version }}-
+            emacs-packages-${{ matrix.platform }}-
+            emacs-packages-
 
       - run: emacs --version
 
       - name: Install packages
+        if: steps.cache-packages.outputs.cache-hit != 'true'
         run: emacs --batch -l ./init.el --eval "(progn (package-refresh-contents) (defun y-or-n-p (_) t) (package-install-selected-packages))"
 
       - name: Prepare environment
