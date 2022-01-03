@@ -66,6 +66,8 @@
 (add-hook 'org-clock-out-hook #'org-clock-update-mode-line)
 
 ;; Battery.
+(setq battery-status-function #'battery-linux-sysfs)
+
 (defun ec--battery-notify (alist)
   "Notify when %b key in ALIST is critical (exclamation mark)."
   (pcase (cdr (assq ?b alist))
