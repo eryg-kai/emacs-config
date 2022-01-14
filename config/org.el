@@ -39,7 +39,7 @@
 
 ;; Core.
 (setq org-directory ec-org-dir
-      org-modules '(ol-irc ol-info org-id org-habit))
+      org-modules '(ol-irc ol-info org-id org-habit ol-eww))
 
 ;; HTML export.
 (setq org-html-checkbox-type 'html)
