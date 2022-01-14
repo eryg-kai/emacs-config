@@ -7,7 +7,8 @@
 ;;; Code:
 
 (setq browse-url-handlers
-      '(("." . browse-url-firefox)))
+      '(("." . eww-browse-url))
+      browse-url-secondary-browser-function #'browse-url-firefox)
 
 ;; TODO: When going back it doesn't update.
 (defun ec--eww-set-buffer-title ()
