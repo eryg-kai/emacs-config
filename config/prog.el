@@ -11,6 +11,7 @@
                                    yarn-mode
                                    go-mode
                                    css-mode
+                                   csv-mode
                                    typescript-mode
                                    elixir-mode
                                    eglot
