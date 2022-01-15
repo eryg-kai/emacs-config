@@ -310,6 +310,17 @@
 
 (advice-add 'org-babel-execute-src-block :around #'ec--load-language)
 
+;; Bolded headers mess with the :pretty option.
+(setq ob-http:curl-custom-arguments '("--no-styled-output"))
+
+;; TEMP: Workaround for ob-http not working over Tramp.
+(defun ec--trampify (fn &rest args)
+  "Override `call-process' with `process-file' for FN called with ARGS."
+  (cl-letf (((symbol-function 'call-process) #'process-file))
+    (apply fn args)))
+
+(advice-add 'org-babel-execute:http :around #'ec--trampify)
+
 ;; Task dependencies.
 (setq org-enforce-todo-dependencies t
       org-enforce-todo-checkbox-dependencies t)
