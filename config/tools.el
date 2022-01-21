@@ -108,7 +108,7 @@
       erc-log-write-after-insert t
       erc-log-insert-log-on-open t
       erc-prompt-for-password nil
-      erc-track-exclude '("&bitlbee")
+      erc-track-exclude '("&bitlbee" "root")
       erc-join-buffer 'bury
       erc-query-display 'buffer
       erc-auto-query 'bury)
