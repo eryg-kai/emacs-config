@@ -105,4 +105,9 @@ When the length is odd the right side will be one longer than the left."
   (let ((default-directory "~"))
     (apply fn args)))
 
+(defun ec-trampify (fn &rest args)
+  "Override `call-process' with `process-file' for FN called with ARGS."
+  (cl-letf (((symbol-function 'call-process) #'process-file))
+    (apply fn args)))
+
 ;;; funcs.el ends here
