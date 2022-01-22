@@ -29,16 +29,10 @@
       mu4e-view-show-addresses t
       mu4e-context-policy 'pick-first)
 
+;; Ensure mu4e runs locally (it only half-supports Tramp).
+(advice-add 'mu4e :around #'ec-localize)
 
-(defun ec-email ()
-  "Run `mu4e' in the mail directory.
-
-This ensures mu runs locally when the current buffer is
-remote (or vice-versa)."
-  (interactive)
-  (let ((default-directory ec-mail-dir)) (call-interactively 'mu4e)))
-
-(define-key global-map (kbd "C-c E") #'ec-email)
+(define-key global-map (kbd "C-c E") #'mu4e)
 
 (with-eval-after-load 'mm-decode
   (add-to-list 'mm-discouraged-alternatives "text/html"))
