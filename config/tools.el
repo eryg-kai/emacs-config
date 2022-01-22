@@ -113,6 +113,8 @@
       erc-query-display 'buffer
       erc-auto-query 'bury)
 
+(advice-add 'erc :around #'ec-localize)
+
 ;; Tramp.
 (setq tramp-use-ssh-controlmaster-options nil
       tramp-histfile-override t

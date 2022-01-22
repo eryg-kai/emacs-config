@@ -100,4 +100,9 @@ When the length is odd the right side will be one longer than the left."
   "Column number at POS.  Analog to `line-number-at-pos'."
   (save-excursion (goto-char pos) (current-column)))
 
+(defun ec-localize (fn &rest args)
+  "Run FN with ARGS after ensure `default-directory' is local."
+  (let ((default-directory "~"))
+    (apply fn args)))
+
 ;;; funcs.el ends here
