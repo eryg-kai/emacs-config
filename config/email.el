@@ -32,6 +32,12 @@
 ;; Ensure mu4e runs locally (it only half-supports Tramp).
 (advice-add 'mu4e :around #'ec-localize)
 
+;; Reset browser to default on exit.
+(defun ec-reset-browser-profile (&rest _)
+  (setq browse-url-firefox-arguments nil))
+
+(advice-add 'mu4e~stop :after #'ec-reset-browser-profile)
+
 (define-key global-map (kbd "C-c E") #'mu4e)
 
 (with-eval-after-load 'mm-decode
@@ -71,7 +77,8 @@ account is activated."
     (lambda (msg)
       (when msg
         (or (mu4e-message-contact-field-matches msg :to address)
-            (string-prefix-p (format "/%s" label) (mu4e-message-field msg :maildir)))))
+            (string-prefix-p (format "/%s" label)
+                             (mu4e-message-field msg :maildir)))))
     :vars letvars)
    mu4e-contexts))
 
