@@ -20,6 +20,7 @@
       `((,ec-ibuffer-startup-filter-group
          ("EXWM" (mode . exwm-mode))
          ("EWW" (mode . eww-mode))
+         ("Org" (mode . org-mode))
          ("Images" (mode . image-mode))
          ("Shell" (or (mode . eshell-mode) (mode . term-mode) (mode . shell-mode)))
          ("Scratch" (name . "\\`\\*.*scratch\\*\\'"))
