@@ -60,7 +60,7 @@
     "C-c &" "snippet"
     "C-c b" "buffer"
     "C-c '" "mode"
-    "C-c p" "projectile"
+    "C-x p" "project"
     "C-c s" "scratch"
     "C-c w" "window"
     "C-c g" "git"
@@ -140,7 +140,7 @@
 
 ;; Consult.
 (define-key global-map (kbd "C-c fr") #'consult-recent-file)
-(define-key global-map (kbd "M-s r") #'consult-ripgrep)
+(define-key global-map (kbd "M-s g") #'consult-ripgrep)
 (define-key global-map (kbd "M-g f") #'consult-flymake)
 
 (define-key global-map (kbd "C-x b") #'consult-buffer)    ;; original: switch-to-buffer

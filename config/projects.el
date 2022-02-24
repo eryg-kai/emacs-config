@@ -4,30 +4,50 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(ripgrep
-                                   projectile))
-;
-(setq projectile-git-submodule-command nil)
+(with-eval-after-load 'grep
+  (grep-apply-setting
+   'grep-find-command
+   `(,(concat "rg --regexp '' --line-number --with-filename --null"
+              " --no-heading --no-messages --max-columns 80 --max-columns-preview"
+              " $(git rev-parse --show-superproject-working-tree --show-toplevel || pwd)")
+     . 14)))
 
-;; Keymaps cannot be autoloaded so here is a workaround.  Loads projectile,
-;; rebinds to the keymap, then triggers the keybinding again.
-(defun ec-projectile ()
-  "Load projectile."
-  (interactive)
-  (projectile-mode)
-  (define-key global-map (kbd "C-c p") #'projectile-command-map)
-  (setq unread-command-events (mapcar (lambda (ev) (cons t ev))
-                                      (listify-key-sequence (kbd "C-c p")))))
+(setq xref-search-program 'ripgrep
+      xref-search-program-alist
+      `((grep . ,(concat "xargs -0 grep <C> --null --no-messages --extended-regexp"
+                         " --line-number --with-filename --only-matching"
+                         " --regexp '.{0,60}'<R>'.{0,20}'"))
+        (ripgrep . ,(concat "xargs -0 rg <C> --null --line-number --with-filename"
+                            " --no-heading --no-messages --glob '!*/' --only-matching"
+                            " --regexp '.{0,60}'<R>'.{0,20}'"))))
 
-(define-key global-map (kbd "C-c p") #'ec-projectile)
+(defun ec-project-find-regexp (regexp)
+  "Find all matches for REGEXP in the current project's roots.
 
-(defun ec--set-repositories ()
-  "Set magit repository directories from known projectile projects."
-  (let ((project-dirs (bound-and-true-p projectile-known-projects)))
-    (setq magit-repository-directories
-          (mapcar (lambda (path) `(,path . 0)) project-dirs))))
+This is like `project-find-regexp' except uses ripgrep on the
+project root instead of passing individual files and thus can
+make use of ignore files."
+  (interactive (list (project--read-regexp)))
+  (require 'xref)
+  (let* ((pr (project-current t))
+         (default-directory (expand-file-name (project-root pr))))
+    (xref--show-xrefs
+     (apply-partially #'ec-project--find-regexp regexp default-directory)
+     nil)))
 
-(advice-add 'projectile-discover-projects-in-search-path
-            :after #'ec--set-repositories)
+(defun ec-project--find-regexp (regexp dir)
+  (let* ((xref-search-program 'ripgrep)
+         ;; Remove the glob exception so ripgrep traverses directories.
+         (xref-search-program-alist
+          `((ripgrep . ,(concat "xargs -0 rg <C> --null --line-number --with-filename"
+                                " --no-heading --no-messages --only-matching"
+                                " --regexp '.{0,60}'<R>'.{0,20}'"))))
+         (xrefs (xref-matches-in-files regexp (list dir))))
+    (unless xrefs
+      (user-error "No matches for: %s" regexp))
+    xrefs))
+
+
+(define-key global-map (kbd "C-x g") #'ec-project-find-regexp)
 
 ;;; projects.el ends here

@@ -49,11 +49,12 @@
     (should (equal (1- (or column 1)) (current-column)))
     (kill-this-buffer))
 
-  (switch-to-buffer (get-buffer-create "ffap test"))
+  (let ((default-directory ec-dir))
+    (switch-to-buffer (get-buffer-create "ffap test")))
 
   (dolist (dir `(,(concat ec-dir "test/fixtures/")
                  "./config/../test/fixtures/"
-                 ,(concat "../" (file-name-base (directory-file-name ec-dir)) "/test/fixtures/")
+                 ,(concat "../" (file-name-nondirectory (directory-file-name ec-dir)) "/test/fixtures/")
                  "./test/fixtures/"))
     (dolist (file '("file" ".file"))
       (dolist (line '(10))

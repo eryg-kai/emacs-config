@@ -22,12 +22,12 @@
          ("EWW" (mode . eww-mode))
          ("Images" (mode . image-mode))
          ("Shell" (or (mode . eshell-mode) (mode . term-mode) (mode . shell-mode)))
-         ("Scratch" (name . "\*scratch"))
+         ("Scratch" (name . "\\`\\*.*scratch\\*\\'"))
          ("Compilation" (mode . compilation-mode))
          ("Dired" (mode . dired-mode))
          ("Chat" (or (mode . erc-mode) (mode . rcirc-mode)))
          ("Magit" (name . "magit"))
-         ("Special" (name . "\*")))))
+         ("Special" (name . "\\`\\*.+\\*\\'")))))
 
 (defun ec--ibuffer-sort-filter-groups (groups)
   "Sort GROUPS using `ec-ibuffer-filter-group-order' and then alphabetically."
