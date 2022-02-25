@@ -47,6 +47,12 @@ make use of ignore files."
       (user-error "No matches for: %s" regexp))
     xrefs))
 
+;; If the path to your shell is different locally from the remote then
+;; `xref-matches-in-files' will fail (in NixOS I end up getting
+;; /run/current-system/sw/bin/bash).  Rely on /bin/sh instead.
+;; TODO: What is the proper fix?  Also, no error is reported (instead it only
+;; reports there are no matches).
+(setq shell-file-name "/bin/sh")
 
 (define-key global-map (kbd "C-x g") #'ec-project-find-regexp)
 
