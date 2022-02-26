@@ -25,6 +25,8 @@ If no ARGS are provided, prompt for the command."
   (let ((command (mapconcat 'identity args " " )))
     (start-process-shell-command command nil command)))
 
+(advice-add 'ec-exec :around #'ec-localize)
+
 ;; Used to determine if the screen script needs to run.
 (defvar ec--connected-monitors nil "Currently connected monitors.")
 
