@@ -12,7 +12,8 @@
                                    ispell
                                    consult))
 
-(setq history-delete-duplicates t)
+(setq history-delete-duplicates t
+      completion-auto-select t)
 
 ;; Apropos.
 (setq apropos-do-all t)
