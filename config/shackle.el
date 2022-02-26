@@ -42,7 +42,10 @@ Special behavior will be exhibited based on PLIST options."
     (unless (get-buffer-window buffer) (delete-other-windows)))
   (when-let (window (cl-some (lambda (a) (funcall a buffer alist)) actions))
     (when (and (plist-get plist :focus) (not (minibufferp)))
-      (select-window window))))
+      (select-window window))
+    (when (and (plist-get plist :float) (fboundp 'exwm-floating--set-floating))
+    (with-current-buffer buffer
+      (exwm-floating--set-floating exwm--id)))))
 
 (defun ec--shackle (conditions actions plist)
   "Display buffer matching CONDITIONS using ACTIONS and PLIST."
@@ -59,7 +62,8 @@ Special behavior will be exhibited based on PLIST options."
          (window-height . ,(or (plist-get plist :height) #'fit-window-to-buffer))
          (window-width  . ,(or (plist-get plist :width) (+ 2 fill-column)))
          (direction     . ,(or (plist-get plist :direction) 'right))
-         (side          . ,(or (plist-get plist :side) 'right)))))))
+         (side          . ,(or (plist-get plist :side) 'right))
+         (allow-no-window . t))))))
 
 (defun ec-shackle (rules &optional reset)
   "Display buffers using RULES after resetting if RESET is non-nil.
@@ -107,12 +111,15 @@ Options are:
                  (display-buffer-below-selected) :height 0.3 :focus t)
 
                 ;; Bottom in a side window.
-                ("\\*Notifications\\*"
+                (("\\*Notifications\\*")
                  (display-buffer-in-side-window) :height 0.1 :side bottom)
 
                 ;; Display at the bottom.
                 (("^\\*Error\\*$" "^\\*Calendar\\*" "^\\*Disabled Command\\*$")
                  (display-buffer-at-bottom) :height 0.3)
+
+                ;; Display floating.
+                (("^\\*zoom\\*$") (display-buffer-no-window) :float t)
 
                 ;; Dedicated temporary/branch state (like how `org-agenda' works
                 ;; by default).
