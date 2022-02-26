@@ -23,11 +23,11 @@ displaying after running FN."
       (setq ec--wconf (assq-delete-all buffer ec--wconf))
       (set-window-configuration conf))))
 
-(defun ec--shackle-condition (buffer mode)
-  "Check if the BUFFER's major mode is MODE."
+(defun ec--shackle-condition (mode buffer _action)
+  "Check if BUFFER's major mode is MODE."
   (eq mode (buffer-local-value 'major-mode (get-buffer buffer))))
 
-(defun ec--shackle-action (actions buffer alist plist)
+(defun ec--shackle-action (actions plist buffer alist)
   "Run ACTIONS with BUFFER and ALIST until non-nil.
 
 Special behavior will be exhibited based on PLIST options."
@@ -53,11 +53,9 @@ Special behavior will be exhibited based on PLIST options."
       (add-to-list
        'display-buffer-alist
        `(,(if (symbolp condition)
-              (lambda (b _) (ec--shackle-condition b condition))
+              (apply-partially #'ec--shackle-condition condition)
             condition)
-         ,(if (or (plist-get plist :only) (plist-get plist :focus))
-              (lambda (b a) (ec--shackle-action actions b a plist))
-            actions)
+         ,(apply-partially #'ec--shackle-action actions plist)
          (window-height . ,(or (plist-get plist :height) #'fit-window-to-buffer))
          (window-width  . ,(or (plist-get plist :width) (+ 2 fill-column)))
          (direction     . ,(or (plist-get plist :direction) 'right))
