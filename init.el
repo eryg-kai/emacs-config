@@ -23,19 +23,8 @@
 (defconst ec-mail-dir (file-name-as-directory
                        (or (getenv "MAIL_HOME")
                            (expand-file-name "~/com"))))
-(defconst ec-tmpl-dir (file-name-as-directory
-                       (expand-file-name "templates" ec-dir)))
-(defconst ec-org-dir (file-name-as-directory
-                      (or (getenv "ORG_HOME")
-                          (expand-file-name "~/org"))))
 (defconst ec-theme-dir (file-name-as-directory
                         (expand-file-name "themes" ec-dir)))
-(defconst ec-research-dir (file-name-as-directory
-                           (or (getenv "ORG_RESEARCH_HOME")
-                               (expand-file-name "research" ec-org-dir))))
-(defconst ec-lang-dir (file-name-as-directory
-                       (or (getenv "ORG_LANG_HOME")
-                           (expand-file-name "languages" ec-research-dir))))
 (push ec-theme-dir custom-theme-load-path)
 (autoload 'mu4e "mu4e" "mu for Emacs." t) ; Installed via the system.
 

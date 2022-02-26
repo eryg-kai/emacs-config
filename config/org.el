@@ -15,6 +15,14 @@
                                    org-edna
                                    org-drill))
 
+;; Set the following in customize:
+;; - org-directory
+;; - org-default-notes-file
+;; - org-agenda-files
+;; - org-agenda-text-search-extra-files
+;; - org-refile-targets
+;; - ec-language-directory
+
 (add-hook 'org-mode-hook #'typo-mode)
 
 (add-hook 'org-mode-hook #'org-bullets-mode)
@@ -38,8 +46,7 @@
         1))                              ; Max newlines
 
 ;; Core.
-(setq org-directory ec-org-dir
-      org-modules '(ol-irc ol-info org-id org-habit ol-eww))
+(setq org-modules '(ol-irc ol-info org-id org-habit ol-eww))
 
 ;; HTML export.
 (setq org-html-checkbox-type 'html)
@@ -120,11 +127,11 @@
   "Return the path to FILE for USER or the current user."
   (expand-file-name
    (format "%s/%s" (or user user-login-name) file)
-   ec-org-dir))
+   org-directory))
 
 (defun ec-get-template (name)
   "Return the path to capture template NAME."
-  (expand-file-name (format "org/%s" name) ec-tmpl-dir))
+  (expand-file-name (format "templates/org/%s" name) ec-dir))
 
 (defun ec-capture-default ()
   "Capture to the current org file or the default."
@@ -169,84 +176,86 @@
 (with-eval-after-load 'org-agenda
   (define-key org-agenda-mode-map (kbd "C-c C-z") #'ec-add-note))
 
-(setq org-default-notes-file (expand-file-name "refile.org" ec-org-dir)
-      org-capture-templates
-      `(("t" "task")
-        ("tt" "task" entry
-         (function ec-capture-default)
-         (file ,(ec-get-template "task")))
-        ("ts" "start" entry
-         (function ec-capture-default)
-         (file ,(ec-get-template "task"))
-         :clock-in t
-         :clock-resume t)
-        ("tr" "respond" entry
-         (function ec-capture-default)
-         (file ,(ec-get-template "respond"))
-         :immediate-finish t)
-        ("th" "habit" entry
-         (file ,(ec-capture-user "habits.org"))
-         (file ,(ec-get-template "habit")))
-        ("n" "note")
-        ("nn" "note" entry
-         (function ec-capture-default)
-         (file ,(ec-get-template "note")))
-        ("nl" "link" entry
-         (function ec-capture-default)
-         (file ,(ec-get-template "link")))
-        ("nc" "clock" plain ; Same as C-c C-z
-         (function ec-capture-log)
-         (file ,(ec-get-template "log")))
-        ("c" "clock")
-        ("cm" "meeting" entry
-         (function ec-capture-default)
-         (file ,(ec-get-template "meeting"))
-         :clock-in t
-         :clock-resume t)
-        ("cc" "call" entry
-         (function ec-capture-default)
-         (file ,(ec-get-template "call"))
-         :clock-in t
-         :clock-resume t)
-        ("cn" "note" plain ; Same as C-c C-z
-         (function ec-capture-log)
-         (file ,(ec-get-template "log")))
-        ("p" "personal")
-        ("pj" "journal" entry
-         (file+olp+datetree ,(ec-capture-user "journal.org"))
-         (file ,(ec-get-template "journal")))
-        ("pd" "dream" entry
-         (file+olp+datetree ,(ec-capture-user "dreams.org"))
-         (file ,(ec-get-template "dream")))
-        ("pm" "measure" table-line
-         (file+function ,(ec-capture-user "log.org") ec-capture-measurement)
-         "|%U|%^{Value}|" ; Temporary stand-in; will be replaced.
-         :immediate-finish t)
-        ("f" "flashcards")
-        ("fv" "vocab" entry
-         (function ec-capture-language)
-         (file ,(ec-get-template "vocab"))
-         :prepend t
-         :no-save t
-         :immediate-finish t)
-        ("fk" "kanji" entry
-         (function ec-capture-language)
-         (file ,(ec-get-template "kanji"))
-         :prepend t
-         :no-save t
-         :immediate-finish t)
-        ("fr" "readings" entry
-         (function ec-capture-language)
-         (file ,(ec-get-template "reading"))
-         :prepend t
-         :no-save t
-         :immediate-finish t)
-        ("fR" "radicals" entry
-         (function ec-capture-language)
-         (file ,(ec-get-template "radical"))
-         :prepend t
-         :no-save t
-         :immediate-finish t)))
+;; `org-directory' will be void until org loads so delay setting capture
+;; templates as they build paths off the org directory.
+(with-eval-after-load 'org-capture
+  (setq org-capture-templates
+        `(("t" "task")
+          ("tt" "task" entry
+           (function ec-capture-default)
+           (file ,(ec-get-template "task")))
+          ("ts" "start" entry
+           (function ec-capture-default)
+           (file ,(ec-get-template "task"))
+           :clock-in t
+           :clock-resume t)
+          ("tr" "respond" entry
+           (function ec-capture-default)
+           (file ,(ec-get-template "respond"))
+           :immediate-finish t)
+          ("th" "habit" entry
+           (file ,(ec-capture-user "habits.org"))
+           (file ,(ec-get-template "habit")))
+          ("n" "note")
+          ("nn" "note" entry
+           (function ec-capture-default)
+           (file ,(ec-get-template "note")))
+          ("nl" "link" entry
+           (function ec-capture-default)
+           (file ,(ec-get-template "link")))
+          ("nc" "clock" plain ; Same as C-c C-z
+           (function ec-capture-log)
+           (file ,(ec-get-template "log")))
+          ("c" "clock")
+          ("cm" "meeting" entry
+           (function ec-capture-default)
+           (file ,(ec-get-template "meeting"))
+           :clock-in t
+           :clock-resume t)
+          ("cc" "call" entry
+           (function ec-capture-default)
+           (file ,(ec-get-template "call"))
+           :clock-in t
+           :clock-resume t)
+          ("cn" "note" plain ; Same as C-c C-z
+           (function ec-capture-log)
+           (file ,(ec-get-template "log")))
+          ("p" "personal")
+          ("pj" "journal" entry
+           (file+olp+datetree ,(ec-capture-user "journal.org"))
+           (file ,(ec-get-template "journal")))
+          ("pd" "dream" entry
+           (file+olp+datetree ,(ec-capture-user "dreams.org"))
+           (file ,(ec-get-template "dream")))
+          ("pm" "measure" table-line
+           (file+function ,(ec-capture-user "log.org") ec-capture-measurement)
+           "|%U|%^{Value}|" ; Temporary stand-in; will be replaced.
+           :immediate-finish t)
+          ("f" "flashcards")
+          ("fv" "vocab" entry
+           (function ec-capture-language)
+           (file ,(ec-get-template "vocab"))
+           :prepend t
+           :no-save t
+           :immediate-finish t)
+          ("fk" "kanji" entry
+           (function ec-capture-language)
+           (file ,(ec-get-template "kanji"))
+           :prepend t
+           :no-save t
+           :immediate-finish t)
+          ("fr" "readings" entry
+           (function ec-capture-language)
+           (file ,(ec-get-template "reading"))
+           :prepend t
+           :no-save t
+           :immediate-finish t)
+          ("fR" "radicals" entry
+           (function ec-capture-language)
+           (file ,(ec-get-template "radical"))
+           :prepend t
+           :no-save t
+           :immediate-finish t))))
 
 (defun ec-capture-measurement ()
   "Capture a measurement to the table under the selected heading."
@@ -330,7 +339,6 @@
       org-agenda-dim-blocked-tasks nil
       org-agenda-sticky t
       org-agenda-restore-windows-after-quit t
-      org-agenda-files (concat ec-org-dir "/.agenda.el")
       org-agenda-span 2
       org-agenda-use-time-grid t
       org-agenda-time-grid '((daily today require-timed) () "~~~~~~" "---")
@@ -393,11 +401,11 @@
 
 (defun ec-get-language-dirs ()
   "Get language flashcard directories."
-  (when (file-exists-p ec-lang-dir)
+  (when (file-exists-p ec-langugage-directory)
     (mapcar #'file-name-as-directory
             (cl-remove-if-not
              #'file-directory-p
-             (directory-files ec-lang-dir t "^[^.]")))))
+             (directory-files ec-language-directory t "^[^.]")))))
 
 (defun ec-capture-language ()
   "Capture to the selected language or current if already visiting."
@@ -409,10 +417,10 @@
                  (completing-read "Target: "
                                   (mapcar
                                    (lambda (dir)
-                                     (string-remove-prefix ec-lang-dir dir))
+                                     (string-remove-prefix ec-language-directory dir))
                                    dirs)
                                   nil t)
-                 ec-lang-dir))))
+                 ec-language-directory))))
     (set-buffer (org-capture-target-buffer (expand-file-name file dir))))
   (goto-char (point-min)))
 
