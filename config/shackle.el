@@ -12,13 +12,14 @@
 (defun ec--with-restore (&optional fn &rest args)
   "Run FN if provided then restore stored window configuration if any.
 
-ARGS will be passed directly through to FN."
+ARGS will be passed directly through to FN.
+
+Window configuration is only restored if the buffer is no longer
+displaying after running FN."
   (let* ((buffer (current-buffer))
-         (conf (and (get-buffer-window buffer)
-                    (buffer-live-p buffer)
-                    (alist-get buffer ec--wconf))))
+         (conf (alist-get buffer ec--wconf)))
     (when fn (apply fn args))
-    (when conf
+    (when (and conf (not (get-buffer-window buffer)))
       (setq ec--wconf (assq-delete-all buffer ec--wconf))
       (set-window-configuration conf))))
 
@@ -87,8 +88,6 @@ Options are:
   "Set up shackle rules."
   (advice-add 'quit-window :around #'ec--with-restore)
   (advice-add 'quit-restore-window :around #'ec--with-restore)
-  ;; TODO: This causes unexpected closures.  Sometimes this appears to trigger
-  ;; for buffers that are still alive.  So far it does not reliably reproduce.
   (advice-add 'kill-buffer :around #'ec--with-restore)
 
   (ec-shackle '(
