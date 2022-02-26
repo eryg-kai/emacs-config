@@ -81,7 +81,7 @@
 
 (defun ec--mode-line-battery ()
   "Battery for the mode-line based on `fancy-battery-last-status'."
-  (when-let (status fancy-battery-last-status)
+  (when-let (status (bound-and-true-p fancy-battery-last-status))
     (let* ((type (cdr (assq ?L status)))
            (p (cdr (assq ?p status)))
            (percentage (cond ((not p) "")
