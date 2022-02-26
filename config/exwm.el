@@ -23,7 +23,10 @@ ARGS are simply concatenated with spaces.
 If no ARGS are provided, prompt for the command."
   (interactive (list (read-shell-command "$ ")))
   (let ((command (mapconcat 'identity args " " )))
-    (start-process-shell-command command nil command)))
+    (set-process-sentinel
+     (start-process-shell-command command nil command)
+     (lambda (_ event)
+       (message "%s: %s" (car args) (string-trim event))))))
 
 (advice-add 'ec-exec :around #'ec-localize)
 
