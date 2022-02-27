@@ -135,4 +135,26 @@ Options are:
 
 (add-hook 'emacs-startup-hook #'ec--setup-shackle)
 
+;; Calc does not seem to use `display-buffer' and it does not seem to call
+;; `quit-window' either so the shackle code is duplicated a little here.  The
+;; goal is to display the current buffer only with the calculator and trail on
+;; the right then restore the previous layout on quit.
+(defun ec--display-calc-window ()
+  "Display the calc window."
+  (let ((buffer (current-buffer)))
+    (with-current-buffer buffer
+      (unless (assq buffer ec--wconf)
+        (push `(,buffer . ,(current-window-configuration)) ec--wconf)))
+    (unless (get-buffer-window buffer) (delete-other-windows))
+    (select-window (display-buffer-in-side-window buffer '((side . right)
+                                                           (slot . -1))))))
+
+(defun ec--display-calc-trail-window ()
+  "Display the calc trail window."
+  (display-buffer-in-side-window (current-buffer) '((side . right))))
+
+(add-hook 'calc-window-hook #'ec--display-calc-window)
+(add-hook 'calc-trail-window-hook #'ec--display-calc-trail-window)
+(advice-add 'calc-quit :around #'ec--with-restore)
+
 ;;; shackle.el ends here
