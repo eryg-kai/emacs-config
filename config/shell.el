@@ -28,6 +28,7 @@
       eshell-prefer-lisp-functions t
       eshell-highlight-prompt nil
       eshell-prompt-function 'ec--eshell-prompt
+      eshell-banner-message ""
 
       eshell-z-freq-dir-hash-table-file-name (expand-file-name "eshell/z" user-emacs-directory))
 
