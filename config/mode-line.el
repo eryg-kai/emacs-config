@@ -227,7 +227,7 @@ Keymap for managing windows in mode-line.")
    '((:eval
       (ec--mode-line-render
        `("%e" ; Error about full memory.
-         " " (:eval (propertize (if (fboundp 'winum-get-number-string)
+         " " (:eval (propertize (if (bound-and-true-p winum-mode)
                                     (winum-get-number-string)
                                   "?")
                                 'face (when (ec-is-active-window) (ec--mode-line-state-face))
