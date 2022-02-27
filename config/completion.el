@@ -78,6 +78,8 @@
     "C-c l s" "server"))
 
 ;; Snippets.
+(setq yas-indent-line 'fixed)
+
 (with-eval-after-load 'yasnippet
   (define-key yas-minor-mode-map (kbd "TAB") #'hippie-expand)
   (push #'yas-hippie-try-expand hippie-expand-try-functions-list)
