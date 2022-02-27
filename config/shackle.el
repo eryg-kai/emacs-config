@@ -9,6 +9,10 @@
 ;; Try to use windows with the same mode.
 (setq display-buffer-base-action '(display-buffer-reuse-mode-window))
 
+;; Not sure what the point of `suspend-frame' is or how to undo it but sometimes
+;; I accidentally hit the keybinding and my frame becomes unusable.
+(advice-add #'suspend-frame :override #'ignore)
+
 (defun ec--with-restore (&optional fn &rest args)
   "Run FN if provided then restore stored window configuration if any.
 
