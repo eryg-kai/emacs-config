@@ -46,7 +46,8 @@
 (advice-add #'speed-type--setup :after #'ec--evil-insert)
 
 ;; Calculator.
-(setq math-additional-units
+(setq calc-show-banner nil
+      math-additional-units
       '((b nil "Bit")
         (B "b * 8" "Byte")
 
