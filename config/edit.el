@@ -39,6 +39,8 @@
 (when (fboundp 'smartparens-global-strict-mode)
   (add-hook 'emacs-startup-hook #'smartparens-global-strict-mode))
 
+(setq show-paren-context-when-offscreen t)
+
 ;; Filling and unfilling.
 (defun ec--prog-auto-fill-mode ()
   (setq-local comment-auto-fill-only-comments t)
