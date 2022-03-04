@@ -142,4 +142,7 @@ home directory it will use the remote user's home directory instead."
 (add-hook 'buffer-list-update-hook #'ec--track-buffer-debounce)
 (add-hook 'exwm-update-title-hook #'ec--track-buffer-debounce)
 
+;; Save cursor position.
+(add-hook 'emacs-startup-hook #'save-place-mode)
+
 ;;; files.el ends here
