@@ -180,25 +180,26 @@
 (autoload 'ffap-string-at-point "ffap")
 
 (defun ec-ffap ()
-  "Like `find-file-at-point' but handles line and column numbers."
+  "Like `find-file-at-point' but handles line/column numbers and remote paths."
   (interactive)
-  (let* ((str (ffap-string-at-point))
-         (index (string-match ":[0-9]+\\(:[0-9]+\\)?$" str))
-         (file (if index (substring str 0 index) str))
-         (position (when index (split-string (substring str (1+ index)) ":"))))
-    ;; In dired this gets in the way of using C-x C-f to create files. You can
-    ;; just hit RET instead to go to the file at point.
-    (cond ((eq major-mode 'dired-mode) (call-interactively ffap-file-finder))
-          ;; Without a position fall back to the default behavior.
-          ((not position) (call-interactively 'find-file-at-point))
-          (t
-           ;; Otherwise provide the real file since in some cases the position
-           ;; gets included as part of the file name. Use the prompter to
-           ;; provide a chance to verify.
-           (find-file-at-point (ffap-prompter (unless (string= "" file) file)))
-           (goto-char (point-min))
-           (forward-line (1- (string-to-number (car position))))
-           (when (cadr position)
-             (forward-char (1- (string-to-number (cadr position)))))))))
+  ;; In `dired' this gets in the way of using C-x C-f to create files.  Use RET
+  ;; instead to go to the file at point.
+  (if (eq major-mode 'dired-mode)
+      (call-interactively ffap-file-finder)
+    ;; Otherwise handle line/column numbers and remote paths before delegating
+    ;; to `find-file-at-point'.
+    (let* ((str (ffap-string-at-point))
+           (index (string-match ":[0-9]+\\(:[0-9]+\\)?$" str))
+           (file (if index (substring str 0 index) str))
+           (position (when index (split-string (substring str (1+ index)) ":")))
+           ;; Only check non-remote paths for existence.
+           (exists (or (ffap-file-remote-p file) (ffap-file-exists-string file))))
+      ;; Use the prompter to provide a chance to verify.
+      (find-file-at-point (ffap-prompter (when exists file)))
+      (when (and exists (car position))
+        (goto-char (point-min))
+        (forward-line (1- (string-to-number (car position))))
+        (when (cadr position)
+          (forward-char (1- (string-to-number (cadr position)))))))))
 
 ;;; completion.el ends here

@@ -41,12 +41,18 @@
   (should (equal '(("SPC 1" . "spy")) ec-test--spy-value)))
 
 (ert-deftest ec-test-ffap ()
-  (defun ec-test--ffap-run (file line column)
-    "Run `ec-ffap' and ensure FILE is opened to LINE then kill the buffer."
+  (defun ec-test--ffap-run (file line column exists)
+    "Run `ec-ffap' and ensure FILE is opened to LINE then kill the buffer.
+
+If EXISTS is nil `dired' should instead be opened to the current
+directory."
     (with-simulated-input "RET" (ec-ffap))
-    (should (string= file (buffer-name)))
-    (should (equal line (line-number-at-pos)))
-    (should (equal (1- (or column 1)) (current-column)))
+    (if exists
+        (progn
+          (should (string= file (buffer-name)))
+          (should (equal line (line-number-at-pos)))
+          (should (equal (1- (or column 1)) (current-column))))
+      (should (eq major-mode 'dired-mode)))
     (kill-this-buffer))
 
   (let ((default-directory ec-dir))
@@ -55,32 +61,35 @@
   (dolist (dir `(,(concat ec-dir "test/fixtures/")
                  "./config/../test/fixtures/"
                  ,(concat "../" (file-name-nondirectory (directory-file-name ec-dir)) "/test/fixtures/")
-                 "./test/fixtures/"))
-    (dolist (file '("file" ".file"))
-      (dolist (line '(10))
+                 "./test/fixtures/"
+                 "test/fixtures/"))
+    (dolist (test '(("file" . t) (".file" . t) ("foo" . nil)))
+      (dolist (line '(10 11))
         (dolist (column '(nil 15))
-          (insert (concat dir file) (format ":%s" line))
-          (when column (insert (format ":%s" column)))
+          (let ((file (car test))
+                (exists (cdr test)))
+            (insert (concat dir file) (format ":%s" line))
+            (when column (insert (format ":%s" column)))
 
-          ;; Beginning of the line always works.
-          (beginning-of-line)
-          (ec-test--ffap-run file line column)
+            ;; Beginning of the line always works.
+            (beginning-of-line)
+            (ec-test--ffap-run file line column exists)
 
-          ;; For relative paths having the point on the first slash always works.
-          (forward-char 1)
-          (ec-test--ffap-run file line column)
+            ;; For relative paths having the point on the first slash always works.
+            (forward-char 1)
+            (ec-test--ffap-run file line column exists)
 
-          ;; At this point relative paths only fail if there is one slash and the
-          ;; file does not start with a dot.
-          (forward-char 1)
-          (ec-test--ffap-run file line column)
+            ;; At this point relative paths only fail if there is one slash and the
+            ;; file does not start with a dot.
+            (forward-char 1)
+            (ec-test--ffap-run file line column exists)
 
-          ;; Now all one-slash relative paths will fail including those that start
-          ;; with a dot.
-          (end-of-line)
-          (ec-test--ffap-run file line column)
+            ;; Now all one-slash relative paths will fail including those that start
+            ;; with a dot.
+            (end-of-line)
+            (ec-test--ffap-run file line column exists)
 
-          (insert "\n")))))
+            (insert "\n"))))))
 
   ;; Should be disabled in dired.
   (dired-jump)
