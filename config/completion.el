@@ -169,9 +169,6 @@
   (define-key evil-normal-state-map (kbd "C-y") #'consult-yank-from-kill-ring)
   (define-key evil-insert-state-map (kbd "C-y") #'consult-yank-from-kill-ring))
 
-;; Ask y/n instcad of yes/no.
-(defalias 'yes-or-no-p 'y-or-n-p)
-
 ;; Search.
 (setq lazy-highlight-initial-delay 1)
 
