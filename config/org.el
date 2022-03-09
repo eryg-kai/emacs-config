@@ -394,9 +394,9 @@
   (add-hook 'before-save-hook #'ec--appt-schedule nil t))
 
 ;; Flashcards.
-(setq org-drill-use-visible-cloze-face-p t
-      org-drill-maximum-items-per-session 150
+(setq org-drill-maximum-items-per-session 150
       org-drill-maximum-duration 30
+      ;; org-drill-use-visible-cloze-face-p t ;TODO: this removes some heading styles
       org-drill-save-buffers-after-drill-sessions-p nil)
 
 (defun ec-get-language-dirs ()
