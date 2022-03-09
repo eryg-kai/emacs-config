@@ -58,6 +58,28 @@ directory."
   (let ((default-directory ec-dir))
     (switch-to-buffer (get-buffer-create "ffap test")))
 
+  ;; Examples:
+  ;; ../test/fixtures/file:10:30
+  ;; ../test/fixtures/file#L10 ../test/fixtures/file#L10-L30
+  ;; completion.el:10:10 ./completion.el:10:10 ~/ops/emacs/test/completion.el:10
+  ;; nope.el:10 ./nope.el:10 ~/ops/emacs/test/nope.el:10 < inconsistent
+  ;; nope.el:10:10 ./nope.el:10:10 ~/ops/emacs/test/nope.el:10:10 < inconsistent
+  ;; /home/foo/bar/nope.el /home/foo/bar/nope.el:10 < inconsistent
+  ;; /sudo::/etc/resolv.conf:2:5
+  ;; ~ < this one is really weird
+  ;; https://emacs.org
+  ;; emacs.org < seems to ping but just hangs
+  ;; mailto:test@test.com < ?
+  ;; file:///etc/resolv.conf
+  ;; ftp://localhost.home/etc/resolv.conf
+  ;; telnet://gnu.org:80/
+  ;; ~/~/.config/emacs/
+  ;; *.el*
+  ;; /bin:/bin2:/bin3 /bin:/bin2:/bin3:10
+  ;; /
+  ;; $~/ops/emacs/test/completion.el $~/ops/emacs/test/completion.el:10
+  ;; ~/ops/emacs/test/completion.el$
+
   (dolist (dir `(,(concat ec-dir "test/fixtures/")
                  "./config/../test/fixtures/"
                  ,(concat "../" (file-name-nondirectory (directory-file-name ec-dir)) "/test/fixtures/")
