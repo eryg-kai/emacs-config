@@ -10,13 +10,13 @@
       kept-old-versions 0
       delete-old-versions t
       backup-directory-alist
-      `((".*" . ,(expand-file-name "backups/" user-emacs-directory)))
+      `((".*" . ,(expand-file-name "backups/" (xdg-data-home))))
       auto-save-file-name-transforms
-      `((".*" ,(expand-file-name "auto-save/" user-emacs-directory) t)))
+      `((".*" ,(expand-file-name "auto-save/" (xdg-data-home)) t)))
 
 ;; Backup Tramp files remotely.  Use ~ so it works for remotes with different
 ;; home directory paths.
-(setq tramp-backup-directory-alist `((".*" . "~/.config/emacs/backups/")))
+(setq tramp-backup-directory-alist `((".*" . "~/.local/share/backups/")))
 
 ;; Recentf.
 (setq recentf-max-menu-items 1000
@@ -50,7 +50,7 @@
 (defun ec--save-tracked-buffers ()
   "Save tracked buffers."
   (let ((buffers ec--tracked-buffers)
-        (dir (expand-file-name "track" user-emacs-directory))
+        (dir (expand-file-name "track" (xdg-data-home)))
         (ediff 0)
         (queue nil))
     (setq ec--last-written-buffer (car ec--tracked-buffers))

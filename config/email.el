@@ -5,8 +5,8 @@
 ;;; Code:
 
 (setq mail-user-agent 'mu4e-user-agent
-      mu4e-mu-home (expand-file-name "mu" ec-cache-dir)
-      mu4e-attachment-dir (expand-file-name "mu4e" ec-cache-dir)
+      mu4e-mu-home (expand-file-name "mu" (xdg-cache-home))
+      mu4e-attachment-dir (expand-file-name "mu4e" (xdg-cache-home))
       mu4e-get-mail-command (concat "mbsync --config "
                                     (expand-file-name ".mbsyncrc" ec-mail-dir)
                                     " --all")

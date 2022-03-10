@@ -17,16 +17,19 @@
                       (expand-file-name "lib" ec-dir)))
 (defconst ec-config-dir (file-name-as-directory
                          (expand-file-name "config" ec-dir)))
-(defconst ec-cache-dir (file-name-as-directory
-                        (or (getenv "XDG_CACHE_HOME")
-                            (expand-file-name "~/.cache"))))
 (defconst ec-mail-dir (file-name-as-directory
                        (or (getenv "MAIL_HOME")
                            (expand-file-name "~/com"))))
 (defconst ec-theme-dir (file-name-as-directory
                         (expand-file-name "themes" ec-dir)))
 (push ec-theme-dir custom-theme-load-path)
-(autoload 'mu4e "mu4e" "mu for Emacs." t) ; Installed via the system.
+
+;; Installed via the system.
+(autoload 'mu4e "mu4e" "mu for Emacs." t)
+
+;; Autoload xdg utils.
+(autoload 'xdg-cache-home "xdg" "XDG cache home.")
+(autoload 'xdg-data-home "xdg" "XDG data home.")
 
 ;; Load custom.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

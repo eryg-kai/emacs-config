@@ -108,12 +108,12 @@
 
 ;; Ispell.
 (setq ispell-personal-dictionary
-      (expand-file-name "aspell/dictionary" ec-cache-dir)
+      (expand-file-name "aspell/dictionary" (xdg-data-home))
       ;; Make curly quotes work with spellcheck.
       ispell-local-dictionary-alist
       '((nil "[[:alpha:]]" "[^[:alpha:]]" "['’]" nil ("-B") nil utf-8))
       ispell-extra-args
-      `("--repl" ,(expand-file-name "aspell/replacements" ec-cache-dir)))
+      `("--repl" ,(expand-file-name "aspell/replacements" (xdg-data-home))))
 
 (add-hook 'text-mode-hook #'ispell-minor-mode)
 (add-hook 'prog-mode-hook #'ispell-minor-mode)

@@ -16,7 +16,7 @@
 ;; Elfeed.
 (define-key global-map (kbd "C-c e") #'elfeed)
 
-(setq elfeed-db-directory (expand-file-name "elfeed" ec-cache-dir))
+(setq elfeed-db-directory (expand-file-name "elfeed" (xdg-cache-home)))
 
 ;; Dired.
 (setq dired-listing-switches "-Fahvl --si --group-directories-first")
@@ -30,7 +30,7 @@
   (setq auth-sources `(,auth-source)))
 
 ;; RFCs.
-(setq rfc-mode-directory (expand-file-name "rfc" ec-cache-dir))
+(setq rfc-mode-directory (expand-file-name "rfc" (xdg-cache-home)))
 
 (define-derived-mode rfc-edit-mode text-mode "RFC-edit"
   "Mode for editing RFCs."
@@ -102,7 +102,7 @@
       erc-header-line-format nil
       erc-mode-line-format "%n%a"
       erc-mode-line-away-status-format "{%Y-%m-%d %a %H:%M}"
-      erc-log-channels-directory (expand-file-name "erc" ec-cache-dir)
+      erc-log-channels-directory (expand-file-name "erc" (xdg-cache-home))
       erc-save-buffer-on-part nil
       erc-save-queries-on-quit nil
       erc-log-write-after-send t
@@ -147,7 +147,7 @@
          `(,(concat "BEANCOUNT_LOAD_CACHE_FILENAME="
                     (expand-file-name
                      (file-relative-name buffer-file-name)
-                     ec-cache-dir)
+                     (xdg-cache-home))
                     ".cache")
            ,@process-environment)))
     (apply fn prog args)))

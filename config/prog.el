@@ -38,7 +38,7 @@
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 
 ;; Dash.
-(setq dash-docs-docsets-path (expand-file-name "docsets" ec-cache-dir))
+(setq dash-docs-docsets-path (expand-file-name "docsets" (xdg-cache-home)))
 
 (defun ec-docs-at-point ()
   "Search docs for thing at point."

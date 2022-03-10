@@ -29,8 +29,8 @@
       eshell-highlight-prompt nil
       eshell-prompt-function 'ec--eshell-prompt
       eshell-banner-message ""
-
-      eshell-z-freq-dir-hash-table-file-name (expand-file-name "eshell/z" user-emacs-directory))
+      eshell-directory-name (expand-file-name "eshell" (xdg-data-home))
+      eshell-z-freq-dir-hash-table-file-name (expand-file-name "eshell/z" (xdg-data-home)))
 
 ;; Unique history per eshell buffer.
 (defun ec--eshell-set-history-file ()
