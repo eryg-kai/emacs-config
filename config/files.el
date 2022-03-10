@@ -6,16 +6,17 @@
 ;;; Code:
 (setq create-lockfiles nil
       version-control t
-      kept-new-versions most-positive-fixnum
+      kept-new-versions 10
       kept-old-versions 0
       delete-old-versions t
-      make-backup-files nil
-      vc-make-backup-files t
-      backup-by-copying t
       backup-directory-alist
       `((".*" . ,(expand-file-name "backups/" user-emacs-directory)))
       auto-save-file-name-transforms
       `((".*" ,(expand-file-name "auto-save/" user-emacs-directory) t)))
+
+;; Backup Tramp files remotely.  Use ~ so it works for remotes with different
+;; home directory paths.
+(setq tramp-backup-directory-alist `((".*" . "~/.config/emacs/backups/")))
 
 ;; Recentf.
 (setq recentf-max-menu-items 1000
@@ -34,50 +35,6 @@
   (add-hook 'find-file-hook #'ec--recentf-save-list-soon))
 
 (add-hook 'emacs-startup-hook #'recentf-mode)
-
-;; Backups.
-(defun ec--backup-buffer ()
-  "Make a backup of the file visited by the current buffer.
-
-The backup is made asynchronously via mkdir and cp and is placed on the same
-machine as the file.  The destination for a file's backup can be configured
-through `backup-directory-alist'.  If the destination includes the local user's
-home directory it will use the remote user's home directory instead."
-  (when-let (file (or (file-remote-p (buffer-file-name) 'localname)
-                      (buffer-file-name)))
-    (cl-every (lambda (elt)
-                (when (string-match (car elt) file)
-                  (let* ((ext (file-name-extension file))
-                         (dest (string-replace
-                                ;; ~ will be interpreted literally in quotes so
-                                ;; replace it with the HOME environment variable.
-                                "~" "$HOME"
-                                ;; The remote home might not be the same as the
-                                ;; local home so abbreviate in order to convert
-                                ;; the home into ~.
-                                (abbreviate-file-name
-                                 (expand-file-name
-                                  (string-remove-prefix
-                                   "/"
-                                   (concat (file-name-directory file)
-                                           (file-name-base file)
-                                           "-"
-                                           (format-time-string "%FT%T%z")
-                                           (when ext ".")
-                                           ext))
-                                  (cdr elt))))))
-                    (set-process-sentinel
-                     (start-file-process "backup" (when ec-debug-p "*backup*") "bash" "-c"
-                                         (format
-                                          "mkdir -p \"%s\" && cp \"%s\" \"%s\" && chmod -w \"%s\""
-                                          (file-name-directory dest)
-                                          file dest
-                                          dest))
-                     (lambda (_ event)
-                       (message "Backup %s %s" file (string-trim event)))))))
-              backup-directory-alist)))
-
-(add-hook 'after-save-hook #'ec--backup-buffer)
 
 ;; Buffers that should be read only but aren't.
 (defun ec--maybe-make-read-only ()
