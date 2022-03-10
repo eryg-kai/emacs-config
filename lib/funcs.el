@@ -102,7 +102,7 @@ When the length is odd the right side will be one longer than the left."
 
 (defun ec-localize (fn &rest args)
   "Run FN with ARGS after ensure `default-directory' is local."
-  (let ((default-directory ec-mail-dir))
+  (let ((default-directory user-emacs-directory))
     (apply fn args)))
 
 (defun ec-trampify (fn &rest args)

@@ -7,9 +7,6 @@
 (setq mail-user-agent 'mu4e-user-agent
       mu4e-mu-home (expand-file-name "mu" (xdg-cache-home))
       mu4e-attachment-dir (expand-file-name "mu4e" (xdg-cache-home))
-      mu4e-get-mail-command (concat "mbsync --config "
-                                    (expand-file-name ".mbsyncrc" ec-mail-dir)
-                                    " --all")
       mu4e-user-agent-string nil
       mu4e-use-fancy-chars nil
       mu4e-change-filenames-when-moving t ; Need this or mbsync won't work.
@@ -96,6 +93,10 @@ account is activated."
         '(lambda (docid msg target)
            (mu4e~proc-move docid (mu4e~mark-check-target target) "-N")))
 
+  (setq mu4e-get-mail-command (concat "mbsync --config "
+                                      (expand-file-name ".mbsyncrc" mail-source-directory)
+                                      " --all"))
+
   ;; This file should call `ec-register-email-account' for each email account.
   ;; For example:
   ;; (ec-register-email-account
@@ -114,6 +115,6 @@ account is activated."
   ;;    (browse-url-firefox-arguments . ("--profile" ,(expand-file-name "~/.mozilla/firefox/profile")))
   ;;    (mu4e-maildir-shortcuts . (("/Inbox" . ?i)
   ;;                               ("/Archive" . ?a)))))
-  (load (expand-file-name "accounts.el" ec-mail-dir) nil t))
+  (load (expand-file-name "accounts.el" mail-source-directory) nil t))
 
 ;;; email.el ends here

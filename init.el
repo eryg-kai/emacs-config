@@ -9,7 +9,7 @@
 (setq lexical-binding t ; Only affects evaluating code.
       delete-by-moving-to-trash nil)
 
-;; Directories and load paths.
+;; Load paths for lisp code.
 (defconst ec-dir (file-name-directory load-file-name))
 (defconst ec-test-dir (file-name-as-directory
                        (expand-file-name "test" ec-dir)))
@@ -17,9 +17,6 @@
                       (expand-file-name "lib" ec-dir)))
 (defconst ec-config-dir (file-name-as-directory
                          (expand-file-name "config" ec-dir)))
-(defconst ec-mail-dir (file-name-as-directory
-                       (or (getenv "MAIL_HOME")
-                           (expand-file-name "~/com"))))
 (defconst ec-theme-dir (file-name-as-directory
                         (expand-file-name "themes" ec-dir)))
 (push ec-theme-dir custom-theme-load-path)
