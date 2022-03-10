@@ -21,11 +21,7 @@
 ;; Recentf.
 (setq recentf-max-menu-items 1000
       recentf-max-saved-items 1000
-      recentf-auto-cleanup 'never
-      recentf-exclude
-      `("/git-rebase-todo\\'"
-        "/\\(\\(\\(COMMIT\\|NOTES\\|PULLREQ\\|MERGEREQ\\|TAG\\)_EDIT\\|MERGE_\\|\\)MSG\\|\\(BRANCH\\|EDIT\\)_DESCRIPTION\\)\\'"
-        "COMMIT_EDITMSG\\'" ,(expand-file-name user-emacs-directory)))
+      recentf-auto-cleanup 'never)
 
 (defun ec--recentf-save-list-soon ()
   "Save recent file list soon."
@@ -101,5 +97,18 @@
 
 ;; Save cursor position.
 (add-hook 'emacs-startup-hook #'save-place-mode)
+
+;; Ignore certain files.
+(let ((ignore (format "/%s\\'"(regexp-opt
+                       `("git-rebase-todo"
+                         "COMMIT_EDITMSG"
+                         "bookmarks")))))
+
+  (setq save-place-ignore-files-regexp ignore
+        recentf-exclude (list ignore)
+        undohist-ignored-files (list ignore)))
+
+(with-eval-after-load 'undohist
+  (setq backup-enable-predicate #'undohist-recover-file-p))
 
 ;;; files.el ends here
