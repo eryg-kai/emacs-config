@@ -29,9 +29,9 @@
 ;; Ensure mu4e runs locally (it only half-supports Tramp).
 (advice-add 'mu4e :around #'ec-localize)
 
-;; Reset browser to default on exit.
+;; Switch to default context on exit.
 (defun ec-reset-browser-profile (&rest _)
-  (setq browse-url-firefox-arguments nil))
+  (mu4e-context-switch nil "0x0049"))
 
 (advice-add 'mu4e~stop :after #'ec-reset-browser-profile)
 
