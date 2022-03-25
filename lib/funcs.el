@@ -101,7 +101,7 @@ When the length is odd the right side will be one longer than the left."
   (save-excursion (goto-char pos) (current-column)))
 
 (defun ec-localize (fn &rest args)
-  "Run FN with ARGS after ensure `default-directory' is local."
+  "Run FN with ARGS after ensuring `default-directory' is local."
   (let ((default-directory user-emacs-directory))
     (apply fn args)))
 

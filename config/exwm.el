@@ -28,7 +28,7 @@ If no ARGS are provided, prompt for the command."
      (lambda (_ event)
        (message "%s: %s" (car args) (string-trim event))))))
 
-(advice-add 'ec-exec :around #'ec-localize)
+(advice-add 'exwm-manage--manage-window :around #'ec-localize)
 
 ;; Used to determine if the screen script needs to run.
 (defvar ec--connected-monitors nil "Currently connected monitors.")
