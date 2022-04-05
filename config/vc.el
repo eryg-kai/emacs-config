@@ -52,7 +52,7 @@
   "Insert the push remote of the current branch."
   (magit-get-push-remote))
 
-;; Git lin.
+;; Git link.
 (define-key global-map (kbd "C-c gl") #'git-link)
 
 ;; Commit mode.
@@ -64,5 +64,8 @@
 (add-hook 'git-commit-mode-hook #'ec--set-git-commit-width)
 
 (add-hook 'git-commit-mode-hook #'evil-insert-state)
+
+;; Try speeding up Tramp.
+(setq vc-handled-backends '(Git)) ;; Only look for git.
 
 ;;; vc.el ends here
