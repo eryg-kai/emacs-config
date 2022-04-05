@@ -8,8 +8,7 @@
                                    pinentry))
 
 ;; Pinentry.
-(setq epa-pinentry-mode 'loopback
-      pinentry-popup-prompt-window nil)
+(setq epa-pinentry-mode 'loopback)
 
 ;; Notifications.
 (setq appt-display-format nil)
