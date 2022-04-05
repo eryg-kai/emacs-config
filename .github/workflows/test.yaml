@@ -32,14 +32,15 @@ jobs:
         with:
           version: ${{ matrix.emacs_version }}
 
-      - uses: actions/cache@v3
-        id: cache-packages
+      - uses: martijnhols/actions-cache/restore@v3
+        id: cache
         with:
           path: |
             ~/.emacs.d
             ~/.config/emacs
           key: emacs-packages-${{ matrix.platform }}-${{ matrix.emacs_version }}-${{ hashFiles('**/package-list') }}-${{ secrets.CACHE_VERSION }}
           restore-keys: |
+            emacs-packages-${{ matrix.platform }}-${{ matrix.emacs_version }}-incomplete
             emacs-packages-${{ matrix.platform }}-${{ matrix.emacs_version }}-
             emacs-packages-${{ matrix.platform }}-
             emacs-packages-
@@ -47,8 +48,24 @@ jobs:
       - run: emacs --version
 
       - name: Install packages
-        if: steps.cache-packages.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: emacs --batch -l ./init.el --eval "(progn (package-refresh-contents) (defun y-or-n-p (_) t) (package-install-selected-packages))"
+
+      - uses: martijnhols/actions-cache/save@v3
+        if: success() && steps.cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.emacs.d
+            ~/.config/emacs
+          key: ${{ steps.cache.outputs.primary-key }}
+
+      - uses: martijnhols/actions-cache/save@v3
+        if: failure() && steps.cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.emacs.d
+            ~/.config/emacs
+          key: emacs-packages-${{ matrix.platform }}-${{ matrix.emacs_version }}-incomplete
 
       - name: Prepare environment
         run: mkdir -p ~/.config/emacs && mkdir -p ~/ops/emacs/{.git,config} && mkdir -p ~/ops/.git
