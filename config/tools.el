@@ -119,7 +119,7 @@
 ;; Tramp.
 (setq tramp-use-ssh-controlmaster-options nil
       tramp-histfile-override t
-      tramp-connection-timeout 2
+      tramp-connection-timeout 10
       tramp-copy-size-limit nil
       tramp-use-scp-direct-remote-copying t)
 
