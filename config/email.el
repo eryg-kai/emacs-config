@@ -31,7 +31,7 @@
 
 ;; Switch to default context on exit.
 (defun ec-reset-browser-profile (&rest _)
-  (mu4e-context-switch nil "0x0049"))
+  (mu4e-context-switch nil "default"))
 
 (advice-add 'mu4e~stop :after #'ec-reset-browser-profile)
 
