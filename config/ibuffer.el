@@ -29,6 +29,7 @@
          ("Chat" (or (mode . erc-mode) (mode . rcirc-mode)))
          ("Magit" (name . "magit"))
          ("PDF" (mode . pdf-view-mode))
+         ("Dictionary" (mode . dictionary-mode))
          ("Special" (name . "\\`\\*.+\\*\\'")))))
 
 (defun ec--ibuffer-sort-filter-groups (groups)
