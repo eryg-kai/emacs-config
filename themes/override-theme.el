@@ -21,6 +21,8 @@
 
  (erc-default-face :inherit 'unspecified)
 
+ (dictionary-word-definition-face :font-family 'unspecified)
+
  (hl-todo   :foreground 'unspecified :inherit 'warning :weight 'bold)
  (hl-temp   :inherit 'evil-operator-face :weight 'bold)
  (hl-note   :inherit 'success :weight 'bold)
