@@ -125,6 +125,9 @@ Options are:
                 ;; Display floating.
                 (("^\\*zoom\\*$") (display-buffer-no-window) :float t)
 
+                (("^\\*Dictionary\\*")
+                 (display-buffer-in-direction) :only t :width 0.5)
+
                 ;; Dedicated temporary/branch state (like how `org-agenda' works
                 ;; by default).
                 (("^\\*Help\\*$" "^\\*ripgrep-search\\*$" "^\\*Man" "^\\*grep\\*$"
