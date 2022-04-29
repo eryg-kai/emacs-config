@@ -48,13 +48,6 @@
 
 (add-hook 'eshell-pre-command-hook  #'ec--eshell-write-history-soon)
 
-;; https://github.com/noctuid/general.el/issues/80
-(defun ec--eshell-set-keybindings ()
-  "Set local keybindings for `eshell'."
-  (local-set-key (kbd "C-c h") #'shell+-eshell-insert-history))
-
-(add-hook 'eshell-mode  #'ec--eshell-set-keybindings)
-
 ;; Make !! and others work.
 (add-hook 'eshell-expand-input-functions #'eshell-expand-history-references)
 
