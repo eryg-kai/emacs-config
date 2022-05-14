@@ -202,7 +202,7 @@ faces are simply invisible."
   (defface org-bullet  '((t (:inherit org-priority :height 0.9)))
     "Face for Org bullets.")
 
-  (setq org-ellipsis "  " ;; ⤵, ⮷, …, ▼, ⋱, ↴, ⬎, ⤷
+  (setq org-ellipsis (if (display-graphic-p) "  " " ▼ ") ;; ⤵ ⮷ … ⋱ ↴ ⬎ ⤷
         org-bullets-face-name 'org-bullet
         org-bullets-bullet-list
         '(;; "☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷"
@@ -239,7 +239,7 @@ faces are simply invisible."
 (setq whitespace-display-mappings
       '((space-mark   ?\  [?·])
         (newline-mark ?\n [?$ ?\n])
-        (tab-mark     ?\t [?\u00BB ?\t] [?\\ ?\t]))
+        (tab-mark     ?\t [?\» ?\t] [?\\ ?\t]))
       whitespace-style
       '(face tabs spaces trailing space-before-tab newline indentation
              empty space-after-tab space-mark tab-mark newline-mark))
@@ -249,12 +249,14 @@ faces are simply invisible."
   (set-display-table-slot standard-display-table
                           'truncation (make-glyph-code ?\… 'whitespace-tab))
   (set-display-table-slot standard-display-table
-                          'wrap (make-glyph-code ?\↙ 'whitespace-tab)))
+                          'wrap (make-glyph-code
+                                 (if (display-graphic-p) ?\↙ ?\▼) 'whitespace-tab)))
 
 (add-hook 'emacs-startup-hook #'global-whitespace-mode)
 
 ;; Fill column indicator.
-(setq-default display-fill-column-indicator-character ?\〱)
+(setq-default display-fill-column-indicator-character
+              (if (display-graphic-p) ?\〱 ?\│))
 
 (add-hook 'emacs-startup-hook #'global-display-fill-column-indicator-mode)
 
