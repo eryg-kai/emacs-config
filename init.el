@@ -39,6 +39,7 @@
 ;;   - To update run `package-refresh-contents' then install packages again.
 ;; Packages not in MELPA can be installed with Quelpa.
 ;;   - For example: (quelpa '(osd :repo "0x0049/osd" :fetcher github))
+;;                  (quelpa '(beancount :repo "beancount/beancount-mode" :fetcher github))
 (setq package-selected-packages '(quelpa esup with-simulated-input)
       package-quickstart t)
 
