@@ -9,7 +9,7 @@
 
 (setq exwm-edit-bind-default-keys nil)
 
-(autoload 'exwm-edit "exwm-edit--compose")
+(autoload 'exwm-edit--compose "exwm-edit" "EXWM edit mode.")
 
 (define-key global-map (kbd "C-c r") #'ec-exec)
 
