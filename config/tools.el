@@ -162,4 +162,7 @@
 
 (advice-add 'net-utils-run-program :after #'ec--net-utils-mode)
 
+;; PDFs.
+(add-hook 'emacs-startup-hook #'pdf-loader-install)
+
 ;;; tools.el ends here
