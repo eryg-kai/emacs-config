@@ -132,7 +132,8 @@ Options are:
                 ;; by default).
                 (("^\\*Help\\*$" "^\\*ripgrep-search\\*$" "^\\*Man" "^\\*grep\\*$"
                   "^\\*Process List\\*$" "^\\*Password-Store\\*$" "^\\*eldoc\\*$"
-                  "^\\*xref\\*" "^\\*Occur\\*$" "^\\*info\\*$")
+                  "^\\*xref\\*" "^\\*Occur\\*$" "^\\*info\\*$"
+                  Buffer-menu-mode)
                  (display-buffer-in-direction) :only t :focus t :width 0.5))
               t))
 
