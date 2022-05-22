@@ -123,6 +123,8 @@
 (add-hook 'org-blocker-hook #'ec--prevent-duplicate-states)
 
 ;; Capturing.
+(define-key global-map (kbd "C-c C-z") #'org-add-note)
+
 (defun ec-capture-user (file &optional user)
   "Return the path to FILE for USER or the current user."
   (expand-file-name
@@ -164,17 +166,59 @@
                                 (lambda (line) (concat indentation line))
                                 template "\n"))))
 
-(defun ec-add-note ()
-  "Replacement for `org-note-add'."
-  (interactive)
-  (org-capture nil "cn"))
+;; Ripped from `org-store-log-note'.
+(defun ec--log-heading ()
+  "Format and return log heading based on purpose."
+  (org-replace-escapes
+   (cdr (assq org-log-note-purpose org-log-note-headings))
+   (list (cons "%u" (user-login-name))
+         (cons "%U" user-full-name)
+         (cons "%t" (format-time-string
+                     (org-time-stamp-format 'long 'inactive)
+                     org-log-note-effective-time))
+         (cons "%T" (format-time-string
+                     (org-time-stamp-format 'long nil)
+                     org-log-note-effective-time))
+         (cons "%d" (format-time-string
+                     (org-time-stamp-format nil 'inactive)
+                     org-log-note-effective-time))
+         (cons "%D" (format-time-string
+                     (org-time-stamp-format nil nil)
+                     org-log-note-effective-time))
+         (cons "%s" (cond
+                     ((not org-log-note-state) "")
+                     ((string-match-p org-ts-regexp
+                                      org-log-note-state)
+                      (format "\"[%s]\""
+                              (substring org-log-note-state 1 -1)))
+                     (t (format "\"%s\"" org-log-note-state))))
+         (cons "%S"
+               (cond
+                ((not org-log-note-previous-state) "")
+                ((string-match-p org-ts-regexp
+                                 org-log-note-previous-state)
+                 (format "\"[%s]\""
+                         (substring
+                          org-log-note-previous-state 1 -1)))
+                (t (format "\"%s\""
+                           org-log-note-previous-state)))))))
 
-;; Replace `org-add-note' with a version that uses capture templates.
-(define-key global-map (kbd "C-c C-z") #'ec-add-note)
-(with-eval-after-load 'org
-  (define-key org-mode-map (kbd "C-c C-z") #'ec-add-note))
-(with-eval-after-load 'org-agenda
-  (define-key org-agenda-mode-map (kbd "C-c C-z") #'ec-add-note))
+(defun ec-add-log (fn &rest args)
+  "Like `org-add-log-note' except use capture templates.
+
+Call FN with ARGS for any log entry that does not take a note."
+  (interactive)
+  (if (or (eq org-log-note-purpose 'note)
+          (and (eq org-log-note-purpose 'state)
+               (eq org-log-note-how 'note)))
+      (progn
+        (remove-hook 'post-command-hook 'org-add-log-note)
+        (setq org-log-setup nil)
+        (org-capture nil "cn"))
+    (apply fn args)))
+
+;; Replace default note capture with a version that uses capture templates.
+(advice-add 'org-add-log-note :around #'ec-add-log)
 
 ;; `org-directory' will be void until org loads so delay setting capture
 ;; templates as they build paths off the org directory.

@@ -1,2 +1,2 @@
-- Note taken on %U \\
-  %?
+- %(ec--log-heading) \\
+  %(or org-log-note-extra "")%?
