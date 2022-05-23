@@ -14,10 +14,6 @@
       auto-save-file-name-transforms
       `((".*" ,(expand-file-name "auto-save/" (xdg-data-home)) t)))
 
-;; Backup Tramp files remotely.  Use ~ so it works for remotes with different
-;; home directory paths.
-(setq tramp-backup-directory-alist `((".*" . "~/.local/share/backups/")))
-
 ;; Recentf.
 (setq recentf-max-menu-items 1000
       recentf-max-saved-items 1000
