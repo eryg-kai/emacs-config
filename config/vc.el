@@ -52,6 +52,10 @@
   "Insert the push remote of the current branch."
   (magit-get-push-remote))
 
+;; Forge.
+(advice-add 'ghub--host :around #'ec-trampify)
+(advice-add 'ghub--username :around #'ec-trampify)
+
 ;; Git link.
 (define-key global-map (kbd "C-c gl") #'git-link)
 
