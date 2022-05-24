@@ -9,6 +9,7 @@
       kept-new-versions 10
       kept-old-versions 0
       delete-old-versions t
+      vc-make-backup-files t
       backup-directory-alist
       `((".*" . ,(expand-file-name "backups/" (xdg-data-home))))
       auto-save-file-name-transforms
