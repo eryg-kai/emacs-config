@@ -108,4 +108,11 @@
 (with-eval-after-load 'undohist
   (setq backup-enable-predicate #'undohist-recover-file-p))
 
+;; Backups on every save.
+(defun ec--force-backup ()
+  "Set `buffer-backed-up' to nil."
+  (setq buffer-backed-up nil))
+
+(add-hook 'before-save-hook #'ec--force-backup)
+
 ;;; files.el ends here
