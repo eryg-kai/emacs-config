@@ -48,8 +48,10 @@ Special behavior will be exhibited based on PLIST options."
     (when (and (plist-get plist :focus) (not (minibufferp)))
       (select-window window))
     (when (and (plist-get plist :float) (fboundp 'exwm-floating--set-floating))
-    (with-current-buffer buffer
-      (exwm-floating--set-floating exwm--id)))))
+      (with-current-buffer buffer
+        (exwm-floating--set-floating exwm--id)))
+    ;; Returning the window lets `display-buffer' know it should stop.
+    window))
 
 (defun ec--shackle (conditions actions plist)
   "Display buffer matching CONDITIONS using ACTIONS and PLIST."
