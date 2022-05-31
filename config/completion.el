@@ -139,6 +139,9 @@
       icomplete-separator " "
       icomplete-prospects-height 1)
 
+(with-eval-after-load 'icomplete
+  (define-key icomplete-fido-mode-map (kbd "DEL") 'backward-delete-char))
+
 (add-hook 'emacs-startup-hook #'fido-mode)
 
 ;; Consult.
