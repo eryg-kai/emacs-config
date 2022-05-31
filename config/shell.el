@@ -87,23 +87,20 @@
 
 (add-hook 'compilation-filter-hook #'ec--colorize-compile-buffer)
 
-(defun ec-compile (&rest args)
-  "Execute ARGS asynchronously in a compilation buffer.
+(defun ec--compile (fn command &rest args)
+  "Run FN with COMMAND and ARGS after setting `compilation-buffer-name-function'."
+  (let ((compilation-buffer-name-function #'(lambda (_) (format "*%s*" command))))
+    (apply fn command args)))
 
-ARGS are simply concatenated with spaces.
+(advice-add 'compile :around #'ec--compile)
 
-If no ARGS are provided, prompt for the command."
-  (interactive (list (read-shell-command "$ ")))
-  (let* ((command (mapconcat
-                   #'(lambda (a)
-                       (if (numberp a)
-                           (number-to-string a)
-                         a))
-                   args " " ))
-         (compilation-buffer-name-function
-          #'(lambda (_) (format "*%s*" command))))
-    (compile command)))
+;; Shell commands.
+(defun ec--shell-command (fn command &rest args)
+  "Run FN with COMMAND and ARGS after setting `shell-command-buffer-name' and `shell-command-buffer-name-async'."
+  (let* ((shell-command-buffer-name-async (format "*%s*" command))
+         (shell-command-buffer-name shell-command-buffer-name-async))
+    (apply fn command args)))
 
-(defalias 'eshell/compile #'ec-compile)
+(advice-add 'shell-command :around #'ec--shell-command)
 
 ;;; shell.el ends here
