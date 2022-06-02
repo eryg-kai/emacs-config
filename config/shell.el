@@ -30,8 +30,7 @@
       eshell-prompt-function 'ec--eshell-prompt
       eshell-banner-message ""
       eshell-directory-name (expand-file-name "eshell" (xdg-data-home))
-      eshell-z-freq-dir-hash-table-file-name (expand-file-name "eshell/z" (xdg-data-home))
-      eshell-prompt-regexp "λ")
+      eshell-z-freq-dir-hash-table-file-name (expand-file-name "eshell/z" (xdg-data-home)))
 
 ;; Unique history per eshell buffer.
 (defun ec--eshell-set-history-file ()
@@ -59,6 +58,13 @@
     (concat
      (if (not (zerop status)) (propertize (format "[%d] " status) 'face 'error) "")
      (if (fboundp 'epe-theme-lambda) (epe-theme-lambda) "$ "))))
+
+(defun ec--eshell-prompt-regex (&rest _ignore)
+  "Set `eshell-prompt-regex'."
+  (setq eshell-prompt-regexp "^[^\nλ]* λ "))
+
+;; `epe-theme-lambda' adds # to the prompt which gives false positives.
+(advice-add 'epe-theme-lambda :after #'ec--eshell-prompt-regex)
 
 ;; It doesn't have its own autoloads.
 (autoload 'epe-theme-lambda "eshell-prompt-extras")
