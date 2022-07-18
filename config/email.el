@@ -13,7 +13,6 @@
       message-kill-buffer-on-exit t
       message-citation-line-function 'message-insert-formatted-citation-line
       message-citation-line-format "On %a, %b %d, %Y at %I:%M %p %Z %f wrote:\n"
-      mu4e-sent-messages-behavior #'ec--mu4e-sent-messages-behavior
       mu4e-headers-fields '((:account    . 16)
                             (:human-date . 10)
                             (:flags      . 4)
