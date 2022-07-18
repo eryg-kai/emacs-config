@@ -125,7 +125,7 @@ Options are:
                  (display-buffer-at-bottom) :height 0.3)
 
                 ;; Display floating.
-                (("^\\*zoom\\*$") (display-buffer-no-window) :float t)
+                (("^\\*.zoom \\*$") (display-buffer-no-window) :float t)
 
                 (("^\\*Dictionary\\*")
                  (display-buffer-in-direction) :only t :width 0.5)
