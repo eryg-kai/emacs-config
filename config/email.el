@@ -24,7 +24,8 @@
       mu4e-headers-time-format "%T"
       mu4e-headers-date-format "%F"
       mu4e-view-show-addresses t
-      mu4e-context-policy 'pick-first)
+      mu4e-context-policy 'pick-first
+      mu4e-compose-format-flowed t)
 
 ;; Ensure mu4e runs locally (it only half-supports Tramp).
 (advice-add 'mu4e :around #'ec-localize)
