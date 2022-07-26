@@ -6,7 +6,7 @@
 ;;; Code:
 (setq create-lockfiles nil
       version-control t
-      kept-new-versions 10
+      kept-new-versions 100
       kept-old-versions 0
       delete-old-versions t
       vc-make-backup-files t
