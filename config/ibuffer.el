@@ -26,7 +26,7 @@
          ("Scratch" (name . "\\`\\*.*scratch\\*\\'"))
          ("Compilation" (mode . compilation-mode))
          ("Dired" (mode . dired-mode))
-         ("Chat" (or (mode . erc-mode) (mode . rcirc-mode)))
+         ("Chat" (or (mode . erc-mode) (mode . erc-dcc-chat-mode) (mode . rcirc-mode)))
          ("Magit" (name . "magit"))
          ("PDF" (mode . pdf-view-mode))
          ("Dictionary" (mode . dictionary-mode))
