@@ -91,7 +91,7 @@ account is activated."
   ;; it permanently deletes which is also not what I want.
   (setf (plist-get (alist-get 'trash mu4e-marks) :action)
         '(lambda (docid msg target)
-           (mu4e~proc-move docid (mu4e~mark-check-target target) "-N")))
+           (mu4e--server-move docid (mu4e--mark-check-target target) "-N")))
 
   (setq mu4e-get-mail-command (concat "mbsync --config "
                                       (expand-file-name ".mbsyncrc" mail-source-directory)
