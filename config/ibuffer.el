@@ -30,7 +30,7 @@
          ("Magit" (name . "magit"))
          ("PDF" (mode . pdf-view-mode))
          ("Dictionary" (mode . dictionary-mode))
-         ("Special" (name . "\\`\\*.+\\*\\'")))))
+         ("Special" (name . "\\`\\*.+\\*\\(<[1-9]+>\\)?\\'")))))
 
 (defun ec--ibuffer-sort-filter-groups (groups)
   "Sort GROUPS using `ec-ibuffer-filter-group-order' and then alphabetically."
