@@ -52,6 +52,12 @@
   "Insert the push remote of the current branch."
   (magit-get-push-remote))
 
+(with-eval-after-load 'project
+  ;; This duplicates code in magit-extras but is necessary since that file will
+  ;; not load until something triggers it.
+  (define-key project-prefix-map "m" #'magit-project-status)
+  (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
+
 ;; Forge.
 (advice-add 'ghub--host :around #'ec-trampify)
 (advice-add 'ghub--username :around #'ec-trampify)
