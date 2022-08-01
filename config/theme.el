@@ -28,8 +28,7 @@
 (when (display-graphic-p)
   (set-frame-font (font-spec :family "Inconsolata Nerd Font" :size 12.0) t t)
   (set-fontset-font t 'unicode (font-spec :name "Source Han Code JP" :size 9.0) nil)
-  (set-fontset-font t 'unicode (font-spec :name "Source Han Sans HW K" :size 9.0) nil)
-  (set-fontset-font t 'unicode (font-spec :name "Noto Color Emoji" :size 9.0) nil))
+  (set-fontset-font t 'unicode (font-spec :name "Source Han Sans HW K" :size 9.0) nil))
 
 ;; Theme overrides.
 (defvar ec-themes '(doom-one doom-solarized-light) "List of themes to cycle between.")
