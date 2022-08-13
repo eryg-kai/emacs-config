@@ -24,7 +24,16 @@
       mu4e-headers-date-format "%F"
       mu4e-view-show-addresses t
       mu4e-context-policy 'pick-first
-      mu4e-compose-format-flowed t)
+      mu4e-compose-format-flowed t
+      mu4e-cache-maildir-list t)
+
+;; Skip .git directory when getting maildirs since recursing through it is slow.
+(defun ec--ignore-git (fn path mdir)
+  "Run FN with PATH and MDIR after ensuring MDIR is not .git."
+  (unless (string= (file-name-nondirectory (directory-file-name mdir)) ".git")
+    (apply fn path mdir nil)))
+
+(advice-add 'mu4e~get-maildirs-1 :around #'ec--ignore-git)
 
 ;; Ensure mu4e runs locally (it only half-supports Tramp).
 (advice-add 'mu4e :around #'ec-localize)
