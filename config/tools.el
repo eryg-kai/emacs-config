@@ -76,6 +76,10 @@
         (PB "1000 * TB" "Petabyte")))
 
 ;; Processes.
+(defun ec-proced-filter (args)
+  "Return t if ARGS is process with an explicit command."
+  (not (string-match-p "^\\[.*\\]$" args)))
+
 (setq proced-format-alist
       '((short tree pcpu pmem
                (args comm))
@@ -84,7 +88,11 @@
         (long user euid group pid tree pri nice pcpu pmem vsize rss ttname state start time
               (args comm))
         (verbose user euid group egid pid ppid tree pgrp sess pri nice pcpu pmem state thcount vsize rss ttname tpgid minflt majflt cminflt cmajflt start time utime stime ctime cutime cstime etime
-                 (args comm))))
+                 (args comm)))
+      proced-filter 'regular
+      proced-filter-alist
+      '((regular (args . ec-proced-filter))
+        (all)))
 
 (defun ec--proced-format-args (fn &rest args)
   "Strip full paths from the result of FN ran with ARGS when using the short format."

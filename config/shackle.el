@@ -135,7 +135,7 @@ Options are:
                 (("^\\*Help\\*$" "^\\*ripgrep-search\\*$" "^\\*Man" "^\\*grep\\*$"
                   "^\\*Process List\\*$" "^\\*Password-Store\\*$" "^\\*eldoc\\*$"
                   "^\\*xref\\*" "^\\*Occur\\*$" "^\\*info\\*$"
-                  Buffer-menu-mode)
+                  Buffer-menu-mode proced-mode)
                  (display-buffer-in-direction) :only t :focus t :width 0.5))
               t))
 
