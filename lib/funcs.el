@@ -76,4 +76,15 @@ When the length is odd the right side will be one longer than the left."
   (cl-letf (((symbol-function 'call-process) #'process-file))
     (apply fn args)))
 
+(defun ec-exec (&rest args)
+  "Execute ARGS asynchronously without a buffer.
+ARGS are simply concatenated with spaces.
+If no ARGS are provided, prompt for the command."
+  (interactive (list (read-shell-command "$ ")))
+  (let ((command (mapconcat 'identity args " " )))
+    (set-process-sentinel
+     (start-process-shell-command command nil command)
+     (lambda (_ event)
+       (message "%s: %s" (car args) (string-trim event))))))
+
 ;;; funcs.el ends here

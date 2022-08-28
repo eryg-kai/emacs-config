@@ -17,17 +17,6 @@
   :type '(alist :key-type string :value-type string)
   :group 'exwm)
 
-(defun ec-exec (&rest args)
-  "Execute ARGS asynchronously without a buffer.
-ARGS are simply concatenated with spaces.
-If no ARGS are provided, prompt for the command."
-  (interactive (list (read-shell-command "$ ")))
-  (let ((command (mapconcat 'identity args " " )))
-    (set-process-sentinel
-     (start-process-shell-command command nil command)
-     (lambda (_ event)
-       (message "%s: %s" (car args) (string-trim event))))))
-
 (advice-add 'exwm-manage--manage-window :around #'ec-localize)
 
 ;; Used to determine if the screen script needs to run.
@@ -58,14 +47,16 @@ If no ARGS are provided, prompt for the command."
 
         (,(kbd "<XF86MonBrightnessUp>")   . (lambda () (interactive) (ec-exec "light -A 5")))
         (,(kbd "<XF86MonBrightnessDown>") . (lambda () (interactive) (ec-exec "light -U 5")))
-        (,(kbd "<XF86AudioLowerVolume>")  . (lambda () (interactive) (ec-exec "pamixer --decrease 1")))
-        (,(kbd "<XF86AudioRaiseVolume>")  . (lambda () (interactive) (ec-exec "pamixer --increase 1")))
-        (,(kbd "<XF86AudioMute>")         . (lambda () (interactive) (ec-exec "pamixer --toggle-mute")))
-        (,(kbd "<XF86AudioMicMute>")      . (lambda () (interactive) (ec-exec "pamixer --default-source --toggle-mute")))
-        (,(kbd "<XF86AudioPause>")        . (lambda () (interactive) (ec-exec "playerctl play-pause")))
-        (,(kbd "<XF86AudioPlay>")         . (lambda () (interactive) (ec-exec "playerctl play-pause")))
-        (,(kbd "<XF86AudioPrev>")         . (lambda () (interactive) (ec-exec "playerctl previous")))
-        (,(kbd "<XF86AudioNext>")         . (lambda () (interactive) (ec-exec "playerctl next")))))
+
+        (,(kbd "<XF86AudioLowerVolume>")  . pipewire-decrease-volume)
+        (,(kbd "<XF86AudioRaiseVolume>")  . pipewire-increase-volume)
+        (,(kbd "<XF86AudioMute>")         . pipewire-toggle-muted)
+        (,(kbd "<XF86AudioMicMute>")      . pipewire-toggle-microphone)
+
+        (,(kbd "<XF86AudioPause>")        . ec-play-pause)
+        (,(kbd "<XF86AudioPlay>")         . ec-play-pause)
+        (,(kbd "<XF86AudioPrev>")         . ec-play-previous)
+        (,(kbd "<XF86AudioNext>")         . ec-play-next)))
 
 (setq exwm-input-simulation-keys
       `((,(kbd "j")        . [down])
