@@ -16,7 +16,8 @@
 ;; Elfeed.
 (define-key global-map (kbd "C-c e") #'elfeed)
 
-(setq elfeed-db-directory (expand-file-name "elfeed" (xdg-cache-home)))
+(setq elfeed-db-directory (expand-file-name "elfeed" (xdg-cache-home))
+      elfeed-sort-order 'ascending)
 
 ;; Dired.
 (setq dired-listing-switches "-Fahvl --si --group-directories-first")
