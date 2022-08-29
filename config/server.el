@@ -7,9 +7,6 @@
 (nconc package-selected-packages '(osd
                                    pinentry))
 
-;; Pinentry.
-(setq epg-pinentry-mode 'loopback)
-
 ;; Notifications.
 (setq appt-display-format nil)
 
