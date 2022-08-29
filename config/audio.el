@@ -6,6 +6,8 @@
 
 (nconc package-selected-packages '(pipewire))
 
+(setq pipewire-osd-enable nil)
+
 (defun ec-play-toggle ()
   "Play or pause audio."
   (interactive)
