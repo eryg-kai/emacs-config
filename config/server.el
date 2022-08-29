@@ -8,7 +8,7 @@
                                    pinentry))
 
 ;; Pinentry.
-(setq epa-pinentry-mode 'loopback)
+(setq epg-pinentry-mode 'loopback)
 
 ;; Notifications.
 (setq appt-display-format nil)
