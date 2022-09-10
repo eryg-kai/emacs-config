@@ -15,6 +15,13 @@
 
 (add-hook 'eshell-mode-hook #'ec--disable-truncation)
 
+(defun ec--disable-scroll-margin ()
+  "Disable scroll margins in the current buffer."
+  (setq-local scroll-margin 0)
+  (setq-local hscroll-margin 0))
+
+(add-hook 'term-mode-hook #'ec--disable-scroll-margin)
+
 (setq window-divider-default-places t
       scroll-margin 8
       hscroll-margin 8
