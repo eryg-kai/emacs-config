@@ -6,7 +6,8 @@
 
 (define-key global-map (kbd "C-c bi") #'ibuffer)
 
-(defvar ec-ibuffer-filter-group-order '("Default" "Shell"))
+(defvar ec-ibuffer-filter-group-order
+  '("Default" "Shell" "Chat" "Images" "PDF" "EXWM" "Org"))
 
 (defvar ec-ibuffer-startup-filter-group "ec")
 
