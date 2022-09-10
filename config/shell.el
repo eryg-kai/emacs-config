@@ -22,7 +22,8 @@
 
 ;; Eshell.
 (setq eshell-history-size 10000
-      eshell-visual-commands '("ssh" "htop" "watch" "mtr")
+      eshell-visual-commands '("ssh" "htop" "watch" "mtr" "iotop" "bmon" "nethogs")
+      eshell-destroy-buffer-when-process-dies t
       eshell-hist-ignoredups t
       eshell-prefer-lisp-variables t
       eshell-prefer-lisp-functions t
