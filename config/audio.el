@@ -8,7 +8,7 @@
 
 (setq pipewire-osd-enable nil)
 
-(defun ec-play-toggle ()
+(defun ec-play-pause ()
   "Play or pause audio."
   (interactive)
   (ec-exec "playerctl play-pause"))
