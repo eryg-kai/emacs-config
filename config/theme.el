@@ -258,6 +258,10 @@ faces are simply invisible."
 
 (add-hook 'emacs-startup-hook #'global-whitespace-mode)
 
+;; Global whitespace mode does not turn on for "special" buffers (with
+;; asterisks) so turn it on manually when necessary.
+(add-hook 'mu4e-compose-mode-hook 'whitespace-mode)
+
 ;; Fill column indicator.
 (setq-default display-fill-column-indicator-character
               (if (display-graphic-p) ?\〱 ?\│))

@@ -27,10 +27,6 @@
       mu4e-compose-format-flowed t
       mu4e-cache-maildir-list t)
 
-;; Global whitespace mode does not turn on for "special" buffers (with
-;; asterisks) so turn it on manually.
-(add-hook 'mu4e-compose-mode-hook 'whitespace-mode)
-
 ;; Skip .git directory when getting maildirs since recursing through it is slow.
 (defun ec--ignore-git (fn path mdir)
   "Run FN with PATH and MDIR after ensuring MDIR is not .git."
