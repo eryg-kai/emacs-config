@@ -7,14 +7,6 @@
 (nconc package-selected-packages '(doom-themes
                                    evil-terminal-cursor-changer))
 
-(setq-default truncate-lines t)
-
-(defun ec--disable-truncation ()
-  "Disable truncation in the current buffer."
-  (setq-local truncate-lines nil))
-
-(add-hook 'eshell-mode-hook #'ec--disable-truncation)
-
 (defun ec--disable-scroll-margin ()
   "Disable scroll margins in the current buffer."
   (setq-local scroll-margin 0)
