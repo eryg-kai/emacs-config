@@ -48,10 +48,10 @@
         (,(kbd "<XF86MonBrightnessUp>")   . (lambda () (interactive) (ec-exec "light -A 5")))
         (,(kbd "<XF86MonBrightnessDown>") . (lambda () (interactive) (ec-exec "light -U 5")))
 
-        (,(kbd "<XF86AudioLowerVolume>")  . pipewire-decrease-volume)
-        (,(kbd "<XF86AudioRaiseVolume>")  . pipewire-increase-volume)
-        (,(kbd "<XF86AudioMute>")         . pipewire-toggle-muted)
-        (,(kbd "<XF86AudioMicMute>")      . pipewire-toggle-microphone)
+        (,(kbd "<XF86AudioLowerVolume>")  . ec-decrease-volume)
+        (,(kbd "<XF86AudioRaiseVolume>")  . ec-increase-volume)
+        (,(kbd "<XF86AudioMute>")         . ec-toggle-muted)
+        (,(kbd "<XF86AudioMicMute>")      . ec-toggle-microphone)
 
         (,(kbd "<XF86AudioPause>")        . ec-play-pause)
         (,(kbd "<XF86AudioPlay>")         . ec-play-pause)

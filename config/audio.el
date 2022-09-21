@@ -4,9 +4,14 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(pipewire))
+(nconc package-selected-packages '(pulseaudio-control))
 
-(setq pipewire-osd-enable nil)
+(setq pulseaudio-control-use-default-sink t)
+
+(defalias 'ec-decrease-volume 'pulseaudio-control-decrease-volume)
+(defalias 'ec-increase-volume 'pulseaudio-control-increase-volume)
+(defalias 'ec-toggle-muted 'pulseaudio-control-toggle-current-sink-mute)
+(defalias 'ec-toggle-microphone 'pulseaudio-control-toggle-current-source-mute)
 
 (defun ec-play-pause ()
   "Play or pause audio."
