@@ -262,6 +262,27 @@ faces are simply invisible."
 ;; asterisks) so turn it on manually when necessary.
 (add-hook 'mu4e-compose-mode-hook 'whitespace-mode)
 
+(defface whitespace-hard-newline
+  '((t (:inherit 'error))) "Used for hard newlines.")
+
+(defun ec--mark-hard-newlines (beg end &rest _ignore)
+  "Visibly mark hard newlines between BEG and END."
+  (when use-hard-newlines
+    (save-excursion
+      (goto-char beg)
+      (while (search-forward "\n" end t)
+        (let ((pos (1- (point))))
+          (if (get-text-property pos 'hard)
+              (add-text-properties
+               pos (1+ pos)
+               (list 'display
+                     (propertize
+                      "¶\n"
+                      'font-lock-face 'whitespace-hard-newline)))
+            (remove-text-properties pos (1+ pos) '(display nil))))))))
+
+(add-hook 'after-change-functions #'ec--mark-hard-newlines)
+
 ;; Fill column indicator.
 (setq-default display-fill-column-indicator-character
               (if (display-graphic-p) ?\〱 ?\│))
