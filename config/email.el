@@ -24,8 +24,38 @@
       mu4e-headers-date-format "%F"
       mu4e-view-show-addresses t
       mu4e-context-policy 'pick-first
-      mu4e-compose-format-flowed t
       mu4e-cache-maildir-list t)
+
+;; Prevent Emacs from mangling the message.  Instead of reflowing leave the
+;; message as it is and add a space to the end of every soft newline leaving the
+;; hard newlines alone.  In other words, soft newlines will reflow on client
+;; displays (space is the reflow indicator) when they are too long and hard
+;; newlines will always break where they break.
+(defun ec-fill-flowed-encode(&optional buffer)
+  "Encode BUFFER or the current buffer for format=flowed."
+  (with-current-buffer (or buffer (current-buffer))
+    (save-excursion
+      (goto-char (point-min))
+      (while (search-forward "\n" nil t)
+        (let ((pos (1- (point))))
+          (unless (get-text-property pos 'hard)
+            (replace-match " \n" t t)))))))
+
+(advice-add 'fill-flowed-encode :override #'ec-fill-flowed-encode)
+
+;; Avoid `mu4e-compose-format-flowed' to prevent forcing any formatting choices.
+;; The idea is to send the email exactly as it is and assume soft newlines are
+;; meant to be wrapped when they are too long for the display.
+(defun ec--set-format-flowed ()
+  "Set up format=flowed."
+  (use-hard-newlines 1 'always)
+  (setq fill-column fill-flowed-encode-column
+        mml-enable-flowed t))
+
+(add-hook 'message-mode-hook #'ec--set-format-flowed)
+
+;; Prevent mu4e from mangling the newlines by making them all hard.
+(advice-add 'mu4e-send-harden-newlines :override #'ignore)
 
 ;; Skip .git directory when getting maildirs since recursing through it is slow.
 (defun ec--ignore-git (fn path mdir)
