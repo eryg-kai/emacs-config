@@ -30,6 +30,8 @@
  (hl-fixme  :inherit 'error :weight 'bold)
  (hl-hack   :inherit 'error :weight 'bold)
 
+ (fringe :foreground 'unspecified :inherit 'success)
+
  (line-number-current-line :background nil :inherit 'hl-line)
 
  (dired-marked          :foreground 'unspecified :background 'unspecified :inverse-video nil)
