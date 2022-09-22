@@ -68,11 +68,13 @@
 ;; Ensure mu4e runs locally (it only half-supports Tramp).
 (advice-add 'mu4e :around #'ec-localize)
 
-;; Switch to default context on exit.
-(defun ec-reset-browser-profile (&rest _)
+;; Switch to default context on exit.  This is mostly to switch back to the
+;; default browser arguments.
+(defun ec-reset-context (&rest _)
+  "Switch to the default mu4e context."
   (mu4e-context-switch nil "default"))
 
-(advice-add 'mu4e~stop :after #'ec-reset-browser-profile)
+(advice-add 'mu4e~stop :after #'ec-reset-context)
 
 (define-key global-map (kbd "C-c E") #'mu4e)
 
