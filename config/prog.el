@@ -10,6 +10,7 @@
                                    yaml-mode
                                    yarn-mode
                                    go-mode
+                                   go-dlv
                                    css-mode
                                    csv-mode
                                    typescript-mode
@@ -30,6 +31,14 @@
   (add-hook 'before-save-hook #'gofmt nil t))
 
 (add-hook 'go-mode-hook #'ec--hook-go-fmt)
+
+(defun ec-gud-localize (fn fmt &rest args)
+  "Run FN with FMT and ARGS after ensuring FMT does not contain Tramp prefixes."
+  (let* ((remote (file-remote-p default-directory))
+         (fmt (if remote (string-replace remote "" fmt) fmt)))
+    (apply fn fmt args)))
+
+(advice-add 'gud-call :around #'ec-gud-localize)
 
 ;; Elisp.
 (add-hook 'emacs-lisp-mode-hook #'flymake-mode)
