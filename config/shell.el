@@ -20,6 +20,10 @@
    (make-comint "*node-repl*" "node" nil "--interactive")
    '((display-buffer-reuse-window display-buffer-same-window))))
 
+(with-eval-after-load 'evil
+  (evil-define-key 'normal comint-mode-map
+    (kbd "q") 'quit-window))
+
 ;; Eshell.
 (setq eshell-history-size 10000
       eshell-visual-commands '("ssh" "htop" "watch" "mtr" "iotop" "bmon" "nethogs")
