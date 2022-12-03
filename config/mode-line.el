@@ -71,7 +71,7 @@
 (defun ec--battery-notify (alist)
   "Notify when %b key in ALIST is critical (exclamation mark)."
   (pcase (cdr (assq ?b alist))
-    ("!" (osd-notify '("Battery critical" "Sleep is imminent")))))
+    ("!" (osd-notify '("Battery critical" "Hibernation imminent" "emacs")))))
 
 (when (fboundp 'fancy-battery-mode)
   (setq fancy-battery-mode-line '(:eval (ec--mode-line-battery))
