@@ -107,7 +107,7 @@
 ;; ERC.
 (setq erc-modules '(pcomplete netsplit fill button match track completion
                               readonly networks ring noncommands irccontrols
-                              move-to-prompt stamp list notifications log)
+                              move-to-prompt stamp list log)
       erc-header-line-format nil
       erc-mode-line-format "%n%a"
       erc-mode-line-away-status-format "{%Y-%m-%d %a %H:%M}"
