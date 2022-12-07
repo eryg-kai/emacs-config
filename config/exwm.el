@@ -19,6 +19,8 @@
 
 (advice-add 'exwm-manage--manage-window :around #'ec-localize)
 
+(setq x-no-window-manager t)
+
 ;; Used to determine if the screen script needs to run.
 (defvar ec--connected-monitors nil "Currently connected monitors.")
 
