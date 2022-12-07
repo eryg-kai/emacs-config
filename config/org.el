@@ -138,7 +138,8 @@
 (defun ec-capture-default ()
   "Capture to the current org file or the default."
   (unless (derived-mode-p 'org-mode)
-    (set-buffer (org-capture-target-buffer org-default-notes-file))))
+    (set-buffer (org-capture-target-buffer org-default-notes-file)))
+  (goto-char (point-max)))
 
 (defun ec-capture-log ()
   "Capture a note into the logbook."
