@@ -76,8 +76,6 @@
 
 (advice-add 'mu4e~stop :after #'ec-reset-context)
 
-(define-key global-map (kbd "C-c E") #'mu4e)
-
 (with-eval-after-load 'mm-decode
   (add-to-list 'mm-discouraged-alternatives "text/html"))
 
