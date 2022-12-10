@@ -10,7 +10,7 @@
 
 (defalias 'ec-decrease-volume 'pipewire-decrease-volume)
 (defalias 'ec-increase-volume 'pipewire-increase-volume)
-(defalias 'ec-toggle-muted 'pipewire-toggle-mute)
+(defalias 'ec-toggle-muted 'pipewire-toggle-muted)
 (defalias 'ec-toggle-microphone 'pipewire-toggle-microphone)
 
 (defun ec-play-pause ()
