@@ -23,6 +23,8 @@
 
 ;; Installed via the system.  This exists in mu4e but it does not load.
 (autoload 'mu4e~compose-mail "mu4e" "mu for Emacs.")
+(autoload 'mu4e "mu4e" "mu for Emacs.")
+(define-key global-map (kbd "C-x M") #'mu4e)
 (define-mail-user-agent 'mu4e-user-agent
   'mu4e~compose-mail
   'message-send-and-exit
