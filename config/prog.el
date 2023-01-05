@@ -17,7 +17,8 @@
                                    elixir-mode
                                    eglot
                                    dash-docs
-                                   editorconfig))
+                                   editorconfig
+                                   rainbow-mode))
 
 ;; Eglot.
 (with-eval-after-load 'eglot
