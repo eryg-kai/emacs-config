@@ -17,7 +17,8 @@
               tab-width 2
               tab-stop-list (list 2)
               c-basic-offset 2
-              standard-indent 2)
+              standard-indent 2
+              ring-bell-function #'ignore)
 
 (setq select-enable-primary t
 
