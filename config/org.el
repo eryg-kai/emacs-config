@@ -160,6 +160,7 @@
     (goto-char (org-log-beginning nil))
     (when (and drawer
                (not (save-excursion (forward-line -1) (looking-at-p org-logbook-drawer-re))))
+      (forward-line 1)
       (setq template (append `(,(concat ":" drawer ":"))
                              template
                              '(":END:"))))
