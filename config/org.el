@@ -594,4 +594,60 @@ is selected, only the bare key is returned."
 
 (advice-add 'org-mks :override #'ec--mks)
 
+(defun ec--org-log-beginning (&optional create)
+  "Copy of `org-log-beginning' except without an extra newline."
+  (org-with-wide-buffer
+   (let ((drawer (org-log-into-drawer)))
+     (cond
+      (drawer
+       (org-end-of-meta-data)
+       (let ((regexp (concat "^[ \t]*:" (regexp-quote drawer) ":[ \t]*$"))
+	     (end (if (org-at-heading-p) (point)
+		    (save-excursion (outline-next-heading) (point))))
+	     (case-fold-search t))
+	 (catch 'exit
+	   ;; Try to find existing drawer.
+	   (while (re-search-forward regexp end t)
+	     (let ((element (org-element-at-point)))
+	       (when (eq (org-element-type element) 'drawer)
+		 (let ((cend  (org-element-property :contents-end element)))
+		   (when (and (not org-log-states-order-reversed) cend)
+		     (goto-char cend)))
+		 (throw 'exit nil))))
+	   ;; No drawer found.  Create one, if permitted.
+	   (when create
+             ;; Unless current heading is the last heading in buffer
+             ;; and does not have a newline, `org-end-of-meta-data'
+             ;; should move us somewhere below the heading.
+             ;; Avoid situation when we insert drawer right before
+             ;; first "*".  Otherwise, if the previous heading is
+             ;; folded, we are inserting after visible newline at
+             ;; the end of the fold, thus breaking the fold
+             ;; continuity.
+             (unless (eobp)
+               (when (org-at-heading-p) (backward-char)))
+             (org-fold-core-ignore-modifications
+	       (unless (bolp) (insert-and-inherit "\n"))
+	       (let ((beg (point)))
+	         (insert-and-inherit ":" drawer ":\n:END:")
+	         (org-indent-region beg (point))
+	         (org-fold-region (line-end-position -1) (point) t (if (eq org-fold-core-style 'text-properties) 'drawer 'outline)))))
+	   (end-of-line 0))))
+      (t
+       (org-end-of-meta-data org-log-state-notes-insert-after-drawers)
+       (let ((endpos (point)))
+         (skip-chars-forward " \t\n")
+         (beginning-of-line)
+         (unless org-log-states-order-reversed
+	   (org-skip-over-state-notes)
+	   (skip-chars-backward " \t\n")
+	   (beginning-of-line 2))
+         ;; When current headline is at the end of buffer and does not
+         ;; end with trailing newline the above can move to the
+         ;; beginning of the headline.
+         (when (< (point) endpos) (goto-char endpos))))))
+   (if (bolp) (point) (line-beginning-position 2))))
+
+(advice-add 'org-log-beginning :override #'ec--org-log-beginning)
+
 ;;; org.el ends here
