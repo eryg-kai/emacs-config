@@ -15,6 +15,8 @@
                                    org-edna
                                    org-drill))
 
+(setq org-fold-core-style 'overlays)
+
 ;; Set the following in customize:
 ;; - org-directory
 ;; - org-default-notes-file
