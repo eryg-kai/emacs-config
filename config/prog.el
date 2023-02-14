@@ -4,21 +4,21 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(markdown-mode
-                                   nix-mode
-                                   web-mode
-                                   yaml-mode
-                                   yarn-mode
-                                   go-mode
-                                   go-dlv
-                                   css-mode
+(nconc package-selected-packages '(css-mode
                                    csv-mode
-                                   typescript-mode
-                                   elixir-mode
-                                   eglot
                                    dash-docs
                                    editorconfig
-                                   rainbow-mode))
+                                   eglot
+                                   elixir-mode
+                                   go-dlv
+                                   go-mode
+                                   markdown-mode
+                                   nix-mode
+                                   rainbow-mode
+                                   typescript-mode
+                                   web-mode
+                                   yaml-mode
+                                   yarn-mode))
 
 ;; Eglot.
 (with-eval-after-load 'eglot
