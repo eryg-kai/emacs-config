@@ -12,6 +12,7 @@
                                    elixir-mode
                                    go-dlv
                                    go-mode
+                                   kotlin-mode
                                    markdown-mode
                                    nix-mode
                                    rainbow-mode
