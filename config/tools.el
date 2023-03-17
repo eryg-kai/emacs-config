@@ -151,7 +151,8 @@
              (format "AUTHENTICATE %s"
                      (base64-encode-string
                       (concat "\0" (erc-current-nick)
-                              "\0" erc-session-password) t)))))
+                              "\0" (erc--unfun erc-session-password))
+                      t)))))
       (progn
         (erc-display-message
          parsed 'error
@@ -164,26 +165,27 @@
     "Handle a successful SASL authentication." nil
     (erc-server-send "CAP END")))
 
+;; A copy of `erc-login' with an extra message to request sasl.
 (defun erc-sasl-login ()
-    "Perform user authentication at the IRC server."
-    (erc-log (format "login: nick: %s, user: %s %s %s :%s"
-                     (erc-current-nick)
-                     (user-login-name)
-                     (or erc-system-name (system-name))
-                     erc-session-server
-                     erc-session-user-full-name))
-    (if erc-session-password
-        (erc-server-send (format "PASS %s" erc-session-password))
-      (message "Logging in without password"))
-    (when (erc-sasl-use-sasl-p) (erc-server-send "CAP REQ :sasl"))
-    (erc-server-send (format "NICK %s" (erc-current-nick)))
-    (erc-server-send
-     (format "USER %s %s %s :%s"
-             ;; hacked - S.B.
-             (if erc-anonymous-login erc-email-userid (user-login-name))
-             "0" "*"
-             erc-session-user-full-name))
-    (erc-update-mode-line))
+  "Perform user authentication at the IRC server."
+  (erc-log (format "login: nick: %s, user: %s %s %s :%s"
+                   (erc-current-nick)
+                   (user-login-name)
+                   (or erc-system-name (system-name))
+                   erc-session-server
+                   erc-session-user-full-name))
+  (if erc-session-password
+      (erc-server-send (concat "PASS :" (erc--unfun erc-session-password)))
+    (message "Logging in without password"))
+  (when (erc-sasl-use-sasl-p) (erc-server-send "CAP REQ :sasl"))
+  (erc-server-send (format "NICK %s" (erc-current-nick)))
+  (erc-server-send
+   (format "USER %s %s %s :%s"
+           ;; hacked - S.B.
+           erc-session-username
+           "0" "*"
+           erc-session-user-full-name))
+  (erc-update-mode-line))
 
 (advice-add 'erc :around #'ec-localize)
 (advice-add 'erc-login :override #'erc-sasl-login)
