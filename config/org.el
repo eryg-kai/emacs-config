@@ -452,7 +452,7 @@ Call FN with ARGS for any log entry that does not take a note."
 
 (defun ec-get-language-dirs ()
   "Get language flashcard directories."
-  (when (file-exists-p ec-langugage-directory)
+  (when (file-exists-p ec-language-directory)
     (mapcar #'file-name-as-directory
             (cl-remove-if-not
              #'file-directory-p
