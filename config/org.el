@@ -25,6 +25,10 @@
 ;; - org-refile-targets
 ;; - ec-language-directory
 
+(defcustom ec-language-directory nil "Directory for language flashcards."
+  :type 'string
+  :group 'org)
+
 (add-hook 'org-mode-hook #'typo-mode)
 
 (add-hook 'org-mode-hook #'org-bullets-mode)
