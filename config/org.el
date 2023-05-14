@@ -349,7 +349,7 @@ Call FN with ARGS for any log entry that does not take a note."
 
 ;; Babel.
 (setq org-src-tab-acts-natively t
-      org-src-window-setup 'other-window)
+      org-src-window-setup 'current-window)
 
 (defvar ec-babel-map
   '((bash . shell)
