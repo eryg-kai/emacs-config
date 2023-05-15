@@ -52,7 +52,8 @@
         1))                              ; Max newlines
 
 ;; Core.
-(setq org-modules '(ol-irc ol-info org-id org-habit ol-eww))
+(setq org-modules '(ol-irc ol-info org-id org-habit ol-eww)
+      org-element-cache-persistent nil)
 
 ;; HTML export.
 (setq org-html-checkbox-type 'html)
