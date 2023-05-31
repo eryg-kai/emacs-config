@@ -44,10 +44,14 @@
 ;; Without this the last buffer is unknown, potentially allowing duplicates.
 (defvar ec--last-written-buffer nil "Last buffer cons written.")
 
+(defcustom ec-track-directory (xdg-data-home) "Directory for buffer tracking."
+  :type 'string
+  :group 'files)
+
 (defun ec--save-tracked-buffers ()
   "Save tracked buffers."
   (let ((buffers ec--tracked-buffers)
-        (dir (expand-file-name "track" (xdg-data-home)))
+        (dir (expand-file-name "track" ec-track-directory))
         (ediff 0)
         (queue nil))
     (setq ec--last-written-buffer (car ec--tracked-buffers))
