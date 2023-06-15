@@ -34,6 +34,7 @@
 ;; Autoload xdg utils.
 (autoload 'xdg-cache-home "xdg" "XDG cache home.")
 (autoload 'xdg-data-home "xdg" "XDG data home.")
+(autoload 'xdg-config-home "xdg" "XDG config home.")
 
 ;; Load custom.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

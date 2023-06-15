@@ -19,6 +19,10 @@
 (setq elfeed-db-directory (expand-file-name "elfeed" (xdg-cache-home))
       elfeed-sort-order 'ascending)
 
+;; Gnus
+(setq gnus-directory (expand-file-name "news" (xdg-cache-home))
+      gnus-startup-file (expand-file-name "news/newsrc" (xdg-config-home)))
+
 ;; Dired.
 (setq dired-listing-switches "-Fahvl --si --group-directories-first")
 
