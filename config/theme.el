@@ -135,10 +135,7 @@ If THEME is an override theme (ends in `override'), do nothing."
 ;; This is based on Adwaita dark; it might not work as well with other bases.
 (defun ec--set-gtk-theme ()
   "Set a GTK theme that matches Emacs."
-  (let ((dir (file-name-as-directory (expand-file-name
-                                      "gtk-3.0"
-                                      (or (getenv "XDG_CONFIG_HOME")
-                                          (expand-file-name "~/.config"))))))
+  (let ((dir (file-name-as-directory (expand-file-name "gtk-3.0" (xdg-config-home)))))
     (make-directory dir t)
     (with-temp-file (expand-file-name "gtk.css" dir)
       (insert
