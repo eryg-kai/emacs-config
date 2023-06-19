@@ -257,7 +257,7 @@ faces are simply invisible."
 
 ;; Global whitespace mode does not turn on for "special" buffers (with
 ;; asterisks) so turn it on manually when necessary.
-(add-hook 'mu4e-compose-mode-hook 'whitespace-mode)
+(add-hook 'message-mode-hook 'whitespace-mode)
 
 (defface whitespace-hard-newline
   '((t (:inherit 'error))) "Used for hard newlines.")

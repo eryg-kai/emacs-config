@@ -12,12 +12,6 @@
                                    speed-type
                                    pdf-tools))
 
-;; Gnus
-(define-key global-map (kbd "C-c G") #'gnus)
-
-(setq gnus-directory (expand-file-name "news" (xdg-cache-home))
-      gnus-startup-file (expand-file-name "news/newsrc" (xdg-config-home)))
-
 ;; Dired.
 (setq dired-listing-switches "-Fahvl --si --group-directories-first")
 

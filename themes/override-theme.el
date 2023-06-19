@@ -89,8 +89,6 @@
 
  (speed-type-correct :foreground 'unspecified :weight 'bold)
 
- (mu4e-header-highlight-face :underline nil :inherit 'hl-line)
-
  (magit-diff-added                      :background 'unspecified)
  (magit-diff-added-highlight            :background 'unspecified)
  (magit-diff-removed                    :background 'unspecified)

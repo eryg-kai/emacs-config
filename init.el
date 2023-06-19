@@ -21,16 +21,6 @@
                         (expand-file-name "themes" ec-dir)))
 (push ec-theme-dir custom-theme-load-path)
 
-;; Installed via the system.  This exists in mu4e but it does not load.
-(autoload 'mu4e~compose-mail "mu4e" "mu for Emacs.")
-(autoload 'mu4e "mu4e" "mu for Emacs.")
-(define-key global-map (kbd "C-x M") #'mu4e)
-(define-mail-user-agent 'mu4e-user-agent
-  'mu4e~compose-mail
-  'message-send-and-exit
-  'message-kill-buffer
-  'message-send-hook)
-
 ;; Autoload xdg utils.
 (autoload 'xdg-cache-home "xdg" "XDG cache home.")
 (autoload 'xdg-data-home "xdg" "XDG data home.")
