@@ -65,6 +65,8 @@
 ;; Git link.
 (define-key global-map (kbd "C-c gl") #'git-link)
 
+(setq git-link-default-origin "github")
+
 ;; Commit mode.
 (setq git-commit-summary-max-length 50)
 
