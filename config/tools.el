@@ -6,20 +6,15 @@
 ;;; Code:
 
 (nconc package-selected-packages '(docker
-                                   elfeed
                                    beancount
                                    magit-annex
                                    rfc-mode
                                    speed-type
                                    pdf-tools))
 
-;; Elfeed.
-(define-key global-map (kbd "C-c e") #'elfeed)
-
-(setq elfeed-db-directory (expand-file-name "elfeed" (xdg-cache-home))
-      elfeed-sort-order 'ascending)
-
 ;; Gnus
+(define-key global-map (kbd "C-c G") #'gnus)
+
 (setq gnus-directory (expand-file-name "news" (xdg-cache-home))
       gnus-startup-file (expand-file-name "news/newsrc" (xdg-config-home)))
 
