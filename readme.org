@@ -1,3 +1,3 @@
-#+TITLE: Emacs • [[https://github.com/0x0049/emacs-config/actions/workflows/test.yaml?branch=master][https://github.com/0x0049/emacs-config/actions/workflows/test.yaml/badge.svg?branch=master]]
+#+TITLE: Emacs • [[https://github.com/eryg-kai/emacs-config/actions/workflows/test.yaml?branch=master][https://github.com/eryg-kai/emacs-config/actions/workflows/test.yaml/badge.svg?branch=master]]
 
-0x0049’s Emacs configuration.
+Emacs configuration.
