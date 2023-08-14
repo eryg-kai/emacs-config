@@ -15,6 +15,7 @@
                                    evil-escape
                                    evil-org
                                    evil-args
+                                   evil-string-inflection
                                    avy))
 
 (setq evil-want-C-u-scroll t

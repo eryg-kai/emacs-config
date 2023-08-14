@@ -7,7 +7,6 @@
 ;;; Code:
 
 (nconc package-selected-packages '(smartparens
-                                   evil-string-inflection
                                    hl-todo
                                    undohist))
 
