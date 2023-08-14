@@ -7,7 +7,8 @@
 (when (display-graphic-p)
   (nconc package-selected-packages '(exwm exwm-edit)))
 
-(setq exwm-edit-bind-default-keys nil)
+(setq exwm-edit-bind-default-keys nil
+      exwm-edit-split t)
 
 (autoload 'exwm-edit--compose "exwm-edit" "EXWM edit mode.")
 
