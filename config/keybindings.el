@@ -14,6 +14,7 @@
                                    evil-exchange
                                    evil-escape
                                    evil-org
+                                   evil-args
                                    avy))
 
 (setq evil-want-C-u-scroll t
@@ -37,6 +38,9 @@
   (evil-commentary-mode)
 
   (evil-exchange-install)
+
+  (define-key evil-inner-text-objects-map "a" 'evil-inner-arg)
+  (define-key evil-outer-text-objects-map "a" 'evil-outer-arg)
 
   (setq evil-escape-key-sequence ";z")
   (evil-escape-mode)
