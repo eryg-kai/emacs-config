@@ -88,7 +88,8 @@
 
 ;; Line numbers.
 (defun ec--enable-line-numbers ()
-  (setq display-line-numbers 'relative))
+  (unless (eq major-mode 'beancount-mode)
+    (setq display-line-numbers 'relative)))
 
 (add-hook 'csv-mode-hook  #'ec--enable-line-numbers) ; Parent is text mode.
 (add-hook 'conf-mode-hook #'ec--enable-line-numbers) ; No parent?
