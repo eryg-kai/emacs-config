@@ -201,6 +201,8 @@
       beancount-mode-map-prefix [(control c) (\')])
 (add-to-list 'auto-mode-alist '("\\.beancount\\'" . beancount-mode))
 (with-eval-after-load 'evil
+  (evil-define-key 'insert beancount-mode-map
+    (kbd "<tab>") 'beancount-tab-dwim)
   (evil-define-key 'normal beancount-mode-map
     (kbd "<tab>") 'outline-cycle
     (kbd "g TAB") 'outline-cycle
