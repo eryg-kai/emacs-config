@@ -56,6 +56,10 @@
       initial-scratch-message nil)
 (fset #'display-startup-echo-area-message #'ignore)
 
+;; Move packages to xdg-data-home.
+(setq package-user-dir "~/.local/share/elpa"
+      quelpa-dir "~/.local/share/quelpa")
+
 ;; Disable as early as possible to prevent brief visibility.
 (menu-bar-mode -1)
 (when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
