@@ -10,6 +10,7 @@
                                    ob-async
                                    ob-go
                                    ob-http
+                                   ob-kotlin
                                    ob-restclient
                                    ob-typescript
                                    org-edna
