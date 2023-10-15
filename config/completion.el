@@ -143,6 +143,12 @@
   (define-key icomplete-fido-mode-map (kbd "C-w") 'evil-delete-backward-word)
   (define-key icomplete-fido-mode-map (kbd "DEL") 'backward-delete-char))
 
+(defun ec--completion-styles ()
+  "Set `completion-styles'."
+  (setq-local completion-styles '(initials flex)))
+
+(add-hook 'icomplete-minibuffer-setup-hook #'ec--completion-styles)
+
 (add-hook 'emacs-startup-hook #'fido-mode)
 
 ;; Consult.
