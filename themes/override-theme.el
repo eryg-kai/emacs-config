@@ -9,15 +9,15 @@
 
  (default :height 120)
 
- (region              :foreground nil :distant-foreground nil)
- (highlight           :foreground nil :distant-foreground nil)
- (lazy-highlight      :foreground nil :distant-foreground nil :background 'unspecified :inherit 'highlight)
- (match               :foreground nil :background 'unspecified :bold nil :inherit 'highlight)
- (secondary-selection :foreground nil :background 'unspecified :inherit 'match)
+ (region              :foreground 'unspecified :distant-foreground 'unspecified)
+ (highlight           :foreground 'unspecified :distant-foreground 'unspecified)
+ (lazy-highlight      :foreground 'unspecified :distant-foreground 'unspecified :background 'unspecified :inherit 'highlight)
+ (match               :foreground 'unspecified :background 'unspecified :bold 'unspecified :inherit 'highlight)
+ (secondary-selection :foreground 'unspecified :background 'unspecified :inherit 'match)
 
  (org-drill-hidden-cloze-face :foreground 'unspecified :background 'unspecified)
 
- (lsp-face-highlight-textual :foreground nil :distant-foreground nil :background 'unspecified :weight 'normal :inherit 'highlight)
+ (lsp-face-highlight-textual :foreground 'unspecified :distant-foreground 'unspecified :background 'unspecified :weight 'normal :inherit 'highlight)
 
  (erc-default-face :inherit 'unspecified)
 
@@ -32,9 +32,9 @@
 
  (fringe :foreground 'unspecified :inherit 'success)
 
- (line-number-current-line :background nil :inherit 'hl-line)
+ (line-number-current-line :background 'unspecified :inherit 'hl-line)
 
- (dired-marked          :foreground 'unspecified :background 'unspecified :inverse-video nil)
+ (dired-marked          :foreground 'unspecified :background 'unspecified :inverse-video 'unspecified)
  (dired-broken-symlink  :foreground 'unspecified :background 'unspecified :inherit 'error)
 
  (whitespace-tab                                      :background 'unspecified)
@@ -53,13 +53,13 @@
  (markdown-header-face-5 :inherit 'outline-5)
  (markdown-header-face-6 :inherit 'outline-6)
 
- (isearch-fail :foreground 'unspecified :background nil :inherit 'error)
+ (isearch-fail :foreground 'unspecified :background 'unspecified :inherit 'error)
 
- (outline-1 :background nil)
+ (outline-1 :background 'unspecified)
 
- (anzu-mode-line :foreground 'unspecified :bold nil)
+ (anzu-mode-line :foreground 'unspecified :bold 'unspecified)
 
- (sp-pair-overlay-face :background nil)
+ (sp-pair-overlay-face :background 'unspecified)
 
  (bookmark-face :background 'unspecified)
 
@@ -97,11 +97,11 @@
  (magit-diff-revision-summary-highlight :background 'unspecified)
  (magit-diff-file-heading               :background 'unspecified)
  (magit-diff-file-heading-highlight     :background 'unspecified)
- (magit-diff-hunk-heading               :background 'unspecified :foreground nil)
- (magit-diff-hunk-heading-highlight     :background 'unspecified :foreground nil)
+ (magit-diff-hunk-heading               :background 'unspecified :foreground 'unspecified)
+ (magit-diff-hunk-heading-highlight     :background 'unspecified :foreground 'unspecified)
 
  (help-key-binding :background 'unspecified)
 
- (magit-branch-remote-head :box nil :underline t :inherit 'magit-branch-remote))
+ (magit-branch-remote-head :box 'unspecified :underline t :inherit 'magit-branch-remote))
 
 ;;; override-theme.el ends here
