@@ -34,6 +34,8 @@
 (add-to-list 'auto-mode-alist '("\\.rfc\\'" . rfc-edit-mode))
 
 ;; Typing practice.
+(setq speed-type-gb-dir (expand-file-name "speed-type" (xdg-data-home)))
+
 (defun ec--evil-insert (&rest _)
   "Enter insert state, ignoring arguments."
   (evil-insert-state))
