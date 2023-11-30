@@ -4,8 +4,7 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(ediff
-                                   magit
+(nconc package-selected-packages '(magit
                                    git-link
                                    forge
                                    git-commit))
