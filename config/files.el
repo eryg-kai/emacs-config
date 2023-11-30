@@ -12,6 +12,7 @@
       vc-make-backup-files t
       backup-directory-alist
       `((".*" . ,(expand-file-name "backups/" (xdg-data-home))))
+      auto-save-list-file-prefix (expand-file-name "auto-save-list/" (xdg-data-home))
       auto-save-file-name-transforms
       `((".*" ,(expand-file-name "auto-save/" (xdg-data-home)) t)))
 
