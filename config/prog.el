@@ -4,8 +4,7 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(css-mode
-                                   csv-mode
+(nconc package-selected-packages '(csv-mode
                                    dash-docs
                                    editorconfig
                                    eglot
