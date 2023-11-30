@@ -9,7 +9,6 @@
                                    dash-docs
                                    editorconfig
                                    eglot
-                                   elixir-mode
                                    go-dlv
                                    go-mode
                                    groovy-mode
@@ -70,19 +69,15 @@
   (add-hook 'emacs-startup-hook #'editorconfig-mode))
 
 ;; Elixir.
-(defun ec--hook-elixir-fmt ()
-  "Run `elixir-format' when saving the current file."
-  (when-let (dir (locate-dominating-file buffer-file-name ".formatter.exs"))
-    (setq-local elixir-format-arguments
-                `("--dot-formatter"
-                  ,(expand-file-name ".formatter.exs" dir))))
-  (add-hook 'before-save-hook #'elixir-format nil t))
-
-(add-hook 'elixir-mode-hook #'ec--hook-elixir-fmt)
-
 (add-to-list 'auto-mode-alist '("\\.eex\\'" . web-mode))
 
+;; `elixir-ts-mode' does specify these but they are not auto-loaded.
+(add-to-list 'auto-mode-alist '("\\.elixir\\'" . elixir-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ex\\'" . elixir-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-ts-mode))
+(add-to-list 'auto-mode-alist '("mix\\.lock" . elixir-ts-mode))
+
 (with-eval-after-load 'eglot
- (add-to-list 'eglot-server-programs '(elixir-mode "elixir-ls")))
+  (add-to-list 'eglot-server-programs '(elixir-ts-mode "language_server.sh")))
 
 ;;; prog.el ends here
