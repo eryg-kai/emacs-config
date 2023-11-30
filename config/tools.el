@@ -13,7 +13,8 @@
                                    pdf-tools))
 
 ;; Dired.
-(setq dired-listing-switches "-Fahvl --si --group-directories-first")
+(setq dired-listing-switches "-Fahvl --si --group-directories-first"
+      image-dired-tags-db-file (expand-file-name "image-dired/tags.db" (xdg-data-home)))
 
 (advice-add 'dired-up-directory :around #'ec-run-and-bury)
 
