@@ -76,7 +76,4 @@
 (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-ts-mode))
 (add-to-list 'auto-mode-alist '("mix\\.lock" . elixir-ts-mode))
 
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs '(elixir-ts-mode "language_server.sh")))
-
 ;;; prog.el ends here
