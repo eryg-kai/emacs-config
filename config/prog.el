@@ -7,7 +7,6 @@
 (nconc package-selected-packages '(csv-mode
                                    dash-docs
                                    editorconfig
-                                   eglot
                                    go-dlv
                                    go-mode
                                    groovy-mode
