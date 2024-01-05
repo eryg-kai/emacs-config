@@ -143,9 +143,13 @@
   (define-key icomplete-fido-mode-map (kbd "C-w") 'evil-delete-backward-word)
   (define-key icomplete-fido-mode-map (kbd "DEL") 'backward-delete-char))
 
+;; Goals:
+;; 1. Match exactly; "erc" should match `erc'
+;; 2. Match initials; "psd" should match `pipewire-set-default'.
+;; 3. Otherwise use flex.
 (defun ec--completion-styles ()
   "Set `completion-styles'."
-  (setq-local completion-styles '(initials flex)))
+  (setq-local completion-styles '(substring initials flex)))
 
 (add-hook 'icomplete-minibuffer-setup-hook #'ec--completion-styles)
 
