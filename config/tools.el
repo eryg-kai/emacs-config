@@ -115,6 +115,8 @@
       erc-log-insert-log-on-open t
       erc-prompt-for-password nil
       erc-track-exclude '("&bitlbee" "root")
+      erc-quit-reason (lambda (s) (or s "going offline"))
+      erc-part-reason (lambda (s) (or s "taking a break"))
       erc-join-buffer 'bury
       erc-query-display 'buffer
       erc-auto-query 'bury)
