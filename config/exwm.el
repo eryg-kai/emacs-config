@@ -33,6 +33,9 @@
         (,(kbd "<s-tab>")         . ec-exwm-workspace-next)
         (,(kbd "<s-iso-lefttab>") . ec-exwm-workspace-prev)
 
+        (,(kbd "<f5>") . ec-record-screen)
+        (,(kbd "<f6>") . ec-screenshot)
+
         (,(kbd "s-j") . evil-window-down)
         (,(kbd "s-k") . evil-window-up)
         (,(kbd "s-l") . evil-window-right)
@@ -83,6 +86,35 @@
   (exwm-workspace-rename-buffer (concat "*" exwm-title "*")))
 
 (add-hook 'exwm-update-title-hook #'ec--exwm-update-title)
+
+(defvar ec--record-process nil "Current recording process.")
+
+(defun ec-record-screen()
+  "Record the screen."
+  (interactive)
+  (if (not ec--record-process)
+    (setq ec--record-process
+          (ec--exec-with-sentinel
+           "*record*"
+           (lambda (process event)
+             (if (eq 15 (process-exit-status process))
+                 (find-file "/tmp/recording.mp4")
+               (message "record: %s" (string-trim event)))
+             (setq ec--record-process nil))
+           "rec" (when current-prefix-arg " --show-keys")
+           "--output /tmp/recording.mp4"))
+    (interrupt-process ec--record-process)
+    (setq ec--record-process nil)))
+
+(defun ec-screenshot()
+  "Take a screenshot."
+  (interactive)
+  (ec--exec-with-sentinel nil
+                          (lambda (process event)
+                            (if (zerop (process-exit-status process))
+                                (find-file "/tmp/screenshot.png")
+                              (message "screenshot: %s" (string-trim event))))
+                          "scr --output /tmp/screenshot.png"))
 
 (defun ec--exwm-workspace-switch (n)
   "Switch to the workspace N away from the current."

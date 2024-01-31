@@ -78,13 +78,21 @@ When the length is odd the right side will be one longer than the left."
 
 (defun ec-exec (&rest args)
   "Execute ARGS asynchronously without a buffer.
-ARGS are simply concatenated with spaces.
+ARGS are concatenated with spaces.
 If no ARGS are provided, prompt for the command."
   (interactive (list (read-shell-command "$ ")))
-  (let ((command (mapconcat 'identity args " " )))
-    (set-process-sentinel
-     (start-process-shell-command command nil command)
-     (lambda (_ event)
-       (message "%s: %s" (car args) (string-trim event))))))
+  (apply #'ec--exec-with-sentinel nil
+         (lambda (_ event) (message "%s: %s" (car args) (string-trim event)))
+         args))
+
+(defun ec--exec-with-sentinel (buffer sentinel &rest args)
+  "Execute ARGS asynchronously with BUFFER.
+ARGS are concatenated with spaces.
+Gives process the sentinel SENTINEL.
+Return the process object for the command."
+  (let* ((command (mapconcat 'identity args " "))
+         (proc (start-process-shell-command command buffer command)))
+    (set-process-sentinel proc sentinel)
+    proc))
 
 ;;; funcs.el ends here
