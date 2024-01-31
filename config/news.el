@@ -51,6 +51,9 @@
 (with-eval-after-load 'mm-decode
   (add-to-list 'mm-discouraged-alternatives "text/html"))
 
+(with-eval-after-load 'mm-util
+  (add-to-list 'mm-inhibit-file-name-handlers 'ec--xdg-file-handler))
+
 ;; TODO: Send delay.
 
 (setq smtpmail-smtp-service 587
