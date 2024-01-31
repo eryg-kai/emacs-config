@@ -6,8 +6,14 @@
 
 ;;; Code:
 
+(defun ec--browse-url-xdg (url &rest _)
+  "Use xdg-open to view the URL."
+  (interactive)
+  (ec-exec "xdg-open" url))
+
 (setq browse-url-handlers
-      '(("." . eww-browse-url))
+      '(("\\.mp4$" . ec--browse-url-xdg)
+        ("." . eww-browse-url))
       browse-url-secondary-browser-function #'browse-url-firefox
       eww-auto-rename-buffer 'url
       eww-buffer-name-length most-positive-fixnum
