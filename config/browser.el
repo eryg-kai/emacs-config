@@ -35,4 +35,12 @@
 (with-eval-after-load 'eww
   (push #'ec--transform-url eww-url-transformers))
 
+;; This is just to avoid having to make a separate function to create generic
+;; URL bookmarks.
+(defun ec-bookmark-url-jump (bookmark)
+  "Open BOOKMARK using `browse-url'."
+  (browse-url (bookmark-prop-get bookmark 'location)))
+
+(advice-add #'eww-bookmark-jump :override #'ec-bookmark-url-jump)
+
 ;;; browser.el ends here
