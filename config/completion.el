@@ -134,35 +134,50 @@
 
 (add-hook 'emacs-startup-hook #'savehist-mode)
 
-;; Fido.
-(setq icomplete-compute-delay 0.1
+;; Icomplete.
+(setq completion-auto-help 'lazy
+      completion-auto-select 'second-tab
+      completion-ignore-case t
+      completion-styles '(substring initials flex)
+
+      read-buffer-completion-ignore-case t
+      read-file-name-completion-ignore-case t
+      icomplete-compute-delay 0.1
       icomplete-separator " "
-      icomplete-prospects-height 1)
+      icomplete-prospects-height 1
+      icomplete-hide-common-prefix nil
+      icomplete-tidy-shadowed-file-names t
+      icomplete-show-matches-on-no-input t)
+
+(defun ec--minibuffer-choose-completion-no-exit()
+  "Insert the selected completion into the minibuffer."
+  (interactive)
+  (minibuffer-choose-completion t))
 
 (with-eval-after-load 'icomplete
-  (define-key icomplete-fido-mode-map (kbd "C-w") 'evil-delete-backward-word)
-  (define-key icomplete-fido-mode-map (kbd "DEL") 'backward-delete-char))
+  (define-key icomplete-minibuffer-map (kbd "C-p") #'icomplete-backward-completions)
+  (define-key icomplete-minibuffer-map (kbd "C-n") #'icomplete-forward-completions)
+  (define-key icomplete-minibuffer-map (kbd "C-w") #'evil-delete-backward-word)
+  (define-key icomplete-minibuffer-map (kbd "RET") #'icomplete-fido-ret)
+  (define-key icomplete-minibuffer-map (kbd "M-j") #'icomplete-fido-exit)
 
-;; Goals:
-;; 1. Match exactly; "erc" should match `erc'
-;; 2. Match initials; "psd" should match `pipewire-set-default'.
-;; 3. Otherwise use flex.
-(defun ec--completion-styles ()
-  "Set `completion-styles'."
-  (setq-local completion-styles '(substring initials flex)))
+  (define-key completion-list-mode-map (kbd "k") #'previous-line)
+  (define-key completion-list-mode-map (kbd "j") #'next-line)
+  (define-key completion-list-mode-map (kbd "h") #'minibuffer-previous-completion)
+  (define-key completion-list-mode-map (kbd "l") #'minibuffer-next-completion)
+  (define-key completion-list-mode-map (kbd "<tab>") #'ec--minibuffer-choose-completion-no-exit))
 
-(add-hook 'icomplete-minibuffer-setup-hook #'ec--completion-styles)
-
-(add-hook 'emacs-startup-hook #'fido-mode)
+(add-hook 'emacs-startup-hook #'icomplete-mode)
 
 ;; Consult.
+(define-key global-map (kbd "C-c m") #'consult-man)
 (define-key global-map (kbd "C-c fr") #'consult-recent-file)
-(define-key global-map (kbd "M-s g") #'consult-ripgrep)
 (define-key global-map (kbd "M-g f") #'consult-flymake)
 
-(define-key global-map (kbd "C-x b") #'consult-buffer)    ;; original: switch-to-buffer
-(define-key global-map (kbd "C-x rb") #'consult-bookmark) ;; original: bookmark-jump
-(define-key global-map (kbd "C-x ri") #'consult-register) ;; original: insert-register
+(define-key global-map (kbd "C-x b") #'consult-buffer)          ;; original: switch-to-buffer
+(define-key global-map (kbd "C-x rb") #'consult-bookmark)       ;; original: bookmark-jump
+(define-key global-map (kbd "C-x ri") #'consult-register)       ;; original: insert-register
+(define-key global-map (kbd "C-x pb") #'consult-project-buffer) ;; original: project-switch-to-buffer
 
 (define-key global-map (kbd "M-g o") #'consult-outline)
 (define-key global-map (kbd "M-g i") #'consult-imenu)
@@ -175,9 +190,29 @@
 (define-key global-map (kbd "M-g m") #'consult-mark)
 (define-key global-map (kbd "M-g M") #'consult-global-mark)
 
-(setq register-preview-delay 0
-      register-preview-function #'consult-register-format
-      completion-in-region-function #'consult-completion-in-region)
+(define-key global-map (kbd "M-s g") #'consult-ripgrep)
+(define-key global-map (kbd "M-s d") #'consult-fd)
+(define-key global-map (kbd "M-s k") #'consult-keep-lines)
+(define-key global-map (kbd "M-s u") #'consult-focus-lines)
+
+(defun ec--completion-in-region(start end collection &optional predicate)
+  "Make in-buffer completion use icomplete.
+
+See `completion-in-region' for the descriptions of START, END,
+COLLECTION, and PREDICATE."
+  (if (minibufferp)
+      (completion--in-region start end collection predicate)
+    (consult-completion-in-region start end collection predicate)))
+
+(setq register-preview-function #'consult-register-format
+      xref-show-xrefs-function #'consult-xref
+      completion-in-region-function #'ec--completion-in-region
+      xref-show-definitions-function #'consult-xref)
+
+;; `consult-preview-at-point-mode' has no autoload.
+(autoload 'consult-preview-at-point-mode "consult")
+
+(add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
 (with-eval-after-load 'evil
   (define-key evil-normal-state-map (kbd "C-y") #'consult-yank-from-kill-ring)
