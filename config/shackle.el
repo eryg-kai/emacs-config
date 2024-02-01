@@ -35,7 +35,7 @@ displaying after running FN."
   "Run ACTIONS with BUFFER and ALIST until non-nil.
 
 Special behavior will be exhibited based on PLIST options."
-  (when (plist-get plist :only)
+  (when (and (plist-get plist :only) (not (window-minibuffer-p)))
     (with-current-buffer buffer
       ;; Keep the state from when we first entered the temporary branched flow.
       ;; This uses a global variable rather than a local because some modes
@@ -45,7 +45,7 @@ Special behavior will be exhibited based on PLIST options."
     ;; Don't mess with the layout if the buffer is already visible.
     (unless (get-buffer-window buffer) (delete-other-windows)))
   (when-let (window (cl-some (lambda (a) (funcall a buffer alist)) actions))
-    (when (and (plist-get plist :focus) (not (minibufferp)))
+    (when (and (plist-get plist :focus) (not (window-minibuffer-p)))
       (select-window window))
     (when (and (plist-get plist :float) (fboundp 'exwm-floating--set-floating))
       (with-current-buffer buffer
