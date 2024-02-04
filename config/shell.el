@@ -106,11 +106,23 @@
 (advice-add 'compile :around #'ec--compile)
 
 ;; Shell commands.
-(defun ec--shell-command (fn command &rest args)
-  "Run FN with COMMAND and ARGS after setting `shell-command-buffer-name' and `shell-command-buffer-name-async'."
-  (let* ((shell-command-buffer-name-async (format "*%s*" command))
-         (shell-command-buffer-name shell-command-buffer-name-async))
-    (apply fn command args)))
+(defun ec--shell-command (fn command &optional output-buffer args)
+  "Run FN with COMMAND, OUTPUT-BUFFER, and ARGS.
+
+Before running FN, set `shell-command-buffer-name' and
+`shell-command-buffer-name-async' based on the command.
+
+After running FN, restore previous Evil state."
+  (let* ((bufname (format "*%s*" command))
+         (shell-command-buffer-name bufname)
+         (shell-command-buffer-name-async bufname)
+         (state (when (and (not (eq t output-buffer))
+                           (get-buffer (or output-buffer bufname)))
+                  (with-current-buffer (or output-buffer bufname) evil-state))))
+    (apply fn command output-buffer args)
+    (unless (or (eq t output-buffer) (not (fboundp 'evil-change-state)))
+      (with-current-buffer (or output-buffer bufname)
+        (evil-change-state (or state 'normal))))))
 
 (advice-add 'shell-command :around #'ec--shell-command)
 
