@@ -108,7 +108,7 @@ Options are:
                  (display-buffer-below-selected) :height 0.5)
 
                 ;; Split below selected and also focus.
-                (("^\\*dig" "^\\*Ping" shell-mode)
+                (("^\\*dig" "^\\*Ping" shell-command-mode)
                  (display-buffer-below-selected) :height 0.3 :focus t)
 
                 ;; Bottom in a side window.

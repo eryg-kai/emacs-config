@@ -106,30 +106,36 @@
 (advice-add 'compile :around #'ec--compile)
 
 ;; Shell commands.
+(define-derived-mode shell-command-mode shell-mode "Command")
+
 (defun ec--shell-command (fn command &optional output-buffer args)
   "Run FN with COMMAND, OUTPUT-BUFFER, and ARGS.
 
 Before running FN, set `shell-command-buffer-name' and
 `shell-command-buffer-name-async' based on the command.
 
-After running FN, restore previous Evil state."
-  (let* ((bufname (format "*%s*" command))
-         (shell-command-buffer-name bufname)
-         (shell-command-buffer-name-async bufname)
-         (state (when (and (not (eq t output-buffer))
-                           (get-buffer (or output-buffer bufname)))
-                  (with-current-buffer (or output-buffer bufname) evil-state))))
-    (apply fn command output-buffer args)
-    (unless (or (eq t output-buffer) (not (fboundp 'evil-change-state)))
-      (with-current-buffer (or output-buffer bufname)
-        (evil-change-state (or state 'normal))))))
+After running FN, restore previous Evil state and change to
+`shell-command-mode'."
+  (if (eq t output-buffer)
+      ;; If `t' we can just ignore and run normally.
+      (apply fn command output-buffer args)
+    (let* ((bufname (or output-buffer (format "*%s*" command)))
+           (shell-command-buffer-name bufname)
+           (shell-command-buffer-name-async bufname)
+           (state (when (get-buffer bufname)
+                    (with-current-buffer bufname evil-state))))
+      (apply fn command output-buffer args)
+      (when (fboundp 'evil-change-state)
+        (with-current-buffer bufname
+          (shell-command-mode)
+          (evil-change-state (or state 'normal)))))))
 
 (advice-add 'shell-command :around #'ec--shell-command)
 
-;; Make synchronous commands use `shell-mode' like asynchronous commands since
-;; by default they use `fundamental-mode'.
+;; Make synchronous commands use `shell-mode' like asynchronous commands
+;; since by default they use `fundamental-mode'.
 (defun ec--shell-mode(fn start end command &optional output-buffer &rest args)
-  "Run FN after setting `set-buffer-major-mode' to always return `shell-mode'.
+  "Run FN after making `set-buffer-major-mode' return `shell-mode'.
 
 See `shell-command-on-region' for documentation on START, END, COMMAND,
 OUTPUT-BUFFER and ARGS."
@@ -138,14 +144,13 @@ OUTPUT-BUFFER and ARGS."
         ;; If `t' we can just ignore and run normally.
         (apply fn start end command output-buffer args)
       ;; Override `set-buffer-major-mode' so `shell-mode' takes effect before
-      ;; `display-buffer' and its rules for that mode will apply.
+      ;; `display-buffer' and its rules for that mode will apply.  Note that
+      ;; normally it would not update the process status once complete but that
+      ;; gets taken care of by the switch to `shell-command-mode' later.
       (cl-letf (((symbol-function 'set-buffer-major-mode)
                  #'(lambda (buffer)
                      (with-current-buffer buffer (shell-mode)))))
-        (apply fn start end command output-buffer args)
-        ;; Run `shell-mode' so the status updates, otherwise it will never show
-        ;; "no process" and will look like it is running.
-        (with-current-buffer bufname (shell-mode))))))
+        (apply fn start end command output-buffer args)))))
 
 (advice-add 'shell-command-on-region :around #'ec--shell-mode)
 

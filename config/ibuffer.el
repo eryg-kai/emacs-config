@@ -26,6 +26,7 @@
          ("Shell" (or (mode . eshell-mode) (mode . term-mode) (mode . shell-mode)))
          ("Scratch" (name . "\\`\\*.*scratch\\*\\'"))
          ("Compilation" (mode . compilation-mode))
+         ("Commands" (mode . shell-command-mode))
          ("Dired" (mode . dired-mode))
          ("Chat" (or (mode . erc-mode) (mode . erc-dcc-chat-mode) (mode . rcirc-mode)))
          ("Magit" (name . "magit"))
