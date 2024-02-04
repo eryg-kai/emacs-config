@@ -35,7 +35,10 @@
   (require 'smartparens-config)
   (sp-local-pair 'prog-mode "{" nil :post-handlers '((ec--indent-between-pair "RET")))
   (sp-local-pair 'prog-mode "[" nil :post-handlers '((ec--indent-between-pair "RET")))
-  (sp-local-pair 'prog-mode "(" nil :post-handlers '((ec--indent-between-pair "RET"))))
+  (sp-local-pair 'prog-mode "(" nil :post-handlers '((ec--indent-between-pair "RET")))
+
+  (define-key smartparens-mode-map (kbd "M-)") #'sp-forward-slurp-sexp)
+  (define-key smartparens-mode-map (kbd "M-(") #'sp-forward-barf-sexp))
 
 (when (fboundp 'smartparens-global-strict-mode)
   (add-hook 'emacs-startup-hook #'smartparens-global-strict-mode))
