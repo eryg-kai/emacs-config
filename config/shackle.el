@@ -99,13 +99,8 @@ Options are:
   (advice-add 'kill-buffer :around #'ec--with-restore)
 
   (ec-shackle '(
-                ;; Split to the right.
-                ("^\\*Shell Command Output\\*"
-                 (display-buffer-in-direction))
-
                 ;; Split below selected.
-                ((compilation-mode shell-mode
-                                   "^\\*lsp-help\\*"
+                ((compilation-mode "^\\*lsp-help\\*"
                                    "^\\*Bookmark Annotation\\*$")
                  (display-buffer-below-selected) :height 0.2)
 
@@ -113,7 +108,7 @@ Options are:
                  (display-buffer-below-selected) :height 0.5)
 
                 ;; Split below selected and also focus.
-                (("^\\*dig" "^\\*Ping")
+                (("^\\*dig" "^\\*Ping" shell-mode)
                  (display-buffer-below-selected) :height 0.3 :focus t)
 
                 ;; Bottom in a side window.
