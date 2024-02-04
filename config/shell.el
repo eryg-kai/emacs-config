@@ -126,4 +126,27 @@ After running FN, restore previous Evil state."
 
 (advice-add 'shell-command :around #'ec--shell-command)
 
+;; Make synchronous commands use `shell-mode' like asynchronous commands since
+;; by default they use `fundamental-mode'.
+(defun ec--shell-mode(fn start end command &optional output-buffer &rest args)
+  "Run FN after setting `set-buffer-major-mode' to always return `shell-mode'.
+
+See `shell-command-on-region' for documentation on START, END, COMMAND,
+OUTPUT-BUFFER and ARGS."
+  (let ((bufname (or output-buffer shell-command-buffer-name)))
+    (if (eq t bufname)
+        ;; If `t' we can just ignore and run normally.
+        (apply fn start end command output-buffer args)
+      ;; Override `set-buffer-major-mode' so `shell-mode' takes effect before
+      ;; `display-buffer' and its rules for that mode will apply.
+      (cl-letf (((symbol-function 'set-buffer-major-mode)
+                 #'(lambda (buffer)
+                     (with-current-buffer buffer (shell-mode)))))
+        (apply fn start end command output-buffer args)
+        ;; Run `shell-mode' so the status updates, otherwise it will never show
+        ;; "no process" and will look like it is running.
+        (with-current-buffer bufname (shell-mode))))))
+
+(advice-add 'shell-command-on-region :around #'ec--shell-mode)
+
 ;;; shell.el ends here
