@@ -100,15 +100,17 @@ Options are:
 
   (ec-shackle '(
                 ;; Split below selected.
-                ((compilation-mode "^\\*lsp-help\\*"
-                                   "^\\*Bookmark Annotation\\*$")
+                (("^\\*lsp-help\\*"
+                  "^\\*Bookmark Annotation\\*$")
                  (display-buffer-below-selected) :height 0.2)
 
                 (("^\\*Completions\\*$")
                  (display-buffer-below-selected) :height 0.5)
 
                 ;; Split below selected and also focus.
-                (("^\\*dig" "^\\*Ping" shell-command-mode)
+                (("^\\*dig" "^\\*Ping"
+                  compilation-mode
+                  "^\\*Shell Command Output\\*$" "^\\*Async Shell Command\\*$")
                  (display-buffer-below-selected) :height 0.3 :focus t)
 
                 ;; Bottom in a side window.

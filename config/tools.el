@@ -16,7 +16,12 @@
 (setq dired-listing-switches "-Fahvl --si --group-directories-first"
       image-dired-tags-db-file (expand-file-name "image-dired/tags.db" (xdg-data-home)))
 
-(advice-add 'dired-up-directory :around #'ec-run-and-bury)
+(defun ec--dired-run (&rest args)
+  "Run ARGS with `compile'."
+  (compile (mapconcat 'identity args " ")))
+
+(advice-add 'dired-do-async-shell-command :override #'dired-do-shell-command)
+(advice-add 'dired-run-shell-command :override #'ec--dired-run)
 
 (advice-add 'dired-find-file :around #'ec-run-and-bury)
 
