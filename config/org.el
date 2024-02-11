@@ -54,7 +54,8 @@
 
 ;; Core.
 (setq org-modules '(ol-irc ol-info org-id org-habit ol-eww)
-      org-element-cache-persistent nil)
+      org-element-cache-persistent nil
+      org-id-locations-file (expand-file-name "org-id-locations" (xdg-data-home)))
 
 ;; HTML export.
 (setq org-html-checkbox-type 'html)
