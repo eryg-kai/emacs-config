@@ -135,10 +135,13 @@
 (add-hook 'emacs-startup-hook #'savehist-mode)
 
 ;; Icomplete.
-(setq completion-auto-help 'lazy
-      completion-auto-select 'second-tab
+(setq completion-auto-help t
+      completion-auto-select t
       completion-ignore-case t
-      completion-styles '(substring initials flex)
+      completion-styles '(flex)
+      completion-category-overrides '((file (styles . (substring)))
+                                      ;; `consult' uses multi-category.
+                                      (multi-category (styles . (substring))))
 
       read-buffer-completion-ignore-case t
       read-file-name-completion-ignore-case t
@@ -149,23 +152,18 @@
       icomplete-tidy-shadowed-file-names t
       icomplete-show-matches-on-no-input t)
 
-(defun ec--minibuffer-choose-completion-no-exit()
-  "Insert the selected completion into the minibuffer."
-  (interactive)
-  (minibuffer-choose-completion t))
-
 (with-eval-after-load 'icomplete
   (define-key icomplete-minibuffer-map (kbd "C-p") #'icomplete-backward-completions)
   (define-key icomplete-minibuffer-map (kbd "C-n") #'icomplete-forward-completions)
   (define-key icomplete-minibuffer-map (kbd "C-w") #'evil-delete-backward-word)
-  (define-key icomplete-minibuffer-map (kbd "RET") #'icomplete-fido-ret)
-  (define-key icomplete-minibuffer-map (kbd "M-j") #'icomplete-fido-exit)
+
+  (define-key icomplete-minibuffer-map (kbd "RET") #'icomplete-force-complete-and-exit)
+  (define-key icomplete-minibuffer-map (kbd "M-RET") #'exit-minibuffer)
 
   (define-key completion-list-mode-map (kbd "k") #'previous-line)
   (define-key completion-list-mode-map (kbd "j") #'next-line)
   (define-key completion-list-mode-map (kbd "h") #'minibuffer-previous-completion)
-  (define-key completion-list-mode-map (kbd "l") #'minibuffer-next-completion)
-  (define-key completion-list-mode-map (kbd "<tab>") #'ec--minibuffer-choose-completion-no-exit))
+  (define-key completion-list-mode-map (kbd "l") #'minibuffer-next-completion))
 
 (add-hook 'emacs-startup-hook #'icomplete-mode)
 
