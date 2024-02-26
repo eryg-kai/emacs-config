@@ -114,7 +114,7 @@ Options are:
                  (display-buffer-below-selected) :height 0.3 :focus t)
 
                 ;; Bottom in a side window.
-                (("\\*Notifications\\*")
+                (("\\*Notifications\\*" "\\*Warnings\\*")
                  (display-buffer-in-side-window) :height 0.1 :side bottom)
 
                 ;; Display at the bottom.
