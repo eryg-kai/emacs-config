@@ -208,6 +208,11 @@ If the monitor is a touchscreen also adjust the touch input."
 (add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens-soon)
 
 (with-eval-after-load 'exwm
+  ;; There is some weird behavior with prompting for input after EXWM has begun
+  ;; to shut down.  It is also a bit annoying to be asked twice because there is
+  ;; already a shutdown confirmation from EXWM.
+  (setq confirm-kill-processes nil)
+
   (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
   (define-key exwm-mode-map (kbd "i") #'exwm-input-release-keyboard)
   (define-key exwm-mode-map (kbd ":") #'evil-ex)
