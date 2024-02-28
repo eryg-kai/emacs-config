@@ -656,4 +656,12 @@ is selected, only the bare key is returned."
 
 (advice-add 'org-log-beginning :override #'ec--org-log-beginning)
 
+(defun ec--maybe-reset-checkboxes ()
+  "Reset checkboxes on repeatable tasks."
+  (when (and (member org-state org-done-keywords)
+             (org-entry-get (point) "REPEAT_TO_STATE"))
+    (org-reset-checkbox-state-subtree)))
+
+(add-hook 'org-after-todo-state-change-hook #'ec--maybe-reset-checkboxes)
+
 ;;; org.el ends here
