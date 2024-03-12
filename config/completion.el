@@ -157,6 +157,9 @@
   (define-key icomplete-minibuffer-map (kbd "C-n") #'icomplete-forward-completions)
   (define-key icomplete-minibuffer-map (kbd "C-w") #'evil-delete-backward-word)
 
+  (define-key icomplete-minibuffer-map (kbd "RET") #'icomplete-force-complete-and-exit)
+  (define-key icomplete-minibuffer-map (kbd "M-RET") #'exit-minibuffer)
+
   (define-key completion-list-mode-map (kbd "k") #'previous-line)
   (define-key completion-list-mode-map (kbd "j") #'next-line)
   (define-key completion-list-mode-map (kbd "h") #'minibuffer-previous-completion)
