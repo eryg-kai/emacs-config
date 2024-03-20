@@ -110,6 +110,8 @@
 ;; Undo.
 (add-hook 'emacs-startup-hook #'global-undo-tree-mode)
 
-(setq evil-undo-system 'undo-tree)
+(setq evil-undo-system 'undo-tree
+      undo-tree-history-directory-alist
+      `(("." . ,(expand-file-name "undo-tree/" (xdg-data-home)))))
 
 ;;; edit.el ends here
