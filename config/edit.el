@@ -8,7 +8,7 @@
 
 (nconc package-selected-packages '(smartparens
                                    hl-todo
-                                   undohist))
+                                   undo-tree))
 
 ;; General settings.
 (setq-default fill-column 80
@@ -107,9 +107,9 @@
 (add-hook 'text-mode #'superword-mode)
 (add-hook 'emacs-lisp-mode #'superword-mode)
 
-;; Undo history.
-(setq undohist-directory (expand-file-name "undohist/" (xdg-data-home)))
+;; Undo.
+(add-hook 'emacs-startup-hook #'global-undo-tree-mode)
 
-(add-hook 'emacs-startup-hook #'undohist-initialize)
+(setq evil-undo-system 'undo-tree)
 
 ;;; edit.el ends here

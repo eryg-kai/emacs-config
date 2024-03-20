@@ -20,8 +20,7 @@
 
 (setq evil-want-C-u-scroll t
       ;; Required for evil-collection.
-      evil-want-keybinding nil
-      evil-undo-system 'undo-redo)
+      evil-want-keybinding nil)
 
 (when (fboundp 'evil-mode)
   (add-hook 'emacs-startup-hook #'evil-mode))
