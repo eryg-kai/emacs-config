@@ -33,8 +33,8 @@
         (,(kbd "<s-tab>")         . ec-exwm-workspace-next)
         (,(kbd "<s-iso-lefttab>") . ec-exwm-workspace-prev)
 
-        (,(kbd "<f5>") . ec-record-screen)
-        (,(kbd "<f6>") . ec-screenshot)
+        (,(kbd "<f5>") . ec-screenshot)
+        (,(kbd "<f6>") . ec-record-screen)
 
         (,(kbd "s-j") . evil-window-down)
         (,(kbd "s-k") . evil-window-up)
