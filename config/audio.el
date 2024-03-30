@@ -4,14 +4,25 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(pipewire))
+(defun ec-decrease-volume ()
+  "Decrease current sink's volume."
+  (interactive)
+  (ec-exec "pactl set-sink-volume @DEFAULT_SINK@ -5%"))
 
-(setq pipewire-osd-enable nil)
+(defun ec-increase-volume ()
+  "Increase current sink's volume."
+  (interactive)
+  (ec-exec "pactl set-sink-volume @DEFAULT_SINK@ +5%"))
 
-(defalias 'ec-decrease-volume 'pipewire-decrease-volume)
-(defalias 'ec-increase-volume 'pipewire-increase-volume)
-(defalias 'ec-toggle-muted 'pipewire-toggle-muted)
-(defalias 'ec-toggle-microphone 'pipewire-toggle-microphone)
+(defun ec-toggle-muted ()
+  "Mute or unmute current sink."
+  (interactive)
+  (ec-exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"))
+
+(defun ec-toggle-microphone ()
+  "Mute or unmute current source."
+  (interactive)
+  (ec-exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
 
 (defun ec-play-pause ()
   "Play or pause audio."
