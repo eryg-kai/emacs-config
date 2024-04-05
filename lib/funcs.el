@@ -95,4 +95,14 @@ Return the process object for the command."
     (set-process-sentinel proc sentinel)
     proc))
 
+(defun ec-exec-and-display (&rest args)
+  "Execute ARGS synchronously and display the output.
+ARGS are concatenated with spaces.
+If no ARGS are provided, prompt for the command."
+  (interactive (list (read-shell-command "$ ")))
+  (message "%s"
+   (replace-regexp-in-string
+    "[\n ]+" " "
+    (string-trim (shell-command-to-string (mapconcat 'identity args " "))))))
+
 ;;; funcs.el ends here
