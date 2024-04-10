@@ -66,41 +66,54 @@
 ;; Battery.
 (defvar ec-battery-mode-line nil "Mode line string for battery information.")
 
-(defun ec--battery-notify (status)
-  "Notify when %b key in STATUS is critical (exclamation mark)."
-  (pcase (cdr (assq ?b status))
-    ("!" (osd-notify '("Battery critical" "Hibernation imminent" "emacs")))))
+(autoload 'battery--upower-devices "battery" "Battery information.")
+
+(defun ec-battery ()
+  "Get battery percentages for all devices."
+  (seq-filter
+   (lambda (props)
+     (let ((type (cdr (assoc "Type" props))))
+       (or (eq type 2) (eq type 19)))) ;; 2 == battery, 19 == headphones
+   (mapcar #'battery--upower-device-properties (battery--upower-devices))))
+
+(defun ec--battery-notify (props)
+  "Notify percentage in PROPS is critical ."
+  (let ((percent (cdr (assoc "Percentage" props)))
+        (model   (cdr (assoc "Model"      props))))
+    (when (> battery-load-critical percent)
+      (osd-notify (list (format "%s battery is %.0f%%" model percent)
+                        "poweroff imminent" "emacs")))))
 
 (defun ec--battery-update ()
-  "Get battery information and update `ec--battery-mode-line'."
-  (let ((status (battery-linux-sysfs)))
-    (setq ec-battery-mode-line (ec--update-mode-line-battery status))
-    (ec--battery-notify status)
-    (force-mode-line-update 'all)))
+  "Update variable `ec-battery-mode-line'."
+  (setq ec-battery-mode-line
+        (mapconcat
+         (lambda (status)
+           (ec--battery-notify status)
+           (ec--mode-line-battery status))
+         (ec-battery) " "))
+  (force-mode-line-update 'all))
 
-(defun ec--mode-line-battery (status)
-  "Turn battery STATUS into a mode line string."
-  (let* ((type (cdr (assq ?L status)))
-         (p (cdr (assq ?p status)))
-         (percentage (cond ((not p) "")
-                           ((string= "N/A" p) "")
-                           (t (concat p "%%"))))
-         (time (cdr (assq ?t status)))
-         (left (cond ((string= "0:00" time) "")
-                     ((string= "N/A"  time) "")
-                     ((string= ""     time) "")
-                     (t (concat "|" time))))
-         (type (cdr (assq ?L status)))
-         (face (if (and type (string= "AC" type))
-                   'success
-                 (pcase (cdr (assq ?b status))
-                   ("!"  'error)
-                   ("+"  'success)
-                   (_    'warning)))))
-    (cond ((string= "on-line" type) "")
-          ((string= ""        type) "")
-          (t (propertize (concat percentage left)
-                         'help-echo (format "%s battery" system-name)
+(defun ec--mode-line-battery (props)
+  "Turn battery PROPS into a mode line string."
+  (let* ((state   (battery--upower-state props nil))
+         (percent (cdr (assoc "Percentage"  props)))
+         (model   (cdr (assoc "Model"       props)))
+         (tte     (cdr (assoc "TimeToEmpty" props)))
+         (ttf     (cdr (assoc "TimeToFull"  props)))
+         (secs (if (< 0 tte) tte ttf))  ;
+         (mins (/ secs 60))
+         (hrs (/ secs 3600))
+         (left (if (or (< 0 mins) (< 0 hrs)) ;
+                   (format " (%d:%02d)" hrs (% mins 60))
+                 ""))
+         (face (cond ((eq state 'fully-charged) 'success)
+                     ((eq state 'charging) 'success)
+                     ((< percent battery-load-critical) 'error)
+                     ((< percent battery-load-low) 'warning)
+                     ('warning))))
+    (cond (t (propertize (format "%.0f%%%%%s" percent left)
+                         'help-echo (format "%s battery" model)
                          'mouse-face 'mode-line-highlight
                          'face face)))))
 
