@@ -4,9 +4,7 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(anzu
-                                   fancy-battery
-                                   minions))
+(nconc package-selected-packages '(anzu minions))
 
 ;; Search information.
 (defun ec--mode-line-anzu (&rest args)
@@ -66,48 +64,51 @@
 (add-hook 'org-clock-out-hook #'org-clock-update-mode-line)
 
 ;; Battery.
-(setq battery-status-function #'battery-linux-sysfs)
+(defvar ec-battery-mode-line nil "Mode line string for battery information.")
 
-(defun ec--battery-notify (alist)
-  "Notify when %b key in ALIST is critical (exclamation mark)."
-  (pcase (cdr (assq ?b alist))
+(defun ec--battery-notify (status)
+  "Notify when %b key in STATUS is critical (exclamation mark)."
+  (pcase (cdr (assq ?b status))
     ("!" (osd-notify '("Battery critical" "Hibernation imminent" "emacs")))))
 
-(when (fboundp 'fancy-battery-mode)
-  (setq fancy-battery-mode-line '(:eval (ec--mode-line-battery))
-        fancy-battery-status-update-functions #'ec--battery-notify)
+(defun ec--battery-update ()
+  "Get battery information and update `ec--battery-mode-line'."
+  (let ((status (battery-linux-sysfs)))
+    (setq ec-battery-mode-line (ec--update-mode-line-battery status))
+    (ec--battery-notify status)
+    (force-mode-line-update 'all)))
 
-  (add-hook 'emacs-startup-hook #'fancy-battery-mode))
+(defun ec--mode-line-battery (status)
+  "Turn battery STATUS into a mode line string."
+  (let* ((type (cdr (assq ?L status)))
+         (p (cdr (assq ?p status)))
+         (percentage (cond ((not p) "")
+                           ((string= "N/A" p) "")
+                           (t (concat p "%%"))))
+         (time (cdr (assq ?t status)))
+         (left (cond ((string= "0:00" time) "")
+                     ((string= "N/A"  time) "")
+                     ((string= ""     time) "")
+                     (t (concat "|" time))))
+         (type (cdr (assq ?L status)))
+         (face (if (and type (string= "AC" type))
+                   'success
+                 (pcase (cdr (assq ?b status))
+                   ("!"  'error)
+                   ("+"  'success)
+                   (_    'warning)))))
+    (cond ((string= "on-line" type) "")
+          ((string= ""        type) "")
+          (t (propertize (concat percentage left)
+                         'help-echo (format "%s battery" system-name)
+                         'mouse-face 'mode-line-highlight
+                         'face face)))))
 
-(defun ec--mode-line-battery ()
-  "Battery for the mode-line based on `fancy-battery-last-status'."
-  (when-let (status (bound-and-true-p fancy-battery-last-status))
-    (let* ((type (cdr (assq ?L status)))
-           (p (cdr (assq ?p status)))
-           (percentage (cond ((not p) "")
-                             ((string= "N/A" p) "")
-                             (t (concat p "%%"))))
-           (time (cdr (assq ?t status)))
-           (left (cond ((string= "0:00" time) "")
-                       ((string= "N/A"  time) "")
-                       ((string= ""     time) "")
-                       (t (concat "|" time)))))
-      (cond ((string= "on-line" type) "")
-            ((string= ""        type) "")
-            (t (list " " (propertize (concat percentage left)
-                                     'help-echo "Battery"
-                                     'mouse-face 'mode-line-highlight
-                                     'face (ec--mode-line-battery-face status))))))))
+(defun ec-battery-mode ()
+  "Start polling batteries."
+  (run-at-time nil 60 #'ec--battery-update))
 
-(defun ec--mode-line-battery-face (status)
-  "Face for the mode-line battery based on STATUS."
-  (let ((type (cdr (assq ?L status))))
-    (if (and type (string= "AC" type)) 'fancy-battery-charging
-      (pcase (cdr (assq ?b status))
-        ("!"  'fancy-battery-critical)
-        ("+"  'fancy-battery-charging)
-        ("-"  'fancy-battery-discharging)
-        (_ 'fancy-battery-discharging)))))
+(add-hook 'emacs-startup-hook #'ec-battery-mode)
 
 ;; Appointment information.
 (defvar ec-mode-line-agenda-keymap
@@ -133,20 +134,20 @@ Keymap for managing appointments in mode-line.")
 
 ;; Time and load average.
 (setq display-time-string-forms
-      '(" " (propertize
-             ;; Use this instead of the default to get rid of the space and to
-             ;; move the menu to `mouse-1'.
-             (format "%.2f" (nth (or display-time-load-average 0) (load-average t)))
-             'local-map (make-mode-line-mouse-map
-                         'mouse-1 'display-time-next-load-average)
-             'mouse-face 'mode-line-highlight
-             'help-echo (concat
-                         "System load average for past "
-                         (pcase display-time-load-average
-                           (0 "1 minute")
-                           (1 "5 minutes")
-                           (_ "15 minutes"))
-                         "; mouse-1: next"))
+      '((propertize
+         ;; Use this instead of the default to get rid of the space and to
+         ;; move the menu to `mouse-1'.
+         (format "%.2f" (nth (or display-time-load-average 0) (load-average t)))
+         'local-map (make-mode-line-mouse-map
+                     'mouse-1 'display-time-next-load-average)
+         'mouse-face 'mode-line-highlight
+         'help-echo (concat
+                     "System load average for past "
+                     (pcase display-time-load-average
+                       (0 "1 minute")
+                       (1 "5 minutes")
+                       (_ "15 minutes"))
+                     "; mouse-1: next"))
         ;; Use this instead of the default to customize the help echo.
         " " (propertize (concat 24-hours ":" minutes)
                         'help-echo (format-time-string "%Y-%m-%d %a %H:%M" now)
@@ -261,8 +262,9 @@ Keymap for managing windows in mode-line.")
                   (list " " (propertize "•REC" 'face 'mode-line-emphasis))))
          (:eval (when (and (mode-line-window-selected-p) (bound-and-true-p erc-modified-channels-alist))
                   (list " " (string-trim erc-modified-channels-object))))
-         (:eval (when (mode-line-window-selected-p) fancy-battery-mode-line))
-         (:eval (when (mode-line-window-selected-p) display-time-string))
+         (:eval (when (mode-line-window-selected-p)
+                  (list " " ec-battery-mode-line
+                        " " display-time-string)))
          " " mode-line-position
          " ")
        1.4))))
