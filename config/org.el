@@ -432,7 +432,7 @@ Call FN with ARGS for any log entry that does not take a note."
 (defun ec--agenda-to-appt ()
   "Generate appointments from the agenda."
   (org-agenda-to-appt t)
-  (appt-check))
+  (when (fboundp 'appt-check) (appt-check)))
 
 (defun ec--agenda-to-appt-with-timer ()
   "Generate appointments after a timer."
