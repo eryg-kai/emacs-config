@@ -41,7 +41,7 @@
   (define-key smartparens-mode-map (kbd "M-(") #'sp-forward-barf-sexp))
 
 (when (fboundp 'smartparens-global-strict-mode)
-  (add-hook 'emacs-startup-hook #'smartparens-global-strict-mode))
+  (add-hook 'prog-mode-hook #'smartparens-strict-mode))
 
 (setq show-paren-context-when-offscreen t)
 
