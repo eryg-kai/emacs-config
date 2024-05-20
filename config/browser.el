@@ -18,7 +18,7 @@
       eww-auto-rename-buffer 'url
       eww-buffer-name-length most-positive-fixnum
       shr-use-fonts nil
-      shr-max-image-proportion 0.2)
+      shr-max-image-proportion 1)
 
 (defcustom ec-url-transforms nil "Pairs of replacements to perform on URLs."
   :type '(alist :key-type string :value-type string)
