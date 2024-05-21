@@ -20,6 +20,12 @@
       shr-use-fonts nil
       shr-max-image-proportion 1)
 
+(defun ec--shr-bg (fn start end fg &optional bg)
+  "Call FN with START, END, and FG, ignoring BG."
+  (apply fn start end fg nil))
+
+(advice-add #'shr-colorize-region :around #'ec--shr-bg)
+
 (defcustom ec-url-transforms nil "Pairs of replacements to perform on URLs."
   :type '(alist :key-type string :value-type string)
   :group 'eww)
