@@ -132,6 +132,31 @@ If THEME is an override theme (ends in `override'), do nothing."
         (set cursor-symbol `(,color ,cursor)))))
   (when (fboundp 'evil-refresh-cursor) (evil-refresh-cursor)))
 
+(defun ec--css (rules)
+  "Convert RULES into CSS."
+  (format "%s {\n%s\n}"
+          (car rules)
+          (mapconcat
+           #'(lambda (p)
+               (format "  %s: %s;" (car p) (cdr p)))
+           (cdr rules)
+           "\n")))
+
+(defun ec--set-rofi-theme ()
+  "Set a rofi theme that matches Emacs."
+  (let ((dir (file-name-as-directory (expand-file-name "rofi/themes" (xdg-config-home)))))
+    (make-directory dir t)
+    (with-temp-file (expand-file-name "rofi.rasi" dir)
+      (insert
+       (mapconcat
+        #'ec--css
+        `(("*"
+           (background-color . ,(face-attribute 'default :background))
+           (text-color . ,(face-attribute 'default :foreground)))
+          (window (fullscreen . "true"))
+          (mainbox (padding . "30% 30%")))
+        "\n")))))
+
 ;; This is based on Adwaita dark; it might not work as well with other bases.
 (defun ec--set-gtk-theme ()
   "Set a GTK theme that matches Emacs."
@@ -140,14 +165,7 @@ If THEME is an override theme (ends in `override'), do nothing."
     (with-temp-file (expand-file-name "gtk.css" dir)
       (insert
        (mapconcat
-        #'(lambda (g)
-            (format "%s {\n%s\n}"
-                    (car g)
-                    (mapconcat
-                     #'(lambda (p)
-                         (format "  %s: %s;" (car p) (cdr p)))
-                     (cdr g)
-                     "\n")))
+        #'ec--css
         `(("window, treeview, button, header, stack, toolbar, entry, menu, placessidebar, dialog, messagedialog, widget, headerbar, popover"
            (color . ,(face-attribute 'default :foreground))
            (background . ,(face-attribute 'default :background)))
