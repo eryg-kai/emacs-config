@@ -102,7 +102,7 @@ If battery is low, send a notification."
                      ((< percent battery-load-critical) 'error)
                      ((< percent battery-load-low) 'warning)
                      ('warning))))
-    (when (and (eq state 'discharging) (> battery-load-critical percent))
+    (when (and (eq state 'discharging) (> battery-load-low percent))
       (osd-notify (list (format "%s battery is %.0f%%" model percent)
                         "poweroff imminent" "emacs")))
     (cond (t (propertize (format "%.0f%%%%%s" percent left)
