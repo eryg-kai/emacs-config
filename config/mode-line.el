@@ -76,26 +76,16 @@
        (or (eq type 2) (eq type 19)))) ;; 2 == battery, 19 == headphones
    (mapcar #'battery--upower-device-properties (battery--upower-devices))))
 
-(defun ec--battery-notify (props)
-  "Notify percentage in PROPS is critical ."
-  (let ((percent (cdr (assoc "Percentage" props)))
-        (model   (cdr (assoc "Model"      props))))
-    (when (> battery-load-critical percent)
-      (osd-notify (list (format "%s battery is %.0f%%" model percent)
-                        "poweroff imminent" "emacs")))))
-
 (defun ec--battery-update ()
   "Update variable `ec-battery-mode-line'."
   (setq ec-battery-mode-line
-        (mapconcat
-         (lambda (status)
-           (ec--battery-notify status)
-           (ec--mode-line-battery status))
-         (ec-battery) " "))
+        (mapconcat #'ec--mode-line-battery (ec-battery) " "))
   (force-mode-line-update 'all))
 
 (defun ec--mode-line-battery (props)
-  "Turn battery PROPS into a mode line string."
+  "Turn battery PROPS into a mode line string.
+
+If battery is low, send a notification."
   (let* ((state   (battery--upower-state props nil))
          (percent (cdr (assoc "Percentage"  props)))
          (model   (cdr (assoc "Model"       props)))
@@ -112,6 +102,9 @@
                      ((< percent battery-load-critical) 'error)
                      ((< percent battery-load-low) 'warning)
                      ('warning))))
+    (when (and (eq state 'discharging) (> battery-load-critical percent))
+      (osd-notify (list (format "%s battery is %.0f%%" model percent)
+                        "poweroff imminent" "emacs")))
     (cond (t (propertize (format "%.0f%%%%%s" percent left)
                          'help-echo (format "%s battery" model)
                          'mouse-face 'mode-line-highlight
