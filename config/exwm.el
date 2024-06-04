@@ -98,7 +98,7 @@
            "*record*"
            (lambda (process event)
              (if (eq 15 (process-exit-status process))
-                 (find-file "/tmp/recording.mp4")
+                 (browse-url-xdg-open "/tmp/recording.mp4")
                (message "record: %s" (string-trim event)))
              (setq ec--record-process nil))
            "rec" (when current-prefix-arg " --show-keys")

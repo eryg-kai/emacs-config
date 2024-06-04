@@ -16,34 +16,6 @@
       auto-save-file-name-transforms
       `((".*" ,(expand-file-name "auto-save/" (xdg-data-home)) t)))
 
-;; Open non-text files with xdg-open.
-(defun ec--xdg-file-handler(operation &rest args)
-  (when (eq 'insert-file-contents operation)
-    ;; The strategy here is to let the file open as normal but once the spawned
-    ;; process closes, kill the buffer as well.  It might be more ideal to kill
-    ;; the buffer first but then we have to somehow stop everything else in its
-    ;; tracks or we get errors from various hooks.  I have seen it done by
-    ;; throwing an error but is there a way to do it more "properly"?
-    (let ((buf (current-buffer)))
-      (ec--exec-with-sentinel nil
-                              (lambda (_ event)
-                                (message "xdg-open %s: %s" (car args) (string-trim event))
-                                (kill-buffer buf))
-                              "xdg-open" (car args))))
-  ;; Fall back to the other handlers.
-  (let ((inhibit-file-name-handlers
-         (cons 'ec--xdg-file-handler
-               (and (eq inhibit-file-name-operation operation)
-                    inhibit-file-name-handlers)))
-        (inhibit-file-name-operation operation))
-    (apply operation args)))
-
-(defun ec--add-xdg-file-handler()
-  "Add a file handler to use xdg-open for certain file types."
-  (add-to-list 'file-name-handler-alist '("\\.mp4$" . ec--xdg-file-handler)))
-
-(add-hook 'emacs-startup-hook #'ec--add-xdg-file-handler)
-
 ;; Recentf.
 (setq recentf-max-menu-items 1000
       recentf-max-saved-items 1000
