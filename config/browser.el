@@ -8,6 +8,7 @@
 
 (setq browse-url-handlers
       '(("\\.mp4$" . browse-url-xdg-open)
+        ("\\.webm$" . browse-url-xdg-open)
         ("." . eww-browse-url))
       browse-url-secondary-browser-function #'browse-url-firefox
       eww-auto-rename-buffer 'url
