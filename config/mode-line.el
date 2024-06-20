@@ -283,6 +283,7 @@ Keymap for managing windows in mode-line.")
       (with-current-buffer buffer
         (setq mode-line-format (default-value 'mode-line-format))))))
 
-(add-hook 'emacs-startup-hook #'ec-set-mode-line)
+;; Load it later so the theme kicks in to avoid an unstyled mode line.
+(add-hook 'emacs-startup-hook #'ec-set-mode-line 10)
 
 ;;; mode-line.el ends here

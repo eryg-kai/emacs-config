@@ -60,6 +60,15 @@
 (setq package-user-dir "~/.local/share/elpa"
       quelpa-dir "~/.local/share/quelpa")
 
+;; The theme has not loaded yet, so set initial colors to avoid a flash of the
+;; wrong color.  Also make it fullscreen otherwise it starts small and then
+;; resizes once EXWM kicks in.
+;; TODO: Store background based on last used theme and use that.
+;; TODO: EXWM causes a flash and the mode-line disappears for a bit.
+(setq-default default-frame-alist
+              '((background-color . "#282c34")
+                (fullscreen . maximized)))
+
 ;; Disable as early as possible to prevent brief visibility.
 (menu-bar-mode -1)
 (when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
