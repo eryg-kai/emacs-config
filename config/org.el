@@ -656,12 +656,23 @@ is selected, only the bare key is returned."
 
 (advice-add 'org-log-beginning :override #'ec--org-log-beginning)
 
-(defun ec--maybe-reset-checkboxes ()
+;; TODO: Upstream?  Does it really need to update the whole buffer anyway?
+(defun ec--reset-checkboxes ()
   "Reset checkboxes on repeatable tasks."
-  (when (and (member org-state org-done-keywords)
-             (org-entry-get (point) "REPEAT_TO_STATE"))
-    (org-reset-checkbox-state-subtree)))
+  ;; Could use `org-reset-checkbox-state-subtree' except it has a bug where it
+  ;; changes all other statistic cookies in the file to [0/0].
+  (save-restriction
+    (save-excursion
+      (org-narrow-to-subtree)
+      (org-fold-show-subtree)
+      (goto-char (point-min))
+      (let ((end (point-max)))
+        (while (< (point) end)
+          (when (org-at-item-checkbox-p)
+            (replace-match "[ ]" t t nil 1))
+          (beginning-of-line 2)))
+      (org-update-checkbox-count-maybe))))
 
-(add-hook 'org-after-todo-state-change-hook #'ec--maybe-reset-checkboxes)
+(add-hook 'org-todo-repeat-hook #'ec--reset-checkboxes)
 
 ;;; org.el ends here
