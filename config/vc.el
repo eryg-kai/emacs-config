@@ -57,10 +57,6 @@
   (define-key project-prefix-map "m" #'magit-project-status)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
 
-;; Forge.
-(advice-add 'ghub--host :around #'ec-trampify)
-(advice-add 'ghub--username :around #'ec-trampify)
-
 ;; Git link.
 (define-key global-map (kbd "C-c gl") #'git-link)
 
