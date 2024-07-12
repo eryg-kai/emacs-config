@@ -17,6 +17,13 @@
       shr-max-image-proportion 1
       url-user-agent "Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0")
 
+(defun ec--normalize-url (url)
+  "Normalize URL."
+  ;; Breadcrumb links get marked as suspicious since the link does not match.
+  (list (string-replace " › " "/" (car url))))
+
+(advice-add #'url-generic-parse-url :filter-args #'ec--normalize-url)
+
 (defun ec--shr-bg (fn start end fg &optional bg)
   "Call FN with START, END, and FG, ignoring BG."
   (apply fn start end fg nil))
