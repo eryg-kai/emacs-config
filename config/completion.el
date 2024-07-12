@@ -6,8 +6,7 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(which-key
-                                   yasnippet
+(nconc package-selected-packages '(yasnippet
                                    yasnippet-snippets
                                    ispell
                                    consult))
