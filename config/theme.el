@@ -280,23 +280,23 @@ faces are simply invisible."
 (defface whitespace-hard-newline
   '((t (:inherit 'error))) "Used for hard newlines.")
 
-(defun ec--mark-hard-newlines (beg end &rest _ignore)
-  "Visibly mark hard newlines between BEG and END."
-  (when use-hard-newlines
-    (save-excursion
-      (goto-char beg)
-      (while (search-forward "\n" end t)
-        (let ((pos (1- (point))))
-          (if (get-text-property pos 'hard)
-              (add-text-properties
-               pos (1+ pos)
-               (list 'display
-                     (propertize
-                      "¶\n"
-                      'font-lock-face 'whitespace-hard-newline)))
-            (remove-text-properties pos (1+ pos) '(display nil))))))))
+(defun ec--mark-hard-newlines (beg end &optional object)
+  "Visibly mark hard newlines between BEG and END in OBJECT."
+  (let ((sticky (get-text-property beg 'rear-nonsticky object)))
+    (put-text-property beg end 'display
+                       (copy-sequence
+                        (propertize
+                         "¶\n"
+                         'font-lock-face 'whitespace-hard-newline))
+                       object)
+    (if (and (listp sticky) (not (memq 'display sticky)))
+        (put-text-property beg end 'rear-nonsticky
+                           (cons 'display sticky)
+                           object))))
 
-(add-hook 'after-change-functions #'ec--mark-hard-newlines)
+(ec--mark-hard-newlines 0 (length hard-newline) hard-newline)
+
+(advice-add #'set-hard-newline-properties :after #'ec--mark-hard-newlines)
 
 ;; Fill column indicator.
 (setq-default display-fill-column-indicator-character
