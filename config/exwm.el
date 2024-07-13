@@ -83,7 +83,15 @@
 
 (setq exwm-input-line-mode-passthrough t
       exwm-manage-configurations
-      `(((string= exwm-class-name "Emacs")
+      `(((string= exwm-title "Picture-in-Picture")
+         floating t
+         floating-mode-line nil
+         x 20
+         y 20
+         ;; These numbers make no sense but visually it aligns...
+         width ,(- (x-display-pixel-width) 90)
+         height ,(- (x-display-pixel-height) 60))
+        ((string= exwm-class-name "Emacs")
          floating t
          floating-mode-line nil
          x 20
