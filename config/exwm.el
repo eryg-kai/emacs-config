@@ -207,6 +207,8 @@ If the monitor is a touchscreen also adjust the touch input."
 
 (add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens-soon)
 
+(setq exwm-floating-border-width 10)
+
 (with-eval-after-load 'exwm
   ;; There is some weird behavior with prompting for input after EXWM has begun
   ;; to shut down.  It is also a bit annoying to be asked twice because there is
