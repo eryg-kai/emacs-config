@@ -33,6 +33,9 @@
         (,(kbd "<s-tab>")         . ec-exwm-workspace-next)
         (,(kbd "<s-iso-lefttab>") . ec-exwm-workspace-prev)
 
+        (,(kbd "<M-tab>")         . ec-exwm-frame-next)
+        (,(kbd "<M-iso-lefttab>") . ec-exwm-frame-prev)
+
         (,(kbd "<f5>") . ec-screenshot)
         (,(kbd "<f6>") . ec-record-screen)
 
@@ -79,7 +82,43 @@
         (,(kbd "<return>") . [return])))
 
 (setq exwm-input-line-mode-passthrough t
-      exwm-manage-configurations '((t char-mode t)))
+      exwm-manage-configurations
+      `(((string= exwm-class-name "Emacs")
+         floating t
+         floating-mode-line nil
+         x 20
+         y 20
+         width ,(* (frame-char-width) 80)
+         height ,(- (x-display-pixel-height) 40)
+         char-mode t)
+        (t char-mode t))
+      frame-alpha-lower-limit 0
+      exwm-floating-border-width 10)
+
+(defun ec--setup-floating ()
+  "Set up a floating frame."
+  (set-frame-parameter (selected-frame) 'alpha 90)
+  ;; Prevent cursor from showing through.
+  (setq cursor-in-non-selected-windows nil))
+
+(add-hook 'exwm-floating-setup-hook #'ec--setup-floating)
+
+;; Launch with emacs -f ec-float
+(defun ec-float ()
+  "Set up Emacs inside a floating frame."
+  (set-frame-parameter (selected-frame) 'alpha-background 0))
+
+;; TODO: Any way to restrict `other-frame' to the frames belonging to the
+;; current workspace?
+(defun ec-exwm-frame-prev ()
+  "Move to the previous frame."
+  (interactive)
+  (other-frame -1))
+
+(defun ec-exwm-frame-next ()
+  "Move to the next frame."
+  (interactive)
+  (other-frame 1))
 
 (defun ec--exwm-update-title ()
   "Rename the buffer to `exwm-title'."
@@ -206,8 +245,6 @@ If the monitor is a touchscreen also adjust the touch input."
   (timer-idle-debounce #'ec-exwm-update-screens 5))
 
 (add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens-soon)
-
-(setq exwm-floating-border-width 10)
 
 (with-eval-after-load 'exwm
   ;; There is some weird behavior with prompting for input after EXWM has begun
