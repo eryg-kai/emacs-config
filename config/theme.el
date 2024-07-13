@@ -94,7 +94,8 @@ If THEME is an override theme (ends in `override'), do nothing."
            no-confirm no-enable)))
       (setq vc-annotate-background nil)
       (ec--evil-set-cursor-faces)
-      (ec--set-gtk-theme))))
+      (ec--set-gtk-theme)
+      (ec--set-rofi-theme))))
 
 (advice-add 'load-theme :after #'ec--load-overrides)
 
