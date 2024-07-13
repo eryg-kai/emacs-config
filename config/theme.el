@@ -151,10 +151,23 @@ If THEME is an override theme (ends in `override'), do nothing."
        (mapconcat
         #'ec--css
         `(("*"
-           (background-color . ,(face-attribute 'default :background))
+           (background-color . "transparent")
            (text-color . ,(face-attribute 'default :foreground)))
-          (window (fullscreen . "true"))
-          (mainbox (padding . "30% 30%")))
+          (window
+           (background-color . "#00000010")
+           (padding . "30% 38%")
+           (fullscreen . "true"))
+          (mainbox
+           (expand . "false")
+           (location . "center"))
+          ("inputbar,message,listview"
+           (padding . "20px")
+           (margin . "20px")
+           (border-color . ,(face-attribute 'mode-line :background))
+           (border . "10px solid")
+           (background-color . ,(face-attribute 'default :background)))
+          (inputbar
+           (spacing . "10px")))
         "\n")))))
 
 ;; This is based on Adwaita dark; it might not work as well with other bases.
