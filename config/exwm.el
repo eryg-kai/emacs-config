@@ -36,6 +36,9 @@
         (,(kbd "<M-tab>")         . ec-exwm-frame-next)
         (,(kbd "<M-iso-lefttab>") . ec-exwm-frame-prev)
 
+        (,(kbd "<C-tab>")         . next-buffer)
+        (,(kbd "<C-iso-lefttab>") . previous-buffer)
+
         (,(kbd "<f5>") . ec-screenshot)
         (,(kbd "<f6>") . ec-record-screen)
 
