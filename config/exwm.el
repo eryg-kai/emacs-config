@@ -84,23 +84,25 @@
         (,(kbd "<tab>")    . [tab])
         (,(kbd "<return>") . [return])))
 
+(defvar ec-float-windows nil "Window classes that should float.")
+
 (setq exwm-input-line-mode-passthrough t
+      ;; Some of these numbers make no sense but visually it aligns...
       exwm-manage-configurations
       `(((string= exwm-title "Picture-in-Picture")
          floating t
          floating-mode-line nil
          x 20
          y 20
-         ;; These numbers make no sense but visually it aligns...
          width ,(- (x-display-pixel-width) 90)
          height ,(- (x-display-pixel-height) 60))
-        ((string= exwm-class-name "Emacs")
+        ((member exwm-class-name ec-float-windows)
          floating t
          floating-mode-line nil
          x 20
          y 20
          width ,(* (frame-char-width) 80)
-         height ,(- (x-display-pixel-height) 40)
+         height ,(- (x-display-pixel-height) 60)
          char-mode t)
         (t char-mode t))
       frame-alpha-lower-limit 0
