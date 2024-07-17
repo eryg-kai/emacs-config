@@ -11,8 +11,19 @@
                                    ispell
                                    consult))
 
+;; Completion.
 (setq history-delete-duplicates t
-      completion-auto-select t)
+      completion-auto-select t
+      completion-auto-help t
+      completion-auto-select t
+      completion-ignore-case t
+      completion-styles '(flex)
+      completion-category-overrides '((file (styles . (substring)))
+                                      ;; `consult' uses multi-category.
+                                      (multi-category (styles . (substring))))
+
+      read-buffer-completion-ignore-case t
+      read-file-name-completion-ignore-case t)
 
 ;; Apropos.
 (setq apropos-do-all t)
@@ -134,22 +145,13 @@
 (add-hook 'emacs-startup-hook #'savehist-mode)
 
 ;; Icomplete.
-(setq completion-auto-help t
-      completion-auto-select t
-      completion-ignore-case t
-      completion-styles '(flex)
-      completion-category-overrides '((file (styles . (substring)))
-                                      ;; `consult' uses multi-category.
-                                      (multi-category (styles . (substring))))
-
-      read-buffer-completion-ignore-case t
-      read-file-name-completion-ignore-case t
-      icomplete-compute-delay 0.1
+(setq icomplete-compute-delay 0.1
       icomplete-separator " "
       icomplete-prospects-height 1
       icomplete-hide-common-prefix nil
       icomplete-tidy-shadowed-file-names t
-      icomplete-show-matches-on-no-input t)
+      icomplete-show-matches-on-no-input t
+      completion-in-region-function #'ec--completion-in-region)
 
 (with-eval-after-load 'icomplete
   (define-key icomplete-minibuffer-map (kbd "C-p") #'icomplete-backward-completions)
@@ -163,6 +165,15 @@
   (define-key completion-list-mode-map (kbd "j") #'next-line)
   (define-key completion-list-mode-map (kbd "h") #'minibuffer-previous-completion)
   (define-key completion-list-mode-map (kbd "l") #'minibuffer-next-completion))
+
+(defun ec--completion-in-region(start end collection &optional predicate)
+  "Make in-buffer completion use icomplete.
+
+See `completion-in-region' for the descriptions of START, END,
+COLLECTION, and PREDICATE."
+  (if (minibufferp)
+      (completion--in-region start end collection predicate)
+    (consult-completion-in-region start end collection predicate)))
 
 (add-hook 'emacs-startup-hook #'icomplete-mode)
 
@@ -192,18 +203,8 @@
 (define-key global-map (kbd "M-s k") #'consult-keep-lines)
 (define-key global-map (kbd "M-s u") #'consult-focus-lines)
 
-(defun ec--completion-in-region(start end collection &optional predicate)
-  "Make in-buffer completion use icomplete.
-
-See `completion-in-region' for the descriptions of START, END,
-COLLECTION, and PREDICATE."
-  (if (minibufferp)
-      (completion--in-region start end collection predicate)
-    (consult-completion-in-region start end collection predicate)))
-
 (setq register-preview-function #'consult-register-format
       xref-show-xrefs-function #'consult-xref
-      completion-in-region-function #'ec--completion-in-region
       xref-show-definitions-function #'consult-xref)
 
 ;; `consult-preview-at-point-mode' has no autoload.
