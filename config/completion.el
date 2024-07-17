@@ -6,13 +6,14 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(yasnippet
-                                   yasnippet-snippets
+(nconc package-selected-packages '(cape
+                                   tempel
                                    ispell
                                    consult))
 
 ;; Completion.
 (setq history-delete-duplicates t
+      tab-always-indent 'complete
       completion-auto-select t
       completion-auto-help t
       completion-auto-select t
@@ -86,32 +87,6 @@
     "C-c l h" "help"
     "C-c l r" "rename"
     "C-c l s" "server"))
-
-;; Snippets.
-(setq yas-indent-line 'fixed)
-
-(with-eval-after-load 'yasnippet
-  (define-key yas-minor-mode-map (kbd "TAB") #'hippie-expand)
-  (push #'yas-hippie-try-expand hippie-expand-try-functions-list)
-
-  ;; In the terminal smartparens-strict-mode causes some weirdness with
-  ;; parenthesis in snippets so disable it while expanding.
-  (defvar ec--smartparens-mode)
-
-  (defun ec--disable-smartparens (&rest _)
-    (setq ec--smartparens-mode smartparens-mode)
-    (setq smartparens-mode nil))
-
-  (advice-add 'yas-hippie-try-expand :after #'ec--disable-smartparens)
-
-  (defun ec--reset-smartparens (&rest _)
-    (setq smartparens-mode ec--smartparens-mode))
-
-  (advice-add 'hippie-expand :after #'ec--reset-smartparens '((depth . -100))))
-
-(when (fboundp 'yas-minor-mode)
-  (add-hook 'text-mode-hook #'yas-minor-mode)
-  (add-hook 'prog-mode-hook #'yas-minor-mode))
 
 ;; Man pages.
 (setq Man-notify-method 'aggressive)
@@ -248,5 +223,38 @@ COLLECTION, and PREDICATE."
         (forward-line (1- (string-to-number (car position))))
         (when (cadr position)
           (forward-char (1- (string-to-number (cadr position)))))))))
+
+;; Completion sources..
+(setq dabbrev-case-replace nil
+      cape-dabbrev-min-length 0
+      ;; It does not appear possible to use aspell databases for completion, so
+      ;; a separate plain text word list is needed.
+      cape-dict-file (list ispell-personal-dictionary
+                           (getenv "WORDLIST")))
+
+;; `dabbrev-capf' exists but it errors.
+;; `ispell-complete-word' might also work instead of `cape-dict'.
+(defalias 'ec--capf (cape-capf-super #'cape-dabbrev
+                                     #'cape-dict
+                                     #'cape-keyword
+                                     #'cape-line))
+
+(defun ec--add-capf (&optional global)
+  "Add back capf functions to GLOBAL hook if non-nil, else local."
+  (let ((local (not global)))
+    (add-hook 'completion-at-point-functions #'ec--capf nil local)
+    (add-hook 'completion-at-point-functions #'tempel-complete nil local)
+    (add-hook 'completion-at-point-functions #'cape-file nil local)
+    (add-hook 'completion-at-point-functions #'cape-emoji nil local)))
+
+(add-hook 'emacs-lisp-mode-hook #'ec--add-capf)
+
+(defun ec--eglot-capf ()
+  "Add back capf functions."
+  (when (eglot-managed-p) (ec--add-capf)))
+
+(add-hook 'eglot-managed-mode-hook #'ec--eglot-capf)
+
+(ec--add-capf t)
 
 ;;; completion.el ends here
