@@ -87,25 +87,6 @@
 (defvar ec-float-windows nil "Window classes that should float.")
 
 (setq exwm-input-line-mode-passthrough t
-      ;; Some of these numbers make no sense but visually it aligns...
-      exwm-manage-configurations
-      `(((or (member exwm-class-name ec-float-windows)
-             (member exwm-instance-name ec-float-windows))
-         floating t
-         floating-mode-line nil
-         x 10
-         y 10
-         width ,(* (frame-char-width) 80)
-         height ,(- (x-display-pixel-height) 130)
-         char-mode t)
-        (t
-         floating t
-         floating-mode-line nil
-         x 10
-         y 10
-         width ,(- (x-display-pixel-width) 70)
-         height ,(- (x-display-pixel-height) 130)
-         char-mode t))
       frame-alpha-lower-limit 0
       exwm-floating-border-width 10)
 
@@ -265,6 +246,26 @@ If the monitor is a touchscreen also adjust the touch input."
   ;; to shut down.  It is also a bit annoying to be asked twice because there is
   ;; already a shutdown confirmation from EXWM.
   (setq confirm-kill-processes nil)
+
+  ;; Some of these numbers make no sense but visually it aligns...
+  (setq exwm-manage-configurations
+        `(((or (member exwm-class-name ec-float-windows)
+               (member exwm-instance-name ec-float-windows))
+           floating t
+           floating-mode-line nil
+           x 10
+           y 10
+           width ,(* (frame-char-width) 80)
+           height ,(- (x-display-pixel-height) 130)
+           char-mode t)
+          (t
+           floating t
+           floating-mode-line nil
+           x 10
+           y 10
+           width ,(- (x-display-pixel-width) 70)
+           height ,(- (x-display-pixel-height) 130)
+           char-mode t)))
 
   (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
   (define-key exwm-mode-map (kbd "i") #'exwm-input-release-keyboard)
