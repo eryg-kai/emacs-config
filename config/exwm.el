@@ -92,17 +92,17 @@
       `(((string= exwm-title "Picture-in-Picture")
          floating t
          floating-mode-line nil
-         x 20
-         y 20
-         width ,(- (x-display-pixel-width) 90)
-         height ,(- (x-display-pixel-height) 60))
+         x 10
+         y 10
+         width ,(- (x-display-pixel-width) 70)
+         height ,(- (x-display-pixel-height) 130))
         ((member exwm-class-name ec-float-windows)
          floating t
          floating-mode-line nil
-         x 20
-         y 20
+         x 10
+         y 10
          width ,(* (frame-char-width) 80)
-         height ,(- (x-display-pixel-height) 60)
+         height ,(- (x-display-pixel-height) 130)
          char-mode t)
         (t char-mode t))
       frame-alpha-lower-limit 0
