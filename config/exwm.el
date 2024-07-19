@@ -249,6 +249,7 @@ If the monitor is a touchscreen also adjust the touch input."
 
   ;; Some of these numbers make no sense but visually it aligns...
   (setq exwm-manage-configurations
+        ;; Anything in `ec-float-windows' gets put to the left with 80 columns.
         `(((or (member exwm-class-name ec-float-windows)
                (member exwm-instance-name ec-float-windows))
            floating t
@@ -258,14 +259,17 @@ If the monitor is a touchscreen also adjust the touch input."
            width ,(* (frame-char-width) 80)
            height ,(- (x-display-pixel-height) 130)
            char-mode t)
-          (t
+          ;; For now assuming that if `ec-float-windows' is set, we want all
+          ;; remaining X windows to float and take up the whole screen.
+          (ec-float-windows
            floating t
            floating-mode-line nil
            x 10
            y 10
            width ,(- (x-display-pixel-width) 70)
            height ,(- (x-display-pixel-height) 130)
-           char-mode t)))
+           char-mode t)
+          (t char-mode t)))
 
   (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
   (define-key exwm-mode-map (kbd "i") #'exwm-input-release-keyboard)
