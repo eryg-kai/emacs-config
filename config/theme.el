@@ -155,7 +155,7 @@ If THEME is an override theme (ends in `override'), do nothing."
            (background-color . "transparent")
            (text-color . ,(face-attribute 'default :foreground)))
           (window
-           (background-color . "#00000010")
+           (background-color . "#00000011")
            (padding . "30% 38%")
            (fullscreen . "true"))
           (mainbox
@@ -163,10 +163,7 @@ If THEME is an override theme (ends in `override'), do nothing."
            (location . "center"))
           ("inputbar,message,listview"
            (padding . "20px")
-           (margin . "20px")
-           (border-color . ,(face-attribute 'mode-line :background))
-           (border . "10px solid")
-           (background-color . ,(face-attribute 'default :background)))
+           (margin . "20px"))
           (inputbar
            (spacing . "10px")))
         "\n")))))
