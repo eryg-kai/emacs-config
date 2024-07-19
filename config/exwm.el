@@ -89,14 +89,7 @@
 (setq exwm-input-line-mode-passthrough t
       ;; Some of these numbers make no sense but visually it aligns...
       exwm-manage-configurations
-      `(((string= exwm-title "Picture-in-Picture")
-         floating t
-         floating-mode-line nil
-         x 10
-         y 10
-         width ,(- (x-display-pixel-width) 70)
-         height ,(- (x-display-pixel-height) 130))
-        ((member exwm-class-name ec-float-windows)
+      `(((member exwm-class-name ec-float-windows)
          floating t
          floating-mode-line nil
          x 10
@@ -104,7 +97,14 @@
          width ,(* (frame-char-width) 80)
          height ,(- (x-display-pixel-height) 130)
          char-mode t)
-        (t char-mode t))
+        (t
+         floating t
+         floating-mode-line nil
+         x 10
+         y 10
+         width ,(- (x-display-pixel-width) 70)
+         height ,(- (x-display-pixel-height) 130)
+         char-mode t))
       frame-alpha-lower-limit 0
       exwm-floating-border-width 10)
 
