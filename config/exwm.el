@@ -89,7 +89,8 @@
 (setq exwm-input-line-mode-passthrough t
       ;; Some of these numbers make no sense but visually it aligns...
       exwm-manage-configurations
-      `(((member exwm-class-name ec-float-windows)
+      `(((or (member exwm-class-name ec-float-windows)
+             (member exwm-instance-name ec-float-windows))
          floating t
          floating-mode-line nil
          x 10
