@@ -6,7 +6,8 @@
 
 (define-key global-map (kbd "C-c G") #'gnus)
 
-(setq gnus-directory (expand-file-name "news" (xdg-cache-home))
+(setq message-directory (expand-file-name "mail" (xdg-data-home))
+      gnus-directory (expand-file-name "news" (xdg-data-home))
       gnus-startup-file (expand-file-name "news/newsrc" (xdg-config-home))
       mail-host-address "system.local"
       ;; Make sure to customize `gnus-secondary-select-methods' and
