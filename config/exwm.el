@@ -121,45 +121,6 @@
 
 (add-hook 'exwm-update-title-hook #'ec--exwm-update-title)
 
-(defvar ec--record-process nil "Current recording process.")
-
-(defun ec-record-screen()
-  "Record the screen."
-  (interactive)
-  (if (not ec--record-process)
-      (setq ec--record-process
-            (ec--exec-with-sentinel
-             "*record*"
-             (lambda (process event)
-               (pcase (process-exit-status process)
-                 (15 (browse-url-xdg-open "/tmp/recording.mp4"))
-                 (_ (message "record: %s" (string-trim event))))
-               (setq ec--record-process nil)
-               (force-mode-line-update))
-             "rec" (when current-prefix-arg " --show-keys")
-             "--output /tmp/recording.mp4"))
-    (interrupt-process ec--record-process)
-    (setq ec--record-process nil))
-  (force-mode-line-update))
-
-(defun ec-screenshot()
-  "Take a screenshot."
-  (interactive)
-  (if (not ec--record-process)
-      (setq ec--record-process
-            (ec--exec-with-sentinel
-             nil
-             (lambda (process event)
-               (pcase (process-exit-status process)
-                 (0 (find-file "/tmp/screenshot.png"))
-                 (_ (message "screenshot: %s" (string-trim event))))
-               (setq ec--record-process nil)
-               (force-mode-line-update))
-             "scr --output /tmp/screenshot.png"))
-    (interrupt-process ec--record-process)
-    (setq ec--record-process nil))
-  (force-mode-line-update))
-
 (defun ec--exwm-workspace-switch (n)
   "Switch to the workspace N away from the current."
   (let* ((workspaceCount (exwm-workspace--count))
