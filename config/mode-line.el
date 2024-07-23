@@ -80,7 +80,7 @@
   "Update variable `ec-battery-mode-line'."
   (setq ec-battery-mode-line
         (mapconcat #'ec--mode-line-battery (ec-battery) " "))
-  (force-mode-line-update 'all))
+  (force-mode-line-update))
 
 (defun ec--mode-line-battery (props)
   "Turn battery PROPS into a mode line string.
@@ -264,7 +264,9 @@ Keymap for managing windows in mode-line.")
                   (list " " org-mode-line-string))))
        '((:eval (when (and (mode-line-window-selected-p) (bound-and-true-p appt-mode-string))
                   (list " " (string-trim appt-mode-string))))
-         (:eval (when (and (mode-line-window-selected-p) (or defining-kbd-macro executing-kbd-macro))
+         (:eval (when (and (mode-line-window-selected-p) (or defining-kbd-macro
+                                                             executing-kbd-macro
+                                                             ec--record-process))
                   (list " " (propertize "•REC" 'face 'mode-line-emphasis))))
          (:eval (when (and (mode-line-window-selected-p) (bound-and-true-p erc-modified-channels-alist))
                   (list " " (string-trim erc-modified-channels-object))))
