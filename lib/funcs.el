@@ -90,7 +90,7 @@ If no ARGS are provided, prompt for the command."
 ARGS are concatenated with spaces.
 Gives process the sentinel SENTINEL.
 Return the process object for the command."
-  (let* ((command (mapconcat 'identity args " "))
+  (let* ((command (string-join args " "))
          (proc (start-process-shell-command command buffer command)))
     (set-process-sentinel proc sentinel)
     proc))
@@ -103,6 +103,7 @@ If no ARGS are provided, prompt for the command."
   (message "%s"
    (replace-regexp-in-string
     "[\n ]+" " "
-    (string-trim (shell-command-to-string (mapconcat 'identity args " "))))))
+    (string-trim (shell-command-to-string
+                  (string-join (seq-filter #'identity args) " "))))))
 
 ;;; funcs.el ends here
