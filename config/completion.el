@@ -240,7 +240,7 @@ COLLECTION, and PREDICATE."
                                      #'cape-line))
 
 (defun ec--add-capf (&optional global)
-  "Add back capf functions to GLOBAL hook if non-nil, else local."
+  "Add capf functions to GLOBAL hook if non-nil, else local."
   (let ((local (not global)))
     (add-hook 'completion-at-point-functions #'ec--capf nil local)
     (add-hook 'completion-at-point-functions #'tempel-complete nil local)
