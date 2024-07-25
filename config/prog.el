@@ -61,7 +61,9 @@
 (add-hook 'typescript-mode-hook #'ec--typescript-doc)
 
 ;; Editorconfig.
-(setq editorconfig-exclude-modes (list 'emacs-lisp-mode 'lisp-interaction-mode))
+(setq editorconfig-exclude-modes (list 'emacs-lisp-mode
+                                       'lisp-interaction-mode
+                                       'org-mode))
 
 (when (fboundp 'editorconfig-mode)
   (add-hook 'emacs-startup-hook #'editorconfig-mode))
