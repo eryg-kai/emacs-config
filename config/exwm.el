@@ -36,8 +36,8 @@
         (,(kbd "<M-tab>")         . ec-exwm-frame-next)
         (,(kbd "<M-iso-lefttab>") . ec-exwm-frame-prev)
 
-        (,(kbd "<C-tab>")         . next-buffer)
-        (,(kbd "<C-iso-lefttab>") . previous-buffer)
+        (,(kbd "<C-tab>")         . ec-exwm-next-buffer)
+        (,(kbd "<C-iso-lefttab>") . ec-exwm-previous-buffer)
 
         (,(kbd "<f5>") . ec-screenshot)
         (,(kbd "<f6>") . ec-record-screen)
@@ -114,6 +114,22 @@
   "Move to the next frame."
   (interactive)
   (other-frame 1))
+
+(defun ec-exwm-previous-buffer ()
+  "Switch to the previous exwm buffer."
+  (interactive)
+  (let ((switch-to-prev-buffer-skip
+         (lambda (window new-buffer bury-or-kill)
+           (not (eq 'exwm-mode (with-current-buffer new-buffer major-mode))))))
+    (previous-buffer)))
+
+(defun ec-exwm-next-buffer ()
+  "Switch to the next exwm buffer."
+  (interactive)
+  (let ((switch-to-prev-buffer-skip
+         (lambda (window new-buffer bury-or-kill)
+           (not (eq 'exwm-mode (with-current-buffer new-buffer major-mode))))))
+    (next-buffer)))
 
 (defun ec--exwm-update-title ()
   "Rename the buffer to `exwm-title'."
