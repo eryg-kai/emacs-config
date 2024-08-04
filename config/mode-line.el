@@ -79,8 +79,7 @@
 (defun ec--battery-update ()
   "Update variable `ec-battery-mode-line'."
   (setq ec-battery-mode-line
-        (mapconcat #'ec--mode-line-battery (ec-battery) " "))
-  (force-mode-line-update))
+        (mapconcat #'ec--mode-line-battery (ec-battery) " ")))
 
 (defun ec--mode-line-battery (props)
   "Turn battery PROPS into a mode line string.
