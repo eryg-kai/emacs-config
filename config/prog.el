@@ -14,7 +14,6 @@
                                    markdown-mode
                                    nix-mode
                                    rainbow-mode
-                                   typescript-mode
                                    reformatter
                                    web-mode
                                    yaml-mode
@@ -44,9 +43,6 @@
 ;; Elisp.
 (add-hook 'emacs-lisp-mode-hook #'flymake-mode)
 
-;; JavaScript and TypeScript.
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-
 ;; Dash.
 (setq dash-docs-docsets-path (expand-file-name "docsets" (xdg-cache-home)))
 
@@ -55,17 +51,22 @@
   (interactive)
   (message "TODO: implement"))
 
+;; TypeScript.
 (defun ec--typescript-doc ()
   "Enable docs for `typescript-mode'."
   (setq-local dash-docs-docsets '("JavaScript")))
 
-(add-hook 'typescript-mode-hook #'ec--typescript-doc)
+(add-hook 'typescript-ts-mode-hook #'ec--typescript-doc)
+
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 
 (reformatter-define biome-format
     :program "biome"
     :args `("format" "--stdin-file-path" ,(buffer-file-name)))
 
-(add-hook 'typescript-mode-hook #'biome-format-on-save-mode)
+(add-hook 'typescript-ts-mode-hook #'biome-format-on-save-mode)
+(add-hook 'tsx-ts-mode-hook #'biome-format-on-save-mode)
 
 ;; Editorconfig.
 (setq editorconfig-exclude-modes (list 'emacs-lisp-mode

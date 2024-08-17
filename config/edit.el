@@ -102,7 +102,8 @@
 
 ;; Subword and superword.
 (add-hook 'go-mode-hook #'subword-mode)
-(add-hook 'typescript-mode-hook #'subword-mode)
+(add-hook 'typescript-ts-mode-hook #'subword-mode)
+(add-hook 'tsx-ts-mode-hook #'subword-mode)
 
 (add-hook 'text-mode #'superword-mode)
 (add-hook 'emacs-lisp-mode #'superword-mode)
