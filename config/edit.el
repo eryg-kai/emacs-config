@@ -6,8 +6,7 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(smartparens
-                                   hl-todo
+(nconc package-selected-packages '(hl-todo
                                    undo-tree))
 
 ;; General settings.
@@ -31,19 +30,8 @@
   (forward-line -1)
   (indent-according-to-mode))
 
-(with-eval-after-load 'smartparens
-  (require 'smartparens-config)
-
-  (sp-with-modes '(typescript-ts-mode go-mode)
-    (sp-local-pair "{" nil :post-handlers '((ec--indent-between-pair "RET")))
-    (sp-local-pair "[" nil :post-handlers '((ec--indent-between-pair "RET")))
-    (sp-local-pair "(" nil :post-handlers '((ec--indent-between-pair "RET"))))
-
-  (define-key smartparens-mode-map (kbd "M-)") #'sp-forward-slurp-sexp)
-  (define-key smartparens-mode-map (kbd "M-(") #'sp-forward-barf-sexp))
-
-(when (fboundp 'smartparens-global-strict-mode)
-  (add-hook 'prog-mode-hook #'smartparens-strict-mode))
+;; Electric pairs.
+(add-hook 'emacs-startup-hook #'electric-pair-mode)
 
 (setq show-paren-context-when-offscreen t)
 
