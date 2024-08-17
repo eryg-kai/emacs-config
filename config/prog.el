@@ -7,8 +7,6 @@
 (nconc package-selected-packages '(csv-mode
                                    dash-docs
                                    editorconfig
-                                   go-dlv
-                                   go-mode
                                    groovy-mode
                                    kotlin-mode
                                    markdown-mode
@@ -26,11 +24,13 @@
   (define-key eglot-mode-map (kbd "C-c ad") 'xref-find-definitions))
 
 ;; Go.
-(defun ec--hook-go-fmt ()
-  "Run gofmt when saving the current file."
-  (add-hook 'before-save-hook #'gofmt nil t))
+(reformatter-define go-format
+  :program "gofmt"
+  :args '("-s"))
 
-(add-hook 'go-mode-hook #'ec--hook-go-fmt)
+(add-hook 'go-ts-mode-hook #'go-format-on-save-mode)
+
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 
 (defun ec-gud-localize (fn fmt &rest args)
   "Run FN with FMT and ARGS after ensuring FMT does not contain Tramp prefixes."

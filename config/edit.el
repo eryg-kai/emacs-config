@@ -101,7 +101,7 @@
 (add-hook 'rfc-edit-mode-hook #'ec--enable-line-numbers) ; Parent is text-mode.
 
 ;; Subword and superword.
-(add-hook 'go-mode-hook #'subword-mode)
+(add-hook 'go-ts-mode-hook #'subword-mode)
 (add-hook 'typescript-ts-mode-hook #'subword-mode)
 (add-hook 'tsx-ts-mode-hook #'subword-mode)
 
