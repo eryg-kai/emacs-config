@@ -242,10 +242,10 @@ COLLECTION, and PREDICATE."
 (defun ec--add-capf (&optional global)
   "Add capf functions to GLOBAL hook if non-nil, else local."
   (let ((local (not global)))
-    (add-hook 'completion-at-point-functions #'ec--capf nil local)
-    (add-hook 'completion-at-point-functions #'tempel-complete nil local)
-    (add-hook 'completion-at-point-functions #'cape-file nil local)
-    (add-hook 'completion-at-point-functions #'cape-emoji nil local)))
+    (add-hook 'completion-at-point-functions #'ec--capf -10 local)
+    (add-hook 'completion-at-point-functions #'tempel-complete -10 local)
+    (add-hook 'completion-at-point-functions #'cape-file -10 local)
+    (add-hook 'completion-at-point-functions #'cape-emoji -10 local)))
 
 (add-hook 'emacs-lisp-mode-hook #'ec--add-capf)
 
