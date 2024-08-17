@@ -69,7 +69,6 @@
     "C-c o" "org"
     "C-c oh" "heading"
     "C-c f" "files"
-    "C-c &" "snippet"
     "C-c b" "buffer"
     "C-c '" "mode"
     "C-x p" "project"
