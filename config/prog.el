@@ -15,6 +15,7 @@
                                    nix-mode
                                    rainbow-mode
                                    typescript-mode
+                                   reformatter
                                    web-mode
                                    yaml-mode
                                    yarn-mode))
@@ -59,6 +60,12 @@
   (setq-local dash-docs-docsets '("JavaScript")))
 
 (add-hook 'typescript-mode-hook #'ec--typescript-doc)
+
+(reformatter-define biome-format
+    :program "biome"
+    :args `("format" "--stdin-file-path" ,(buffer-file-name)))
+
+(add-hook 'typescript-mode-hook #'biome-format-on-save-mode)
 
 ;; Editorconfig.
 (setq editorconfig-exclude-modes (list 'emacs-lisp-mode
