@@ -85,4 +85,11 @@
 (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-ts-mode))
 (add-to-list 'auto-mode-alist '("mix\\.lock" . elixir-ts-mode))
 
+;; Kotlin.
+(reformatter-define kotlin-format
+  :program "ktlint"
+  :args '("-F" "--stdin" "--log-level=error"))
+
+(add-hook 'kotlin-mode-hook #'kotlin-format-on-save-mode)
+
 ;;; prog.el ends here
