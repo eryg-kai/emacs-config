@@ -231,20 +231,25 @@ COLLECTION, and PREDICATE."
       cape-dict-file (list ispell-personal-dictionary
                            (getenv "WORDLIST")))
 
-;; `dabbrev-capf' exists but it errors.
-;; `ispell-complete-word' might also work instead of `cape-dict'.
-(defalias 'ec--capf (cape-capf-super #'cape-dabbrev
-                                     #'cape-dict
-                                     #'cape-keyword
-                                     #'cape-line))
+(defalias 'ec--capf (cape-capf-prefix-length
+                     (cape-capf-super
+                      #'cape-dabbrev ; `dabbrev-capf' exists but it errors.
+                      #'cape-dict    ; `ispell-complete-word' might also.
+                      #'cape-keyword
+                      #'cape-line)
+                     1))
+
+(defalias 'ec--capf-file (cape-capf-prefix-length #'cape-file 1))
+(defalias 'ec--capf-emoji (cape-capf-prefix-length #'cape-emoji 1))
+(defalias 'ec--capf-template (cape-capf-prefix-length #'tempel-complete 1))
 
 (defun ec--add-capf (&optional global)
   "Add capf functions to GLOBAL hook if non-nil, else local."
   (let ((local (not global)))
     (add-hook 'completion-at-point-functions #'ec--capf -10 local)
-    (add-hook 'completion-at-point-functions #'tempel-complete -10 local)
-    (add-hook 'completion-at-point-functions #'cape-file -10 local)
-    (add-hook 'completion-at-point-functions #'cape-emoji -10 local)))
+    (add-hook 'completion-at-point-functions #'ec--capf-template -10 local)
+    (add-hook 'completion-at-point-functions #'ec--capf-file -10 local)
+    (add-hook 'completion-at-point-functions #'ec--capf-emoji -10 local)))
 
 (add-hook 'emacs-lisp-mode-hook #'ec--add-capf)
 
