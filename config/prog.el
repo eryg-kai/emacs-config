@@ -92,4 +92,7 @@
 
 (add-hook 'kotlin-mode-hook #'kotlin-format-on-save-mode)
 
+;; Rust.
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
+
 ;;; prog.el ends here
