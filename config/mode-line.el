@@ -120,8 +120,6 @@ If battery is low, send a notification."
                          'mouse-face 'mode-line-highlight
                          'face face)))))
 
-(add-hook 'emacs-startup-hook #'ec-battery-mode)
-
 ;; Appointment information.
 (defvar ec-mode-line-agenda-keymap
   (let ((map (make-sparse-keymap)))
@@ -165,8 +163,6 @@ Keymap for managing appointments in mode-line.")
                         'help-echo (format-time-string "%Y-%m-%d %a %H:%M" now)
                         'mouse-face 'mode-line-highlight
                         'face 'mode-line-emphasis)))
-
-(add-hook 'emacs-startup-hook #'display-time-mode)
 
 ;; Position.
 (setq mode-line-position '("%l:%C " (-3 "%p")))
