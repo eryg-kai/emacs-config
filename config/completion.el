@@ -248,7 +248,10 @@ COLLECTION, and PREDICATE."
     (add-hook 'completion-at-point-functions #'ec--capf -10 local)
     (add-hook 'completion-at-point-functions #'ec--capf-template -10 local)
     (add-hook 'completion-at-point-functions #'ec--capf-file -10 local)
-    (add-hook 'completion-at-point-functions #'ec--capf-emoji -10 local)))
+    (add-hook 'completion-at-point-functions #'ec--capf-emoji -10 local)
+    (when local
+      ;; Do not run the global hook; everything is already added locally.
+      (delq t completion-at-point-functions))))
 
 (add-hook 'emacs-lisp-mode-hook #'ec--add-capf)
 
