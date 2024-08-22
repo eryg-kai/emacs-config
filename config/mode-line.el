@@ -66,7 +66,23 @@
 ;; Battery.
 (defvar ec-battery-mode-line nil "Mode line string for battery information.")
 
-(autoload 'battery--upower-devices "battery" "Battery information.")
+;; `display-battery-mode' exists but it does not give you separate laptop and
+;; headset battery information.  Instead, use it for the dbus subscription and
+;; parsing each battery's info but put together the mode line manually.
+(defun ec-battery-mode ()
+  "Start polling batteries."
+  (require 'battery)
+  (setq battery-update-timer
+        (run-at-time nil battery-update-interval #'ec--battery-update))
+  ;; Listen for being plugged in/out.
+  (battery--upower-subscribe))
+
+(defun ec--battery-update ()
+  "Update variable `ec-battery-mode-line'."
+  (setq ec-battery-mode-line
+        (mapconcat #'ec--mode-line-battery (ec-battery) " "))
+  ;; Force because it might have been triggered by dbus.
+  (force-mode-line-update t))
 
 (defun ec-battery ()
   "Get battery percentages for all devices."
@@ -75,11 +91,6 @@
      (let ((type (cdr (assoc "Type" props))))
        (or (eq type 2) (eq type 19)))) ;; 2 == battery, 19 == headphones
    (mapcar #'battery--upower-device-properties (battery--upower-devices))))
-
-(defun ec--battery-update ()
-  "Update variable `ec-battery-mode-line'."
-  (setq ec-battery-mode-line
-        (mapconcat #'ec--mode-line-battery (ec-battery) " ")))
 
 (defun ec--mode-line-battery (props)
   "Turn battery PROPS into a mode line string.
@@ -90,10 +101,10 @@ If battery is low, send a notification."
          (model   (cdr (assoc "Model"       props)))
          (tte     (cdr (assoc "TimeToEmpty" props)))
          (ttf     (cdr (assoc "TimeToFull"  props)))
-         (secs (if (< 0 tte) tte ttf))  ;
+         (secs (if (< 0 tte) tte ttf))
          (mins (/ secs 60))
          (hrs (/ secs 3600))
-         (left (if (or (< 0 mins) (< 0 hrs)) ;
+         (left (if (or (< 0 mins) (< 0 hrs))
                    (format " (%d:%02d)" hrs (% mins 60))
                  ""))
          (face (cond ((eq state 'fully-charged) 'success)
@@ -108,10 +119,6 @@ If battery is low, send a notification."
                          'help-echo (format "%s battery" model)
                          'mouse-face 'mode-line-highlight
                          'face face)))))
-
-(defun ec-battery-mode ()
-  "Start polling batteries."
-  (run-at-time nil 60 #'ec--battery-update))
 
 (add-hook 'emacs-startup-hook #'ec-battery-mode)
 
