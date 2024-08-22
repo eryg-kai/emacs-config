@@ -102,6 +102,8 @@
 
  (help-key-binding :background 'unspecified)
 
- (magit-branch-remote-head :box 'unspecified :underline t :inherit 'magit-branch-remote))
+ (magit-branch-remote-head :box 'unspecified :underline t :inherit 'magit-branch-remote)
+
+ (consult-preview-insertion :inherit 'success))
 
 ;;; override-theme.el ends here
