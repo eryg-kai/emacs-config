@@ -21,39 +21,11 @@
                             " --no-heading --no-messages --glob '!*/' --only-matching"
                             " --regexp '.{0,60}'<R>'.{0,20}'"))))
 
-(defun ec-project-find-regexp (regexp)
-  "Find all matches for REGEXP in the current project's roots.
-
-This is like `project-find-regexp' except uses ripgrep on the
-project root instead of passing individual files and thus can
-make use of ignore files."
-  (interactive (list (project--read-regexp)))
-  (require 'xref)
-  (let* ((pr (project-current t))
-         (default-directory (expand-file-name (project-root pr))))
-    (xref--show-xrefs
-     (apply-partially #'ec-project--find-regexp regexp default-directory)
-     nil)))
-
-(defun ec-project--find-regexp (regexp dir)
-  (let* ((xref-search-program 'ripgrep)
-         ;; Remove the glob exception so ripgrep traverses directories.
-         (xref-search-program-alist
-          `((ripgrep . ,(concat "xargs -0 rg <C> --null --line-number --with-filename"
-                                " --no-heading --no-messages --only-matching"
-                                " --regexp '.{0,60}'<R>'.{0,20}'"))))
-         (xrefs (xref-matches-in-files regexp (list dir))))
-    (unless xrefs
-      (user-error "No matches for: %s" regexp))
-    xrefs))
-
 ;; If the path to your shell is different locally from the remote then
 ;; `xref-matches-in-files' will fail (in NixOS I end up getting
 ;; /run/current-system/sw/bin/bash).  Rely on /bin/sh instead.
 ;; TODO: What is the proper fix?  Also, no error is reported (instead it only
 ;; reports there are no matches).
 (setq shell-file-name "/bin/sh")
-
-(keymap-set global-map "<remap> <project-find-regexp>" #'ec-project-find-regexp)
 
 ;;; projects.el ends here
