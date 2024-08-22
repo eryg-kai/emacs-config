@@ -7,11 +7,6 @@
 (when (display-graphic-p)
   (nconc package-selected-packages '(exwm exwm-edit)))
 
-(setq exwm-edit-bind-default-keys nil
-      exwm-edit-split t)
-
-(autoload 'exwm-edit--compose "exwm-edit" "EXWM edit mode.")
-
 (define-key global-map (kbd "C-c r") #'ec-exec)
 
 (defcustom ec-monitor-xrandr-alist nil "Xrandr flags for each monitor."
