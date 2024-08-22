@@ -16,10 +16,10 @@
       anzu-mode-line-update-function #'ec--mode-line-anzu)
 
 (with-eval-after-load 'anzu
-  (global-set-key [remap query-replace] 'anzu-query-replace)
-  (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
-  (define-key isearch-mode-map [remap isearch-query-replace]  #'anzu-isearch-query-replace)
-  (define-key isearch-mode-map [remap isearch-query-replace-regexp] #'anzu-isearch-query-replace-regexp))
+  (keymap-set global-map "<remap> <query-replace>" #'anzu-query-replace)
+  (keymap-set global-map "<remap> <query-replace-regexp>" #'anzu-query-replace-regexp)
+  (keymap-set isearch-mode-map "<remap> <isearch-query-replace>"  #'anzu-isearch-query-replace)
+  (keymap-set isearch-mode-map "<remap> <isearch-query-replace-regexp>" #'anzu-isearch-query-replace-regexp))
 
 (when (fboundp 'global-anzu-mode)
   (add-hook 'emacs-startup-hook #'global-anzu-mode))
@@ -125,7 +125,7 @@ If battery is low, send a notification."
 ;; Appointment information.
 (defvar ec-mode-line-agenda-keymap
   (let ((map (make-sparse-keymap)))
-    (define-key map [mode-line mouse-1] #'org-agenda-list)
+    (keymap-set map "<mode-line> <mouse-1>" #'org-agenda-list)
     map) "\
 Keymap for managing appointments in mode-line.")
 
@@ -209,14 +209,14 @@ return the inactive face.  In all other cases defer to FN."
 ;; Windows and buffers.
 (defvar ec-mode-line-window-keymap
   (let ((map (make-sparse-keymap)))
-    (define-key map [mode-line mouse-1] `(menu-item "Menu Bar" ignore :filter (lambda (_) (mouse-menu-bar-map))))
-    (define-key map [mode-line mouse-2] #'ec-exwm-workspace-prev)
-    (define-key map [mode-line mouse-3] #'ec-exwm-workspace-next)
+    (keymap-set map "<mode-line> <mouse-1>" `(menu-item "Menu Bar" ignore :filter (lambda (_) (mouse-menu-bar-map))))
+    (keymap-set map "<mode-line> <mouse-2>" #'ec-exwm-workspace-prev)
+    (keymap-set map "<mode-line> <mouse-3>" #'ec-exwm-workspace-next)
     map) "\
 Keymap for managing windows in mode-line.")
 
-(define-key mode-line-buffer-identification-keymap [mode-line mouse-1] #'mouse-buffer-menu)
-(define-key mode-line-buffer-identification-keymap [mode-line mouse-2] #'mode-line-previous-buffer)
+(keymap-set mode-line-buffer-identification-keymap "<mode-line> <mouse-1>" #'mouse-buffer-menu)
+(keymap-set mode-line-buffer-identification-keymap "<mode-line> <mouse-2>" #'mode-line-previous-buffer)
 
 ;; Putting it all together.
 (defun ec--mode-line-render (left right &optional height)

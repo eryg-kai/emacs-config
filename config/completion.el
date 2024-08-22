@@ -128,17 +128,17 @@
       completion-in-region-function #'ec--completion-in-region)
 
 (with-eval-after-load 'icomplete
-  (define-key icomplete-minibuffer-map (kbd "C-p") #'icomplete-backward-completions)
-  (define-key icomplete-minibuffer-map (kbd "C-n") #'icomplete-forward-completions)
-  (define-key icomplete-minibuffer-map (kbd "C-w") #'evil-delete-backward-word)
+  (keymap-set icomplete-minibuffer-map "C-p" #'icomplete-backward-completions)
+  (keymap-set icomplete-minibuffer-map "C-n" #'icomplete-forward-completions)
+  (keymap-set icomplete-minibuffer-map "C-w" #'evil-delete-backward-word)
 
-  (define-key icomplete-minibuffer-map (kbd "RET") #'icomplete-force-complete-and-exit)
-  (define-key icomplete-minibuffer-map (kbd "M-RET") #'exit-minibuffer)
+  (keymap-set icomplete-minibuffer-map "RET" #'icomplete-force-complete-and-exit)
+  (keymap-set icomplete-minibuffer-map "M-RET" #'exit-minibuffer)
 
-  (define-key completion-list-mode-map (kbd "k") #'previous-line)
-  (define-key completion-list-mode-map (kbd "j") #'next-line)
-  (define-key completion-list-mode-map (kbd "h") #'minibuffer-previous-completion)
-  (define-key completion-list-mode-map (kbd "l") #'minibuffer-next-completion))
+  (keymap-set completion-list-mode-map "k" #'previous-line)
+  (keymap-set completion-list-mode-map "j" #'next-line)
+  (keymap-set completion-list-mode-map "h" #'minibuffer-previous-completion)
+  (keymap-set completion-list-mode-map "l" #'minibuffer-next-completion))
 
 (defun ec--completion-in-region(start end collection &optional predicate)
   "Make in-buffer completion use icomplete.
@@ -152,29 +152,29 @@ COLLECTION, and PREDICATE."
 (add-hook 'emacs-startup-hook #'icomplete-mode)
 
 ;; Consult.
-(define-key global-map (kbd "C-c m") #'consult-man)
-(define-key global-map (kbd "C-c fr") #'consult-recent-file)
-(define-key global-map (kbd "M-g f") #'consult-flymake)
+(keymap-set global-map "C-c m" #'consult-man)
+(keymap-set global-map "C-c f r" #'consult-recent-file)
+(keymap-set global-map "M-g f" #'consult-flymake)
 
-(define-key global-map [remap switch-to-buffer] 'consult-buffer)
-(define-key global-map [remap bookmark-jump] 'consult-bookmark)
-(define-key global-map [remap insert-register] 'consult-register)
-(define-key global-map [remap project-switch-to-buffer] 'consult-project-buffer)
+(keymap-set global-map "<remap> <switch-to-buffer>" #'consult-buffer)
+(keymap-set global-map "<remap> <bookmark-jump>" #'consult-bookmark)
+(keymap-set global-map "<remap> <insert-register>" #'consult-register)
+(keymap-set global-map "<remap> <project-switch-to-buffer>" #'consult-project-buffer)
 
-(define-key global-map (kbd "M-g o") #'consult-outline)
-(define-key global-map (kbd "M-g i") #'consult-imenu)
-(define-key global-map (kbd "M-g I") #'consult-imenu-multi)
+(keymap-set global-map "M-g o" #'consult-outline)
+(keymap-set global-map "M-g i" #'consult-imenu)
+(keymap-set global-map "M-g I" #'consult-imenu-multi)
 (with-eval-after-load 'org-mode
-  (define-key org-mode-map (kbd "M-g o") #'consult-org-heading)
-  (define-key org-mode-map (kbd "M-g O") #'consult-org-agenda))
-(define-key global-map [remap goto-line] 'consult-goto-line)
-(define-key global-map (kbd "M-g m") #'consult-mark)
-(define-key global-map (kbd "M-g M") #'consult-global-mark)
+  (keymap-set org-mode-map "M-g o" #'consult-org-heading)
+  (keymap-set org-mode-map "M-g O" #'consult-org-agenda))
+(keymap-set global-map "<remap> <goto-line>" #'consult-goto-line)
+(keymap-set global-map "M-g m" #'consult-mark)
+(keymap-set global-map "M-g M" #'consult-global-mark)
 
-(define-key global-map (kbd "M-s g") #'consult-ripgrep)
-(define-key global-map (kbd "M-s d") #'consult-fd)
-(define-key global-map (kbd "M-s k") #'consult-keep-lines)
-(define-key global-map (kbd "M-s u") #'consult-focus-lines)
+(keymap-set global-map "M-s g" #'consult-ripgrep)
+(keymap-set global-map "M-s d" #'consult-fd)
+(keymap-set global-map "M-s k" #'consult-keep-lines)
+(keymap-set global-map "M-s u" #'consult-focus-lines)
 
 (setq register-preview-function #'consult-register-format
       xref-show-xrefs-function #'consult-xref
@@ -186,14 +186,14 @@ COLLECTION, and PREDICATE."
 (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
 (with-eval-after-load 'evil
-  (define-key evil-normal-state-map (kbd "C-y") #'consult-yank-from-kill-ring)
-  (define-key evil-insert-state-map (kbd "C-y") #'consult-yank-from-kill-ring))
+  (keymap-set evil-normal-state-map "C-y" #'consult-yank-from-kill-ring)
+  (keymap-set evil-insert-state-map "C-y" #'consult-yank-from-kill-ring))
 
 ;; Search.
 (setq lazy-highlight-initial-delay 1)
 
 ;; Find file at point.
-(define-key global-map (kbd "C-x C-f") #'ec-ffap)
+(keymap-set global-map "<remap> <find-file>" #'ec-ffap)
 
 ;; `ffap-string-at-point' doesn't have an autoload so `ec-ffap' will fail
 ;; without this (or without manually loading `ffap').

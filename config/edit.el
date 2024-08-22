@@ -47,7 +47,7 @@
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
 ;; A way to use C-u when it's bound in Evil.
-(define-key global-map (kbd "C-c u") #'universal-argument)
+(keymap-set global-map "C-c u" #'universal-argument)
 
 (defun ec-unfill (beg end)
   "Unfill the text from BEG to END or the paragraph if nil."
@@ -57,7 +57,7 @@
         (fill-region beg end)
       (fill-paragraph nil))))
 
-(define-key global-map (kbd "M-Q") #'ec-unfill)
+(keymap-set global-map "M-Q" #'ec-unfill)
 
 ;; Todo keywords in comments.
 (defface hl-temp     '((t (:inherit 'hl-todo :weight bold))) "Face for the TEMP keyword.")

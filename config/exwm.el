@@ -7,7 +7,7 @@
 (when (display-graphic-p)
   (nconc package-selected-packages '(exwm exwm-edit)))
 
-(define-key global-map (kbd "C-c r") #'ec-exec)
+(keymap-set global-map "C-c r" #'ec-exec)
 
 (defcustom ec-monitor-xrandr-alist nil "Xrandr flags for each monitor."
   :type '(alist :key-type string :value-type string)
@@ -245,9 +245,9 @@ If the monitor is a touchscreen also adjust the touch input."
   ;; already a shutdown confirmation from EXWM.
   (setq confirm-kill-processes nil)
 
-  (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
-  (define-key exwm-mode-map (kbd "i") #'exwm-input-release-keyboard)
-  (define-key exwm-mode-map (kbd ":") #'evil-ex)
+  (keymap-set exwm-mode-map "C-w" #'evil-window-map)
+  (keymap-set exwm-mode-map "i" #'exwm-input-release-keyboard)
+  (keymap-set exwm-mode-map ":" #'evil-ex)
 
   (ec-exwm-update-screens)
 

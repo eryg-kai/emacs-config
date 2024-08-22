@@ -6,8 +6,8 @@
 
 (nconc package-selected-packages '(persistent-scratch))
 
-(define-key global-map (kbd "C-c sb") #'ec-scratch-buffer)
-(define-key global-map (kbd "C-c sB") #'ec-global-scratch-buffer)
+(keymap-set global-map "C-c s b" #'ec-scratch-buffer)
+(keymap-set global-map "C-c s B" #'ec-global-scratch-buffer)
 
 (defun ec-global-scratch-buffer ()
   "Switch to the `*scratch*' buffer."

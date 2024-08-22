@@ -19,9 +19,9 @@
 
 ;; Eglot.
 (with-eval-after-load 'eglot
-  (define-key eglot-mode-map (kbd "C-c ar") 'eglot-rename)
-  (define-key eglot-mode-map (kbd "C-c ao") 'eglot-code-action-organize-imports)
-  (define-key eglot-mode-map (kbd "C-c ad") 'xref-find-definitions))
+  (keymap-set eglot-mode-map "C-c a r" 'eglot-rename)
+  (keymap-set eglot-mode-map "C-c a o" 'eglot-code-action-organize-imports)
+  (keymap-set eglot-mode-map "C-c a d" 'xref-find-definitions))
 
 ;; Go.
 (reformatter-define go-format

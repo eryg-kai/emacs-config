@@ -10,8 +10,8 @@
 ;; Notifications.
 (setq appt-display-format nil)
 
-(define-key global-map (kbd "C-c n") #'osd-show-notifications)
-(define-key global-map (kbd "C-c C-n") #'osd-show-notifications)
+(keymap-set global-map "C-c n" #'osd-show-notifications)
+(keymap-set global-map "C-c C-n" #'osd-show-notifications)
 
 (defun ec-enable-pinentry-soon()
   (run-with-idle-timer 1 nil #'pinentry-start))

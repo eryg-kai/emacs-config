@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-(define-key global-map (kbd "C-c G") #'gnus)
+(keymap-set global-map "C-c G" #'gnus)
 
 (setq message-directory (expand-file-name "mail" (xdg-data-home))
       gnus-directory (expand-file-name "news" (xdg-data-home))

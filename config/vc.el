@@ -15,12 +15,12 @@
               ediff-window-setup-function #'ediff-setup-windows-plain)
 
 ;; Magit.
-(define-key global-map (kbd "C-c gb") #'magit-blame)
-(define-key global-map (kbd "C-c gg") #'magit-file-dispatch)
-(define-key global-map (kbd "C-c gs") #'magit-status)
-(define-key global-map (kbd "C-c gB") #'magit-log-buffer-file)
-(define-key global-map (kbd "C-c gf") #'magit-find-file)
-(define-key global-map (kbd "C-c gd") #'magit-list-repositories)
+(keymap-set global-map "C-c g b" #'magit-blame)
+(keymap-set global-map "C-c g g" #'magit-file-dispatch)
+(keymap-set global-map "C-c g s" #'magit-status)
+(keymap-set global-map "C-c g B" #'magit-log-buffer-file)
+(keymap-set global-map "C-c g f" #'magit-find-file)
+(keymap-set global-map "C-c g d" #'magit-list-repositories)
 
 (setq magit-delete-by-moving-to-trash nil
       magit-module-sections-nested nil
@@ -54,11 +54,11 @@
 (with-eval-after-load 'project
   ;; This duplicates code in magit-extras but is necessary since that file will
   ;; not load until something triggers it.
-  (define-key project-prefix-map "m" #'magit-project-status)
+  (keymap-set project-prefix-map "m" #'magit-project-status)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
 
 ;; Git link.
-(define-key global-map (kbd "C-c gl") #'git-link)
+(keymap-set global-map "C-c g l" #'git-link)
 
 (setq git-link-default-origin "github")
 

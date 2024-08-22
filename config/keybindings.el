@@ -39,15 +39,15 @@
 
   (evil-exchange-install)
 
-  (define-key evil-inner-text-objects-map "a" 'evil-inner-arg)
-  (define-key evil-outer-text-objects-map "a" 'evil-outer-arg)
+  (keymap-set evil-inner-text-objects-map "a" 'evil-inner-arg)
+  (keymap-set evil-outer-text-objects-map "a" 'evil-outer-arg)
 
   (setq evil-escape-key-sequence ";z")
   (evil-escape-mode)
 
-  (define-key evil-normal-state-map (kbd "gsc") #'evil-avy-goto-char-2)
-  (define-key evil-normal-state-map (kbd "gst") #'evil-avy-goto-char-timer)
-  (define-key evil-normal-state-map (kbd "gsw") #'evil-avy-goto-word-1))
+  (keymap-set evil-normal-state-map "g s c" #'evil-avy-goto-char-2)
+  (keymap-set evil-normal-state-map "g s t" #'evil-avy-goto-char-timer)
+  (keymap-set evil-normal-state-map "g s w" #'evil-avy-goto-word-1))
 
 ;; These don't have any autoloads.
 (with-eval-after-load 'org

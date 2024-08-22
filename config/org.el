@@ -40,8 +40,8 @@
 (add-hook 'org-capture-mode-hook #'evil-insert-state)
 
 ;; Keybindings.
-(define-key global-map (kbd "C-c ol") #'org-store-link)
-(define-key global-map (kbd "C-c oc") #'org-capture)
+(keymap-set global-map "C-c o l" #'org-store-link)
+(keymap-set global-map "C-c o c" #'org-capture)
 
 ;; Must set emphasis components before org loads (or use org-set-emph-re).
 ;; (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
@@ -132,7 +132,7 @@
 (add-hook 'org-blocker-hook #'ec--prevent-duplicate-states)
 
 ;; Capturing.
-(define-key global-map (kbd "C-c C-z") #'org-add-note)
+(keymap-set global-map "C-c C-z" #'org-add-note)
 
 (defun ec-capture-user (file &optional user)
   "Return the path to FILE for USER or the current user."
@@ -387,7 +387,7 @@ Call FN with ARGS for any log entry that does not take a note."
   (org-edna-mode))
 
 ;; Agenda.
-(define-key global-map (kbd "C-c oa") #'org-agenda)
+(keymap-set global-map "C-c o a" #'org-agenda)
 
 (setq org-agenda-skip-scheduled-if-deadline-is-shown t
       org-agenda-dim-blocked-tasks nil

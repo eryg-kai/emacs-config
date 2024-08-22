@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-(define-key global-map (kbd "C-c bi") #'ibuffer)
+(keymap-set global-map "C-c b i" #'ibuffer)
 
 (defvar ec-ibuffer-filter-group-order
   '("Default" "Shell" "Chat" "Images" "PDF" "EXWM" "Org"))
