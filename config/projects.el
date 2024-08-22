@@ -54,6 +54,6 @@ make use of ignore files."
 ;; reports there are no matches).
 (setq shell-file-name "/bin/sh")
 
-(define-key global-map (kbd "C-x g") #'ec-project-find-regexp)
+(keymap-set global-map "<remap> <project-find-regexp>" #'ec-project-find-regexp)
 
 ;;; projects.el ends here
