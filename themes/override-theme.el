@@ -104,6 +104,8 @@
 
  (magit-branch-remote-head :box 'unspecified :underline t :inherit 'magit-branch-remote)
 
- (consult-preview-insertion :inherit 'success))
+ (consult-preview-insertion :inherit 'success)
+
+ (tempel-field :background 'unspecified :foreground 'unspecified))
 
 ;;; override-theme.el ends here
