@@ -156,10 +156,10 @@ COLLECTION, and PREDICATE."
 (define-key global-map (kbd "C-c fr") #'consult-recent-file)
 (define-key global-map (kbd "M-g f") #'consult-flymake)
 
-(define-key global-map (kbd "C-x b") #'consult-buffer)          ;; original: switch-to-buffer
-(define-key global-map (kbd "C-x rb") #'consult-bookmark)       ;; original: bookmark-jump
-(define-key global-map (kbd "C-x ri") #'consult-register)       ;; original: insert-register
-(define-key global-map (kbd "C-x pb") #'consult-project-buffer) ;; original: project-switch-to-buffer
+(define-key global-map [remap switch-to-buffer] 'consult-buffer)
+(define-key global-map [remap bookmark-jump] 'consult-bookmark)
+(define-key global-map [remap insert-register] 'consult-register)
+(define-key global-map [remap project-switch-to-buffer] 'consult-project-buffer)
 
 (define-key global-map (kbd "M-g o") #'consult-outline)
 (define-key global-map (kbd "M-g i") #'consult-imenu)
@@ -167,8 +167,7 @@ COLLECTION, and PREDICATE."
 (with-eval-after-load 'org-mode
   (define-key org-mode-map (kbd "M-g o") #'consult-org-heading)
   (define-key org-mode-map (kbd "M-g O") #'consult-org-agenda))
-(define-key global-map (kbd "M-g g") #'consult-goto-line)    ;; original: goto-line
-(define-key global-map (kbd "M-g M-g") #'consult-goto-line)  ;; original: goto-line
+(define-key global-map [remap goto-line] 'consult-goto-line)
 (define-key global-map (kbd "M-g m") #'consult-mark)
 (define-key global-map (kbd "M-g M") #'consult-global-mark)
 
