@@ -84,8 +84,6 @@
         (,(kbd "<tab>")    . [tab])
         (,(kbd "<return>") . [return])))
 
-(defvar ec-float-windows nil "Window classes that should float.")
-
 (setq exwm-input-line-mode-passthrough t
       frame-alpha-lower-limit 0
       exwm-floating-border-width 10)
@@ -102,6 +100,24 @@
 (defun ec-float ()
   "Set up Emacs inside a floating frame."
   (set-frame-parameter (selected-frame) 'alpha-background 0))
+
+(defun ec--exwm-manage-configurations (_id)
+  "Configure EXWM window management."
+  (setq exwm-manage-configurations
+        ;; If currently viewing an X window...
+        (if (or exwm-class-name exwm-instance-name)
+            ;; ...float at 80 columns width.
+            `((t floating t
+                 floating-mode-line nil
+                 x 10
+                 y 10
+                 width ,(* (frame-char-width) 80)
+                 height ,(- (x-display-pixel-height) 130)
+                 char-mode t))
+          ;; ...otherwise just enter char mode.
+          '((t char-mode t)))))
+
+(advice-add #'exwm-manage--manage-window :before #'ec--exwm-manage-configurations)
 
 ;; TODO: Any way to restrict `other-frame' to the frames belonging to the
 ;; current workspace?
@@ -233,30 +249,6 @@ If the monitor is a touchscreen also adjust the touch input."
   ;; to shut down.  It is also a bit annoying to be asked twice because there is
   ;; already a shutdown confirmation from EXWM.
   (setq confirm-kill-processes nil)
-
-  ;; Some of these numbers make no sense but visually it aligns...
-  (setq exwm-manage-configurations
-        ;; Anything in `ec-float-windows' gets put to the left with 80 columns.
-        `(((or (member exwm-class-name ec-float-windows)
-               (member exwm-instance-name ec-float-windows))
-           floating t
-           floating-mode-line nil
-           x 10
-           y 10
-           width ,(* (frame-char-width) 80)
-           height ,(- (x-display-pixel-height) 130)
-           char-mode t)
-          ;; For now assuming that if `ec-float-windows' is set, we want all
-          ;; remaining X windows to float and take up the whole screen.
-          (ec-float-windows
-           floating t
-           floating-mode-line nil
-           x 10
-           y 10
-           width ,(- (x-display-pixel-width) 70)
-           height ,(- (x-display-pixel-height) 130)
-           char-mode t)
-          (t char-mode t)))
 
   (define-key exwm-mode-map (kbd "C-w") #'evil-window-map)
   (define-key exwm-mode-map (kbd "i") #'exwm-input-release-keyboard)
