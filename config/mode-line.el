@@ -239,7 +239,8 @@ Keymap for managing windows in mode-line.")
          " " (:eval (propertize (if (bound-and-true-p winum-mode)
                                     (winum-get-number-string)
                                   "?")
-                                'face (when (mode-line-window-selected-p) (ec--mode-line-state-face))
+                                'face (when (mode-line-window-selected-p)
+                                        (ec--mode-line-state-face))
                                 'mouse-face 'mode-line-highlight
                                 'local-map ec-mode-line-window-keymap
                                 'help-echo "mouse-1: Display global menu\nmouse-2: Previous frame\nmouse-3: Next frame"))
@@ -262,15 +263,20 @@ Keymap for managing windows in mode-line.")
                   (list " " mode-line-buffer-identification)))
          (:eval (when (bound-and-true-p flymake-mode)
                   (list " " flymake-mode-line-counters)))
-         (:eval (when (and (mode-line-window-selected-p) (fboundp 'org-clocking-p) (org-clocking-p))
+         (:eval (when (and (mode-line-window-selected-p)
+                           (fboundp 'org-clocking-p)
+                           (org-clocking-p))
                   (list " " org-mode-line-string))))
-       '((:eval (when (and (mode-line-window-selected-p) (bound-and-true-p appt-mode-string))
+       '((:eval (when (and (mode-line-window-selected-p)
+                           (bound-and-true-p appt-mode-string))
                   (list " " (string-trim appt-mode-string))))
-         (:eval (when (and (mode-line-window-selected-p) (or defining-kbd-macro
-                                                             executing-kbd-macro
-                                                             ec--record-process))
+         (:eval (when (and (mode-line-window-selected-p)
+                           (or defining-kbd-macro
+                               executing-kbd-macro
+                               ec--record-process))
                   (list " " (propertize "•REC" 'face 'mode-line-emphasis))))
-         (:eval (when (and (mode-line-window-selected-p) (bound-and-true-p erc-modified-channels-alist))
+         (:eval (when (and (mode-line-window-selected-p)
+                           (bound-and-true-p erc-modified-channels-alist))
                   (list " " (string-trim erc-modified-channels-object))))
          (:eval (when (mode-line-window-selected-p)
                   (list " " ec-battery-mode-line
