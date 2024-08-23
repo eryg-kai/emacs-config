@@ -31,7 +31,7 @@
       (ec-battery-mode)
       (display-time-mode)
       (with-eval-after-load 'org ; Regen appts when the day changes.
-        (run-at-time "00:01" (* 60 60 24) #'ec--agenda-to-appt-with-timer))
+        (run-at-time "00:01" (* 60 60 24) #'ec--agenda-to-appt-soon))
       (add-hook 'org-mode-hook #'ec--hook-appt-schedule))))
 
 (add-hook 'emacs-startup-hook #'ec-maybe-start-servers)

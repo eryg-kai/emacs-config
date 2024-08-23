@@ -47,9 +47,20 @@
 
 (add-hook 'eshell-hist-load-hook #'ec--eshell-set-history-file)
 
+(defvar-local ec--eshell-history-timer nil "Eshell history write timer.")
+
 ;; Write history after a command is executed.
 (defun ec--eshell-write-history-soon ()
-  (timer-idle-debounce #'eshell-write-history nil t))
+  "Write the current shell's history after a timer."
+  (when ec--eshell-history-timer (cancel-timer ec--eshell-history-timer))
+  (setq ec--eshell-history-timer
+        (run-with-idle-timer
+         30
+         nil
+         `(lambda ()
+            (when (buffer-live-p ,(current-buffer))
+              (with-current-buffer ,(current-buffer)
+                (eshell-write-history)))))))
 
 (add-hook 'eshell-pre-command-hook  #'ec--eshell-write-history-soon)
 

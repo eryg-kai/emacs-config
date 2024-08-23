@@ -233,9 +233,12 @@ If the monitor is a touchscreen also adjust the touch input."
           (message ">>> %s" command)
           (ec-exec command))))))
 
+(defvar ec--exwm-timer nil "EXWM screen update timer.")
+
 (defun ec--exwm-update-screens-soon ()
   "Update screens soon."
-  (timer-idle-debounce #'ec-exwm-update-screens 5))
+  (when ec--exwm-timer (cancel-timer ec--exwm-timer))
+  (setq ec--exwm-timer (run-with-idle-timer 5 nil #'ec-exwm-update-screens)))
 
 (add-hook 'exwm-randr-screen-change-hook #'ec--exwm-update-screens-soon)
 
