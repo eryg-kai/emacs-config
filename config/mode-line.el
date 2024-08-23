@@ -86,6 +86,19 @@
   ;; Force because it might have been triggered by dbus.
   (force-mode-line-update t))
 
+(defun ec--battery-signal-handler (&rest _ignore)
+  "Run the battery update now."
+  (cancel-timer battery-update-timer)
+  (setq battery-update-timer
+        (run-at-time nil battery-update-interval #'ec--battery-update)))
+
+;; `battery--upower-signal-handler' runs `timer-event-handler' which for some
+;; reason after running the timer increases the delay by the repeat time instead
+;; of resetting the delay (so from 60 seconds to 2 minutes to 3 minutes, etc).
+;; At some point I had a delay of over an hour, I think because my cable was bad
+;; and kept tripping the signal.
+(advice-add #'battery--upower-signal-handler :override #'ec--battery-signal-handler)
+
 (defun ec-battery ()
   "Get battery percentages for all devices."
   (seq-filter
