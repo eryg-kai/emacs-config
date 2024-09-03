@@ -82,31 +82,28 @@
 ;; TODO: Track which buffer this buffer replaced if any.
 (defun ec--track-buffer ()
   "Track the current buffer."
-  (let* ((buffer (current-buffer))
+  (let* ((buffer(current-buffer))
          (name (or (buffer-file-name buffer) (buffer-name buffer)))
          (time (current-time))
          (previous (car ec--tracked-buffers)))
-    ;; Remove short-lived buffers.
-    (when (and previous (time-less-p time (time-add (cdr previous) 1)))
-      (pop ec--tracked-buffers)
-      (setq previous (car ec--tracked-buffers)))
-    (unless (string= name (car (or previous ec--last-written-buffer)))
-      (push `(,name . ,time) ec--tracked-buffers)
-      (when ec--track-buffer-save-timer (cancel-timer ec--track-buffer-save-timer))
-      (setq ec--track-buffer-save-timer (run-with-idle-timer 30 nil #'ec--save-tracked-buffers)))))
+    ;; Ignore some buffers.
+    (unless (or (window-minibuffer-p)
+                ;; There are buffers that are not actually visible.
+                (not (eq (window-buffer (selected-window)) (current-buffer)))
+                (eq major-mode 'ibuffer-mode))
+      (when (bound-and-true-p ec-debug-p)
+        (message "tracking: %s" name))
+      ;; Remove short-lived buffers.
+      (when (and previous (time-less-p time (time-add (cdr previous) 1)))
+        (pop ec--tracked-buffers)
+        (setq previous (car ec--tracked-buffers)))
+      ;; Track the buffer, if it changed.
+      (unless (string= name (car (or previous ec--last-written-buffer)))
+        (push `(,name . ,time) ec--tracked-buffers)
+        (when ec--track-buffer-save-timer (cancel-timer ec--track-buffer-save-timer))
+        (setq ec--track-buffer-save-timer (run-with-idle-timer 30 nil #'ec--save-tracked-buffers))))))
 
-(defvar ec--track-buffer-timer nil "Buffer tracking timer.")
-
-(defun ec--track-buffer-debounce ()
-  "Track the current buffer."
-  ;; The last buffer to go through `buffer-list-update-hook' isn't necessarily
-  ;; the actual current buffer (or even a visible buffer) so wait a bit and
-  ;; check again to be sure.
-  (when ec--track-buffer-timer (cancel-timer ec--track-buffer-timer))
-  (setq ec--track-buffer-timer (run-with-timer 0.1 nil #'ec--track-buffer)))
-
-(add-hook 'buffer-list-update-hook #'ec--track-buffer-debounce)
-(add-hook 'exwm-update-title-hook #'ec--track-buffer-debounce)
+(add-hook 'buffer-list-update-hook #'ec--track-buffer)
 
 ;; Save cursor position.
 (add-hook 'emacs-startup-hook #'save-place-mode)
