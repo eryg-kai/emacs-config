@@ -32,6 +32,8 @@
         (,(kbd "<C-tab>")         . ec-exwm-next-buffer)
         (,(kbd "<C-iso-lefttab>") . ec-exwm-previous-buffer)
 
+        (,(kbd "s-t") . exwm-floating-toggle-floating)
+
         (,(kbd "<f5>") . ec-screenshot)
         (,(kbd "<f6>") . ec-record-screen)
 
@@ -79,7 +81,13 @@
 
 (setq exwm-input-line-mode-passthrough t
       frame-alpha-lower-limit 0
-      exwm-floating-border-width 10)
+      exwm-floating-border-width 10
+      exwm-manage-configurations `((t floating-mode-line nil
+                                      x 10
+                                      y 10
+                                      width ,(* (frame-char-width) 80)
+                                      height ,(- (x-display-pixel-height) 130)
+                                      char-mode t)))
 
 (defun ec--setup-floating ()
   "Set up a floating frame."
@@ -93,24 +101,6 @@
 (defun ec-float ()
   "Set up Emacs inside a floating frame."
   (set-frame-parameter (selected-frame) 'alpha-background 0))
-
-(defun ec--exwm-manage-configurations (_id)
-  "Configure EXWM window management."
-  (setq exwm-manage-configurations
-        ;; If currently viewing an X window...
-        (if (or exwm-class-name exwm-instance-name)
-            ;; ...float at 80 columns width.
-            `((t floating t
-                 floating-mode-line nil
-                 x 10
-                 y 10
-                 width ,(* (frame-char-width) 80)
-                 height ,(- (x-display-pixel-height) 130)
-                 char-mode t))
-          ;; ...otherwise just enter char mode.
-          '((t char-mode t)))))
-
-(advice-add #'exwm-manage--manage-window :before #'ec--exwm-manage-configurations)
 
 ;; TODO: Any way to restrict `other-frame' to the frames belonging to the
 ;; current workspace?
