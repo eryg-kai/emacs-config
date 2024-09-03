@@ -82,11 +82,14 @@
 (setq exwm-input-line-mode-passthrough t
       frame-alpha-lower-limit 0
       exwm-floating-border-width 10
-      exwm-manage-configurations `((t floating-mode-line nil
-                                      x 10
-                                      y 10
-                                      width ,(* (frame-char-width) 80)
-                                      height ,(- (x-display-pixel-height) 130)
+      exwm-manage-configurations `(((string= exwm-instance-name "Navigator")
+                                    floating-mode-line nil
+                                    x 10
+                                    y 10
+                                    width ,(* (frame-char-width) 80)
+                                    height ,(- (x-display-pixel-height) 130)
+                                    char-mode t)
+                                   (t floating-mode-line nil
                                       char-mode t)))
 
 (defun ec--setup-floating ()
