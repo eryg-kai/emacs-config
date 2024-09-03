@@ -13,8 +13,6 @@
   :type '(alist :key-type string :value-type string)
   :group 'exwm)
 
-(advice-add 'exwm-manage--manage-window :around #'ec-localize)
-
 (setq x-no-window-manager t)
 
 ;; Used to determine if the screen script needs to run.
