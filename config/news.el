@@ -16,6 +16,7 @@
       gnus-use-full-window nil
       gnus-use-dribble-file nil
       gnus-user-agent nil
+      gnus-inhibit-startup-message t
       mail-user-agent 'gnus-user-agent
       message-kill-buffer-on-exit t
       message-citation-line-function 'message-insert-formatted-citation-line
