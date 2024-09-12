@@ -74,10 +74,8 @@
         (,(kbd "h")        . [left])
         (,(kbd "C-u")      . [prior])
         (,(kbd "C-d")      . [next])
-        (,(kbd "C-H")      . [C-prior])
-        (,(kbd "C-L")      . [C-next])
-        (,(kbd "H")        . [M-left])
-        (,(kbd "L")        . [M-right])
+        (,(kbd "H")        . [M-left])  ;; Back in history.
+        (,(kbd "L")        . [M-right]) ;; Forward in history.
         (,(kbd "<tab>")    . [tab])
         (,(kbd "<return>") . [return])))
 
