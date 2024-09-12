@@ -32,6 +32,8 @@
         (,(kbd "<C-tab>")         . ec-exwm-next-buffer)
         (,(kbd "<C-iso-lefttab>") . ec-exwm-previous-buffer)
 
+        (,(kbd "<C-\\>") . toggle-input-method)
+
         (,(kbd "s-t") . exwm-floating-toggle-floating)
 
         (,(kbd "<f5>") . ec-screenshot)
