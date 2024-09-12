@@ -330,5 +330,4 @@ faces are simply invisible."
               (dolist (frame (frame-list))
                 (set-frame-parameter frame 'mouse-color (frame-parameter frame 'mouse-color)))))
 
-
 ;;; theme.el ends here
