@@ -245,11 +245,8 @@ If the monitor is a touchscreen also adjust the touch input."
 
   (ec-exwm-update-screens)
 
-  (require 'exwm-randr)
-  (exwm-randr-enable)
-
-  (require 'exwm-xim)
-  (exwm-xim-enable))
+  (exwm-randr-mode)
+  (exwm-xim-mode))
 
 (with-eval-after-load 'evil
   (evil-set-initial-state 'exwm-mode 'emacs))
