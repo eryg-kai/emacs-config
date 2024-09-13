@@ -8,7 +8,7 @@
                                    dash-docs
                                    editorconfig
                                    groovy-mode
-                                   kotlin-mode
+                                   kotlin-ts-mode
                                    markdown-mode
                                    nix-mode
                                    rainbow-mode
@@ -90,7 +90,9 @@
   :program "ktlint"
   :args '("-F" "--stdin" "--log-level=error"))
 
-(add-hook 'kotlin-mode-hook #'kotlin-format-on-save-mode)
+(add-hook 'kotlin-ts-mode-hook #'kotlin-format-on-save-mode)
+
+(add-to-list 'auto-mode-alist '("\\.kt\\'" . kotlin-ts-mode))
 
 ;; Rust.
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
