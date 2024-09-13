@@ -74,6 +74,7 @@
         (,(kbd "h")        . [left])
         (,(kbd "C-u")      . [prior])
         (,(kbd "C-d")      . [next])
+        (,(kbd "C-n")      . [C-n])     ;; New window.
         (,(kbd "H")        . [M-left])  ;; Back in history.
         (,(kbd "L")        . [M-right]) ;; Forward in history.
         (,(kbd "<tab>")    . [tab])
