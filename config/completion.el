@@ -30,7 +30,7 @@
 (setq apropos-do-all t)
 
 ;; Which-key.
-(setq which-key-idle-delay 0.2)
+(setq which-key-idle-delay 1)
 
 (defun ec--split-name (name)
   "Split NAME into its prefix and suffix."
