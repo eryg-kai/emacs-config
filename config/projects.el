@@ -28,4 +28,6 @@
 ;; reports there are no matches).
 (setq shell-file-name "/bin/sh")
 
+(setq project-buffers-viewer #'project-list-buffers-ibuffer)
+
 ;;; projects.el ends here
