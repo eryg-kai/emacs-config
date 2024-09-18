@@ -28,6 +28,17 @@
 ;; reports there are no matches).
 (setq shell-file-name "/bin/sh")
 
-(setq project-buffers-viewer #'project-list-buffers-ibuffer)
+(defun ec-project-list-buffers-ibuffer (project &optional files-only)
+  "List buffers for PROJECT using Ibuffer.
+
+Like `project-list-buffers-ibuffer' but using directory instead of
+predicate since the former is much nicer to read in the buffer filter
+list since it prints the entire predicate.
+
+FILES-ONLY is ignored."
+  (ibuffer t (format "*Ibuffer-%s*" (project-name project))
+           `((directory . ,(expand-file-name (project-root project))))))
+
+(setq project-buffers-viewer #'ec-project-list-buffers-ibuffer)
 
 ;;; projects.el ends here
