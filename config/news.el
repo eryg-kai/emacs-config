@@ -17,10 +17,21 @@
       gnus-use-dribble-file nil
       gnus-user-agent nil
       gnus-inhibit-startup-message t
+      gnus-thread-indent-level 1
+      gnus-summary-line-format "%U%R%z%(%un%)%I %S\n"
       mail-user-agent 'gnus-user-agent
       message-kill-buffer-on-exit t
       message-citation-line-function 'message-insert-formatted-citation-line
       message-citation-line-format "On %a, %b %d, %Y at %I:%M %p %Z %f wrote:\n")
+
+(defun gnus-user-format-function-n (header)
+  "Return a possibly truncated name from HEADER."
+  (format "%-20s"
+          (ec-center-truncate
+           (gnus-summary-from-or-to-or-newsgroups
+            header
+            (mail-header-from header))
+           20)))
 
 ;; Prevent Emacs from mangling the message.  Instead of reflowing leave the
 ;; message as it is and add a space to the end of every soft newline leaving the
