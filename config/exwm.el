@@ -82,16 +82,7 @@
 
 (setq exwm-input-line-mode-passthrough t
       frame-alpha-lower-limit 0
-      exwm-floating-border-width 10
-      exwm-manage-configurations `(((string= exwm-instance-name "Navigator")
-                                    floating-mode-line nil
-                                    x 10
-                                    y 10
-                                    width ,(* (frame-char-width) 80)
-                                    height ,(- (x-display-pixel-height) 130)
-                                    char-mode t)
-                                   (t floating-mode-line nil
-                                      char-mode t)))
+      exwm-floating-border-width 10)
 
 (defun ec--setup-floating ()
   "Set up a floating frame."
@@ -239,6 +230,16 @@ If the monitor is a touchscreen also adjust the touch input."
   ;; to shut down.  It is also a bit annoying to be asked twice because there is
   ;; already a shutdown confirmation from EXWM.
   (setq confirm-kill-processes nil)
+
+  (setq exwm-manage-configurations `(((string= exwm-instance-name "Navigator")
+                                      floating-mode-line nil
+                                      x 10
+                                      y 10
+                                      width ,(* (frame-char-width) 80)
+                                      height ,(- (x-display-pixel-height) 130)
+                                      char-mode t)
+                                     (t floating-mode-line nil
+                                        char-mode t)))
 
   (keymap-set exwm-mode-map "C-w" #'evil-window-map)
   (keymap-set exwm-mode-map "i" #'exwm-input-release-keyboard)
