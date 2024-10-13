@@ -109,10 +109,10 @@
 (add-hook 'emacs-startup-hook #'save-place-mode)
 
 ;; Ignore certain files.
-(let ((ignore (format "/%s\\'"(regexp-opt
-                               `("git-rebase-todo"
-                                 "COMMIT_EDITMSG"
-                                 "bookmarks")))))
+(let ((ignore (format "%s\\'"(regexp-opt
+                              `("git-rebase-todo"
+                                "COMMIT_EDITMSG"
+                                "bookmarks")))))
 
   (setq save-place-ignore-files-regexp ignore
         recentf-exclude (list ignore)))
