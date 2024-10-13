@@ -115,11 +115,7 @@
                                  "bookmarks")))))
 
   (setq save-place-ignore-files-regexp ignore
-        recentf-exclude (list ignore)
-        undohist-ignored-files (list ignore)))
-
-(with-eval-after-load 'undohist
-  (setq backup-enable-predicate #'undohist-recover-file-p))
+        recentf-exclude (list ignore)))
 
 ;; Backups on every save.
 (defun ec--force-backup ()
