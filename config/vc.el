@@ -27,6 +27,15 @@
 (with-eval-after-load 'magit
   (add-to-list 'magit-status-sections-hook 'magit-insert-modules t))
 
+(defun ec--set-repositories ()
+  "Set magit repository directories from known projects."
+  (setq magit-repository-directories
+        (mapcar (lambda (path) `(,path . 0))
+                (seq-filter (lambda (path) (not (tramp-tramp-file-p path)))
+                            (project-known-project-roots)))))
+
+(advice-add 'magit-list-repositories :before #'ec--set-repositories)
+
 ;; Magit repolist.
 (setq magit-repolist-columns
       '(("Name"     15 magit-repolist-column-ident                    nil)
