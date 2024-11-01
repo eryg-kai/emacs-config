@@ -56,7 +56,7 @@
 ;; Git link.
 (keymap-set global-map "C-c g l" #'git-link)
 
-(setq git-link-default-origin "github")
+(setq git-link-default-remote "github")
 
 ;; Commit mode.
 (setq git-commit-summary-max-length 50)
