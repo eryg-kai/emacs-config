@@ -15,11 +15,7 @@
               ediff-window-setup-function #'ediff-setup-windows-plain)
 
 ;; Magit.
-(keymap-set global-map "C-c g b" #'magit-blame)
 (keymap-set global-map "C-c g g" #'magit-file-dispatch)
-(keymap-set global-map "C-c g s" #'magit-status)
-(keymap-set global-map "C-c g B" #'magit-log-buffer-file)
-(keymap-set global-map "C-c g f" #'magit-find-file)
 (keymap-set global-map "C-c g d" #'magit-list-repositories)
 
 (setq magit-delete-by-moving-to-trash nil
