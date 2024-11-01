@@ -31,7 +31,7 @@
 (setq magit-repolist-columns
       '(("Name"     15 magit-repolist-column-ident                    nil)
         ("Version"  25 magit-repolist-column-version                  nil)
-        ("*"         1 magit-repolist-column-dirty                    ((:help-echo "Dirty state")))
+        ("*"         1 magit-repolist-column-flag                     ((:help-echo "Uncommitted changes")))
         ("S"         1 magit-repolist-column-stashes                  ((:help-echo "Stash count")))
         ("Branch"   25 magit-repolist-column-branch                   nil)
         ("B"         1 magit-repolist-column-branches                 ((:help-echo "Branch count")))
