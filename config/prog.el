@@ -65,8 +65,15 @@
     :program "biome"
     :args `("format" "--stdin-file-path" ,(buffer-file-name)))
 
-(add-hook 'typescript-ts-mode-hook #'biome-format-on-save-mode)
-(add-hook 'tsx-ts-mode-hook #'biome-format-on-save-mode)
+(defun ec--maybe-enable-biome ()
+  "Enable Biome formatter if there is a biome.json file."
+  (when (locate-dominating-file
+         (or (buffer-file-name) (project-root (project-current t)))
+         "biome.json")
+    (biome-format-on-save-mode)))
+
+(add-hook 'typescript-ts-mode-hook #'ec--maybe-enable-biome)
+(add-hook 'tsx-ts-mode-hook #'ec--maybe-enable-biome)
 
 ;; Editorconfig.
 (setq editorconfig-exclude-modes (list 'emacs-lisp-mode
