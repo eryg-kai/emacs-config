@@ -24,11 +24,12 @@
   (keymap-set eglot-mode-map "C-c a d" 'xref-find-definitions))
 
 ;; Go.
-(reformatter-define go-format
-  :program "gofmt"
-  :args '("-s"))
+(when (fboundp 'reformatter-define)
+  (reformatter-define go-format
+    :program "gofmt"
+    :args '("-s"))
 
-(add-hook 'go-ts-mode-hook #'go-format-on-save-mode)
+  (add-hook 'go-ts-mode-hook #'go-format-on-save-mode))
 
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 
@@ -61,19 +62,20 @@
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 
-(reformatter-define biome-format
+(when (fboundp 'reformatter-define)
+  (reformatter-define biome-format
     :program "biome"
     :args `("format" "--stdin-file-path" ,(buffer-file-name)))
 
-(defun ec--maybe-enable-biome ()
-  "Enable Biome formatter if there is a biome.json file."
-  (when (locate-dominating-file
-         (or (buffer-file-name) (project-root (project-current t)))
-         "biome.json")
-    (biome-format-on-save-mode)))
+  (defun ec--maybe-enable-biome ()
+    "Enable Biome formatter if there is a biome.json file."
+    (when (locate-dominating-file
+           (or (buffer-file-name) (project-root (project-current t)))
+           "biome.json")
+      (biome-format-on-save-mode)))
 
-(add-hook 'typescript-ts-mode-hook #'ec--maybe-enable-biome)
-(add-hook 'tsx-ts-mode-hook #'ec--maybe-enable-biome)
+  (add-hook 'typescript-ts-mode-hook #'ec--maybe-enable-biome)
+  (add-hook 'tsx-ts-mode-hook #'ec--maybe-enable-biome))
 
 ;; Editorconfig.
 (setq editorconfig-exclude-modes (list 'emacs-lisp-mode
@@ -93,11 +95,12 @@
 (add-to-list 'auto-mode-alist '("mix\\.lock" . elixir-ts-mode))
 
 ;; Kotlin.
-(reformatter-define kotlin-format
-  :program "ktlint"
-  :args '("-F" "--stdin" "--log-level=error"))
+(when (fboundp 'reformatter-define)
+  (reformatter-define kotlin-format
+    :program "ktlint"
+    :args '("-F" "--stdin" "--log-level=error"))
 
-(add-hook 'kotlin-ts-mode-hook #'kotlin-format-on-save-mode)
+  (add-hook 'kotlin-ts-mode-hook #'kotlin-format-on-save-mode))
 
 (add-to-list 'auto-mode-alist '("\\.kt\\'" . kotlin-ts-mode))
 
