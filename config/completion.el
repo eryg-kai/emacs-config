@@ -230,37 +230,38 @@ COLLECTION, and PREDICATE."
       cape-dict-file (list ispell-personal-dictionary
                            (getenv "WORDLIST")))
 
-(defalias 'ec--capf (cape-capf-prefix-length
-                     (cape-capf-super
-                      #'cape-dabbrev ; `dabbrev-capf' exists but it errors.
-                      #'cape-dict    ; `ispell-complete-word' might also.
-                      #'cape-keyword
-                      #'cape-line)
-                     1))
+(when (fboundp 'cape-capf-prefix-length)
+  (defalias 'ec--capf (cape-capf-prefix-length
+                       (cape-capf-super
+                        #'cape-dabbrev ; `dabbrev-capf' exists but it errors.
+                        #'cape-dict    ; `ispell-complete-word' might also.
+                        #'cape-keyword
+                        #'cape-line)
+                       1))
 
-(defalias 'ec--capf-file (cape-capf-prefix-length #'cape-file 1))
-(defalias 'ec--capf-emoji (cape-capf-prefix-length #'cape-emoji 1))
-(defalias 'ec--capf-template (cape-capf-prefix-length #'tempel-complete 1))
+  (defalias 'ec--capf-file (cape-capf-prefix-length #'cape-file 1))
+  (defalias 'ec--capf-emoji (cape-capf-prefix-length #'cape-emoji 1))
+  (defalias 'ec--capf-template (cape-capf-prefix-length #'tempel-complete 1))
 
-(defun ec--add-capf (&optional global)
-  "Add capf functions to GLOBAL hook if non-nil, else local."
-  (let ((local (not global)))
-    (add-hook 'completion-at-point-functions #'ec--capf -10 local)
-    (add-hook 'completion-at-point-functions #'ec--capf-template -10 local)
-    (add-hook 'completion-at-point-functions #'ec--capf-file -10 local)
-    (add-hook 'completion-at-point-functions #'ec--capf-emoji -10 local)
-    (when local
-      ;; Do not run the global hook; everything is already added locally.
-      (delq t completion-at-point-functions))))
+  (defun ec--add-capf (&optional global)
+    "Add capf functions to GLOBAL hook if non-nil, else local."
+    (let ((local (not global)))
+      (add-hook 'completion-at-point-functions #'ec--capf -10 local)
+      (add-hook 'completion-at-point-functions #'ec--capf-template -10 local)
+      (add-hook 'completion-at-point-functions #'ec--capf-file -10 local)
+      (add-hook 'completion-at-point-functions #'ec--capf-emoji -10 local)
+      (when local
+        ;; Do not run the global hook; everything is already added locally.
+        (delq t completion-at-point-functions))))
 
-(add-hook 'emacs-lisp-mode-hook #'ec--add-capf)
+  (add-hook 'emacs-lisp-mode-hook #'ec--add-capf)
 
-(defun ec--eglot-capf ()
-  "Add back capf functions."
-  (when (eglot-managed-p) (ec--add-capf)))
+  (defun ec--eglot-capf ()
+    "Add back capf functions."
+    (when (eglot-managed-p) (ec--add-capf)))
 
-(add-hook 'eglot-managed-mode-hook #'ec--eglot-capf)
+  (add-hook 'eglot-managed-mode-hook #'ec--eglot-capf)
 
-(ec--add-capf t)
+  (ec--add-capf t))
 
 ;;; completion.el ends here
