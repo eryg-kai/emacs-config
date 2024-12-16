@@ -6,8 +6,7 @@
 
 (nconc package-selected-packages '(magit
                                    git-link
-                                   forge
-                                   git-commit))
+                                   forge))
 
 ;; Ediff.
 (setq-default ediff-split-window-function #'split-window-horizontally
