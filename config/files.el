@@ -124,4 +124,13 @@
 
 (add-hook 'before-save-hook #'ec--force-backup)
 
+(defun ec-backup-find-file ()
+  "Find the current buffer's backup files."
+  (interactive)
+  (find-file-at-point
+    (ffap-prompter
+      (file-name-sans-versions (make-backup-file-name (buffer-file-name))))))
+
+(keymap-set global-map "C-c f b" #'ec-backup-find-file)
+
 ;;; files.el ends here
