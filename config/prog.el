@@ -6,7 +6,6 @@
 
 (nconc package-selected-packages '(csv-mode
                                    dash-docs
-                                   editorconfig
                                    groovy-mode
                                    kotlin-ts-mode
                                    markdown-mode
@@ -78,12 +77,7 @@
   (add-hook 'tsx-ts-mode-hook #'ec--maybe-enable-biome))
 
 ;; Editorconfig.
-(setq editorconfig-exclude-modes (list 'emacs-lisp-mode
-                                       'lisp-interaction-mode
-                                       'org-mode))
-
-(when (fboundp 'editorconfig-mode)
-  (add-hook 'emacs-startup-hook #'editorconfig-mode))
+(add-hook 'emacs-startup-hook #'editorconfig-mode)
 
 ;; Elixir.
 (add-to-list 'auto-mode-alist '("\\.eex\\'" . web-mode))
