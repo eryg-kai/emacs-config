@@ -39,7 +39,8 @@
 ;;   - For example: (quelpa '(osd :repo "eryg-kai/osd" :fetcher github))
 ;;                  (quelpa '(beancount :repo "beancount/beancount-mode" :fetcher github))
 (setq package-selected-packages '(quelpa esup with-simulated-input)
-      package-quickstart t)
+      package-quickstart t
+      package-quickstart-file (expand-file-name "emacs/quickstart.el" (xdg-data-home)))
 
 (with-eval-after-load 'package ; Won't load immediately when using quickstart.
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))

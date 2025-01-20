@@ -105,4 +105,7 @@
       undo-tree-history-directory-alist
       `(("." . ,(expand-file-name "undo-tree/" (xdg-data-home)))))
 
+;; KKC.
+(setq kkc-init-file-name (expand-file-name "emacs/kkcrc" (xdg-data-home)))
+
 ;;; edit.el ends here

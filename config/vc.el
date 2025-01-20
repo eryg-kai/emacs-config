@@ -79,4 +79,7 @@
 ;; Try speeding up Tramp.
 (setq vc-handled-backends '(Git)) ;; Only look for git.
 
+;; Forge.
+(setq forge-database-file (expand-file-name "forge/forge.db" (xdg-data-home)))
+
 ;;; vc.el ends here

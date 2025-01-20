@@ -264,4 +264,7 @@ COLLECTION, and PREDICATE."
 
   (ec--add-capf t))
 
+;; Transient.
+(setq transient-history-file (expand-file-name "transient/history.el" (xdg-data-home)))
+
 ;;; completion.el ends here

@@ -57,8 +57,8 @@
 (fset #'display-startup-echo-area-message #'ignore)
 
 ;; Move packages to xdg-data-home.
-(setq package-user-dir "~/.local/share/elpa"
-      quelpa-dir "~/.local/share/quelpa")
+(setq package-user-dir "~/.local/share/emacs/elpa"
+      quelpa-dir "~/.local/share/emacs/quelpa")
 
 ;; The theme has not loaded yet, so set initial colors to avoid a flash of the
 ;; wrong color.  Also make it fullscreen otherwise it starts small and then

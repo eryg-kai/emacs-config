@@ -15,7 +15,8 @@
       eww-buffer-name-length most-positive-fixnum
       shr-use-fonts nil
       shr-max-image-proportion 1
-      url-user-agent "Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0")
+      url-user-agent "Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0"
+      url-cookie-file (expand-file-name "emacs/cookies" (xdg-data-home)))
 
 (defun ec--normalize-url (url)
   "Normalize URL."

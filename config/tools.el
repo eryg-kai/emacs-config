@@ -199,7 +199,8 @@
       tramp-histfile-override t
       tramp-connection-timeout 10
       tramp-copy-size-limit nil
-      tramp-use-scp-direct-remote-copying t)
+      tramp-use-scp-direct-remote-copying t
+      tramp-persistency-file-name (expand-file-name "emacs/tramp" (xdg-data-home)))
 
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
@@ -244,5 +245,8 @@
 
 ;; PDFs.
 (add-hook 'emacs-startup-hook #'pdf-loader-install)
+
+;; Multi-session variables.
+(setq multisession-directory (expand-file-name "multisession/" (xdg-data-home)))
 
 ;;; tools.el ends here
