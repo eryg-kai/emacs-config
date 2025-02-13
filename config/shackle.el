@@ -44,7 +44,7 @@ Special behavior will be exhibited based on PLIST options."
         (push `(,buffer . ,(current-window-configuration)) ec--wconf)))
     ;; Don't mess with the layout if the buffer is already visible.
     (unless (get-buffer-window buffer) (delete-other-windows)))
-  (when-let (window (cl-some (lambda (a) (funcall a buffer alist)) actions))
+  (when-let* ((window (cl-some (lambda (a) (funcall a buffer alist)) actions)))
     (when (and (plist-get plist :focus) (not (window-minibuffer-p)))
       (select-window window))
     (when (and (plist-get plist :float) (fboundp 'exwm-floating--set-floating))

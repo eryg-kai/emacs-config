@@ -26,7 +26,7 @@
 (advice-add 'dired-find-file :around #'ec-run-and-bury)
 
 ;; Auth sources.
-(when-let (auth-source (getenv "AUTH_SOURCE"))
+(when-let* ((auth-source (getenv "AUTH_SOURCE")))
   (setq auth-sources `(,auth-source)))
 
 ;; RFCs.
