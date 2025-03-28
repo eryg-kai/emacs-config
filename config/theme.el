@@ -200,23 +200,6 @@ If THEME is an override theme (ends in `override'), do nothing."
              :group 'evil)
           `((state . ,state)))))
 
-(defun ec--doom-fallback (fn name docstring defs &rest args)
-  "Ensure DEFS has all theme values set.
-
-Once the values are set call FN with NAME, DOCSTRING, modified DEFS, and ARGS.
-
-In particular, doom-one doesn't define bg and bg-alt for the terminal so many
-faces are simply invisible."
-  (dolist (def defs)
-    (when (and (listp (cadr def))
-               (listp (cadadr def))
-               (consp (cdr (cadadr def)))
-               (not (cadr (cadadr def))))
-      (setcar (cdr (cadadr def)) "black")))
-  (apply fn name docstring defs args))
-
-(advice-add 'def-doom-theme :around #'ec--doom-fallback)
-
 (defun ec--load-theme (&rest _)
   "Load the current theme'."
   (load-theme (or (bound-and-true-p ec--current-theme) (car ec-themes)) t))
