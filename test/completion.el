@@ -42,7 +42,7 @@
 
 (ert-deftest ec-test-ffap ()
   (defun ec-test--ffap-run (file line column exists)
-    "Run `ec-ffap' and ensure FILE is opened to LINE then kill the buffer.
+    "Run `ec-ffap' and ensure FILE is opened to LINE and COLUMN then kill the buffer.
 
 If EXISTS is nil `dired' should instead be opened to the current
 directory."
@@ -53,7 +53,7 @@ directory."
           (should (equal line (line-number-at-pos)))
           (should (equal (1- (or column 1)) (current-column))))
       (should (eq major-mode 'dired-mode)))
-    (kill-this-buffer))
+    (kill-buffer))
 
   (let ((default-directory ec-dir))
     (switch-to-buffer (get-buffer-create "ffap test")))
@@ -85,9 +85,13 @@ directory."
                  ,(concat "../" (file-name-nondirectory (directory-file-name ec-dir)) "/test/fixtures/")
                  "./test/fixtures/"
                  "test/fixtures/"))
-    (dolist (test '(("file" . t) (".file" . t) ("foo" . nil)))
-      (dolist (line '(10 11))
-        (dolist (column '(nil 15))
+    (dolist (test '(("file" . t)
+                    (".file" . t)
+                    ("foo" . nil)))
+      (dolist (line '(10
+                      11))
+        (dolist (column '(nil
+                          15))
           (let ((file (car test))
                 (exists (cdr test)))
             (insert (concat dir file) (format ":%s" line))

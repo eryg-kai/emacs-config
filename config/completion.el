@@ -209,18 +209,23 @@ COLLECTION, and PREDICATE."
     ;; Otherwise handle line/column numbers and remote paths before delegating
     ;; to `find-file-at-point'.
     (let* ((str (ffap-string-at-point))
-           (index (string-match ":[0-9]+\\(:[0-9]+\\)?$" str))
+           (index (seq-some (lambda (r) (string-match r str))
+                            '(":\\([0-9]+\\):\\([0-9]+\\)$"
+                              ":\\([0-9]+\\)$"
+                              "#L\\([0-9]+\\)$"
+                              "#L\\([0-9]+\\)-L\\([0-9]+\\)$")))
+           (line (when index (match-string 1 str)))
+           (column (when index (match-string 2 str)))
            (file (if index (substring str 0 index) str))
-           (position (when index (split-string (substring str (1+ index)) ":")))
            ;; Only check non-remote paths for existence.
            (exists (or (ffap-file-remote-p file) (ffap-file-exists-string file))))
       ;; Use the prompter to provide a chance to verify.
       (find-file-at-point (ffap-prompter (when exists file)))
-      (when (and exists (car position))
+      (when (and exists index)
         (goto-char (point-min))
-        (forward-line (1- (string-to-number (car position))))
-        (when (cadr position)
-          (forward-char (1- (string-to-number (cadr position)))))))))
+        (forward-line (1- (string-to-number line)))
+        (when column
+          (forward-char (1- (string-to-number column))))))))
 
 ;; Completion sources..
 (setq dabbrev-case-replace nil
