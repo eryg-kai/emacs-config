@@ -130,7 +130,7 @@ If THEME is an override theme (ends in `override'), do nothing."
            (color (when (facep state-symbol)
                     (face-attribute state-symbol :foreground))))
       (when (boundp cursor-symbol)
-        (set cursor-symbol `(,color ,cursor)))))
+        (set cursor-symbol `(,cursor ,color)))))
   (when (fboundp 'evil-refresh-cursor) (evil-refresh-cursor)))
 
 (defun ec--css (rules)
