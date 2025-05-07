@@ -205,6 +205,27 @@
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
+(defun ec-eshell-remote-cd (&optional directory)
+  "Change to DIRECTORY in the remote."
+  (let ((prefix (file-remote-p default-directory))
+        ;; Note that expansion of this directory will have already occurred.
+        (directory (or directory "~")))
+    (eshell/cd
+     (cond
+      ;; Not in a remote.
+      ((null prefix) directory)
+      ;; Relative paths work as expected in both local and remote.
+      ((not (file-name-absolute-p directory)) directory)
+      ;; Provided path is already prefixed with a remote.
+      ((file-remote-p directory) directory)
+      ;; Starts with local home, replace with remote home.
+      ((string-prefix-p (expand-file-name "~") directory)
+       (concat prefix "~/" (file-relative-name directory (expand-file-name "~"))))
+      ;; Some other absolute path.
+      (t (concat prefix directory))))))
+
+(defalias 'eshell/rcd 'ec-eshell-remote-cd)
+
 ;; Boomarks.
 (setq bookmark-save-flag 1)
 
