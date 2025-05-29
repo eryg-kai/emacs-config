@@ -13,6 +13,22 @@
 ;; I accidentally hit the keybinding and my frame becomes unusable.
 (advice-add #'suspend-frame :override #'ignore)
 
+(defun ec--restore-layout (buffer)
+  "Restore the layout associated with BUFFER."
+  (when-let* ((conf (alist-get buffer ec--wconf)))
+    (setq ec--wconf (assq-delete-all buffer ec--wconf))
+    (set-window-configuration conf)))
+
+(defun ec--store-layout (buffer)
+  "Associate the current layout with BUFFER.
+
+If there is already a layout associated with BUFFER, do nothing."
+  (unless (assq buffer ec--wconf)
+    ;; Keep the state from when we first entered the temporary branched flow.
+    ;; This uses a global variable rather than a local because some modes (man)
+    ;; set their mode late which wipes local variables.
+    (push `(,buffer . ,(current-window-configuration)) ec--wconf)))
+
 (defun ec--with-restore (&optional fn &rest args)
   "Run FN if provided then restore stored window configuration if any.
 
@@ -20,12 +36,10 @@ ARGS will be passed directly through to FN.
 
 Window configuration is only restored if the buffer is no longer
 displaying after running FN."
-  (let* ((buffer (current-buffer))
-         (conf (alist-get buffer ec--wconf)))
+  (let ((buffer (current-buffer)))
     (when fn (apply fn args))
-    (when (and conf (not (get-buffer-window buffer)))
-      (setq ec--wconf (assq-delete-all buffer ec--wconf))
-      (set-window-configuration conf))))
+    (when (not (get-buffer-window buffer))
+      (ec--restore-layout buffer))))
 
 (defun ec--shackle-condition (mode buffer _action)
   "Check if BUFFER's major mode is MODE."
@@ -36,12 +50,7 @@ displaying after running FN."
 
 Special behavior will be exhibited based on PLIST options."
   (when (and (plist-get plist :only) (not (window-minibuffer-p)))
-    (with-current-buffer buffer
-      ;; Keep the state from when we first entered the temporary branched flow.
-      ;; This uses a global variable rather than a local because some modes
-      ;; (man) set their mode late which wipes local variables.
-      (unless (assq buffer ec--wconf)
-        (push `(,buffer . ,(current-window-configuration)) ec--wconf)))
+    (ec--store-layout buffer)
     ;; Don't mess with the layout if the buffer is already visible.
     (unless (get-buffer-window buffer) (delete-other-windows)))
   (when-let* ((window (cl-some (lambda (a) (funcall a buffer alist)) actions)))
@@ -160,5 +169,23 @@ Options are:
 (add-hook 'calc-window-hook #'ec--display-calc-window)
 (add-hook 'calc-trail-window-hook #'ec--display-calc-trail-window)
 (advice-add 'calc-quit :around #'ec--with-restore)
+
+;; Restore layout after ediff.
+(defun ec--before-ediff (&rest _)
+  "Store window layout."
+  (ec--store-layout nil))
+
+(defun ec--after-ediff ()
+  "Restore window layout."
+  (ec--restore-layout nil))
+
+;; Ideally you could use `ediff-before-setup-hook' to store the previous window
+;; configuration, but it is called too late when using region diffs, because you
+;; end up storing the split of the region selection layout itself that shows up
+;; before ediff is launched.  Because of this, avoid the hook.
+(advice-add #'ediff-buffers :before #'ec--before-ediff)
+(advice-add #'ediff-regions-linewise :before #'ec--before-ediff)
+(advice-add #'ediff-regions-wordwise :before #'ec--before-ediff)
+(add-hook 'ediff-quit-hook #'ec--after-ediff)
 
 ;;; shackle.el ends here
