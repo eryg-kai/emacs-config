@@ -241,6 +241,9 @@ If the monitor is a touchscreen also adjust the touch input."
                                      (t floating-mode-line nil
                                         char-mode t)))
 
+  ;; Do not remember desktop position, always open on current.
+  (advice-add #'exwm--on-net-wm-desktop :override #'ignore)
+
   (keymap-set exwm-mode-map "C-w" #'evil-window-map)
   (keymap-set exwm-mode-map "i" #'exwm-input-release-keyboard)
   (keymap-set exwm-mode-map ":" #'evil-ex)
