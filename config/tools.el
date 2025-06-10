@@ -195,7 +195,7 @@
 (advice-add 'erc-login :override #'erc-sasl-login)
 
 ;; Tramp.
-(setq tramp-use-ssh-controlmaster-options nil
+(setq tramp-use-connection-share nil
       tramp-histfile-override t
       tramp-connection-timeout 10
       tramp-copy-size-limit nil
