@@ -196,6 +196,7 @@
 
 ;; Tramp.
 (setq tramp-use-connection-share nil
+      tramp-verbose 0
       tramp-histfile-override t
       tramp-connection-timeout 10
       tramp-copy-size-limit nil
@@ -203,6 +204,16 @@
       tramp-persistency-file-name (expand-file-name "emacs/tramp" (xdg-data-home)))
 
 (with-eval-after-load 'tramp
+  (connection-local-set-profile-variables
+   'remote-direct-async-process
+   '((tramp-direct-async-process . t)))
+
+  (connection-local-set-profiles
+   '(:application tramp :protocol "scp")
+   'remote-direct-async-process)
+
+  (add-to-list 'tramp-connection-properties (list "/scp:" "direct-async" t))
+
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 (defun ec-eshell-remote-cd (&optional directory)
