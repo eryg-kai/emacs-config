@@ -4,8 +4,7 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(typo
-                                   gnuplot
+(nconc package-selected-packages '(gnuplot
                                    org-bullets
                                    ob-async
                                    ob-go
@@ -29,8 +28,6 @@
 (defcustom ec-language-directory nil "Directory for language flashcards."
   :type 'string
   :group 'org)
-
-(add-hook 'org-mode-hook #'typo-mode)
 
 (add-hook 'org-mode-hook #'org-bullets-mode)
 
