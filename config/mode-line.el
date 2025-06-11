@@ -182,8 +182,10 @@ Keymap for managing appointments in mode-line.")
 ;; Position.
 (setq mode-line-position '("%l:%C " (-3 "%p")))
 
-;; Minions.
-(setq minions-mode-line-delimiters '("" . "")
+;; Modes.
+(setq mode-line-modes-delimiters '("" . "")
+      mode-line-collapse-minor-modes-to "…"
+      mode-line-collapse-minor-modes t
       minions-mode-line-lighter "…")
 
 (when (fboundp 'minions-mode)
@@ -273,7 +275,7 @@ Keymap for managing windows in mode-line.")
                                 'local-map mode-line-buffer-identification-keymap))
          (vc-mode vc-mode)
          " " ,(seq-filter (lambda (m) (not (and (stringp m) (string-blank-p m))))
-                          (or (bound-and-true-p minions-mode-line-modes) mode-line-modes))
+                          mode-line-modes)
          (:eval (when (eq major-mode 'erc-mode)
                   (list " " mode-line-buffer-identification)))
          (:eval (when (bound-and-true-p flymake-mode)
