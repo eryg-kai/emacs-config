@@ -166,7 +166,10 @@ COLLECTION, and PREDICATE."
 (keymap-set global-map "M-g I" #'consult-imenu-multi)
 (with-eval-after-load 'org-mode
   (keymap-set org-mode-map "M-g o" #'consult-org-heading)
-  (keymap-set org-mode-map "M-g O" #'consult-org-agenda))
+  (keymap-set org-mode-map "M-g O" #'consult-org-agenda)
+  ;; Remove `org-cycle' binding so TAB does completion in headings.  In normal
+  ;; mode TAB will still cycle.
+  (keymap-set org-mode-map "<TAB>" nil))
 (keymap-set global-map "<remap> <goto-line>" #'consult-goto-line)
 (keymap-set global-map "M-g m" #'consult-mark)
 (keymap-set global-map "M-g M" #'consult-global-mark)
@@ -175,6 +178,12 @@ COLLECTION, and PREDICATE."
 (keymap-set global-map "M-s d" #'consult-fd)
 (keymap-set global-map "M-s k" #'consult-keep-lines)
 (keymap-set global-map "M-s u" #'consult-focus-lines)
+
+;; Make TAB work for completion.  Unfortunately `indent-for-tab-command' does
+;; not seem to work correctly in Markdown (for some reason it always puts my
+;; cursor at the start of the line), so go straight to completion instead.
+(with-eval-after-load 'markdown-mode
+  (keymap-set markdown-mode-map "<TAB>" #'completion-at-point))
 
 (setq register-preview-function #'consult-register-format
       xref-show-xrefs-function #'consult-xref
