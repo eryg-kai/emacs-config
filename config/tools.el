@@ -83,7 +83,7 @@
   (not (string-match-p "^\\[.*\\]$" args)))
 
 (setq proced-format-alist
-      '((short tree pcpu pmem
+      '((short tree user pcpu pmem
                (args comm))
         (medium user pid tree pcpu pmem vsize rss ttname state start time
                 (args comm))
