@@ -196,7 +196,7 @@
 
 ;; Tramp.
 (setq tramp-use-connection-share nil
-      tramp-verbose 0
+      tramp-verbose 2
       tramp-histfile-override t
       tramp-connection-timeout 10
       tramp-copy-size-limit nil
