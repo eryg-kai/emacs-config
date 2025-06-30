@@ -11,7 +11,6 @@
 
 ;; General settings.
 (setq-default fill-column 80
-              indent-tabs-mode nil
               tab-width 2
               tab-stop-list (list 2)
               c-basic-offset 2
