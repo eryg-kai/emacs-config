@@ -199,7 +199,7 @@
       tramp-verbose 2
       tramp-histfile-override t
       tramp-connection-timeout 10
-      tramp-copy-size-limit nil
+      tramp-copy-size-limit (* 1024 1024)
       tramp-use-scp-direct-remote-copying t
       tramp-persistency-file-name (expand-file-name "emacs/tramp" (xdg-data-home)))
 
