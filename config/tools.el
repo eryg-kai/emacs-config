@@ -213,8 +213,6 @@
    '(:application tramp :protocol "scp")
    'remote-direct-async-process)
 
-  (add-to-list 'tramp-connection-properties (list "/scp:" "direct-async" t))
-
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 (defun ec-eshell-remote-cd (&optional directory)
