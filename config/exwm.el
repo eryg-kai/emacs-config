@@ -26,7 +26,7 @@
 (setq x-no-window-manager t)
 
 ;; Used to determine if the screen script needs to run.
-(defvar ec--connected-monitors nil "Currently connected monitors.")
+(defvar ec--connected-monitors '("eDP-1") "Currently connected monitors.")
 
 (setq exwm-input-global-keys
       `((,(kbd "s-q") . exwm-input-send-next-key)
@@ -169,6 +169,9 @@
           (mapcar (lambda (s) (car (split-string s " ")))
                   (seq-filter (lambda (s) (string-match " connected" s))
                               (split-string xrandr "\n")))))
+    ;; If there are multiple monitors, disable the internal screen.
+    ;; TODO: Do so only if lid is closed and turn back on if lid is opened.
+    (when (length> monitors 1) (setq monitors (delete "eDP-1" monitors)))
     (unless (and (not (called-interactively-p)) (equal ec--connected-monitors monitors))
       (let ((command (concat
                       "xrandr "
