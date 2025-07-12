@@ -297,7 +297,7 @@ Keymap for managing windows in mode-line.")
                   (list " " (string-trim erc-modified-channels-object))))
          (:eval (when (mode-line-window-selected-p)
                   (list " " ec-battery-mode-line
-                        " " display-time-string)))
+                        " " (bound-and-true-p display-time-string))))
          " " mode-line-position
          " ")
        1.4))))
