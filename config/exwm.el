@@ -169,6 +169,9 @@
           (mapcar (lambda (s) (car (split-string s " ")))
                   (seq-filter (lambda (s) (string-match " connected" s))
                               (split-string xrandr "\n")))))
+    ;; If there are multiple monitors, disable the internal screen.
+    ;; TODO: Do so only if lid is closed and turn back on if lid is opened.
+    (when (length> monitors 1) (setq monitors (delete "eDP-1" monitors)))
     (unless (and (not (called-interactively-p)) (equal ec--connected-monitors monitors))
       (let ((command (concat
                       "xrandr "
