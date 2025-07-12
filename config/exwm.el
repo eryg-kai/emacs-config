@@ -181,8 +181,6 @@
                        (lambda (m) (format "--output %s --off" m))
                        (seq-difference ec--connected-monitors monitors)
                        " "))))
-        (when (or (bound-and-true-p ec-debug-p) (called-interactively-p))
-          (message ">>> %s" command))
         (unless monitors
           (message ">>> %s" xrandr)
           (error "Refusing to turn off all monitors"))
