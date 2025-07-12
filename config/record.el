@@ -39,4 +39,7 @@
                    #'find-file
                    "scr" "--output /tmp/screenshot.png"))
 
+(keymap-set global-map "<f5>" #'ec-screenshot)
+(keymap-set global-map "<f6>" #'ec-record-screen)
+
 ;;; record.el ends here

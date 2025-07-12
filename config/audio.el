@@ -43,4 +43,13 @@
   (interactive)
   (ec-exec "playerctl next"))
 
+(keymap-set global-map "<XF86AudioLowerVolume>"  #'ec-decrease-volume)
+(keymap-set global-map "<XF86AudioRaiseVolume>"  #'ec-increase-volume)
+(keymap-set global-map "<XF86AudioMute>"         #'ec-toggle-muted)
+(keymap-set global-map "<XF86AudioMicMute>"      #'ec-toggle-microphone)
+(keymap-set global-map "<XF86AudioPause>"        #'ec-play-pause)
+(keymap-set global-map "<XF86AudioPlay>"         #'ec-play-pause)
+(keymap-set global-map "<XF86AudioPrev>"         #'ec-play-previous)
+(keymap-set global-map "<XF86AudioNext>"         #'ec-play-next)
+
 ;;; audio.el ends here

@@ -46,35 +46,10 @@
 
         (,(kbd "s-t") . exwm-floating-toggle-floating)
 
-        (,(kbd "<f5>") . ec-screenshot)
-        (,(kbd "<f6>") . ec-record-screen)
-
-        (,(kbd "s-j") . evil-window-down)
-        (,(kbd "s-k") . evil-window-up)
-        (,(kbd "s-l") . evil-window-right)
-        (,(kbd "s-h") . evil-window-left)
         (,(kbd "<s-left>") . (lambda () (interactive) (ec-exwm-rotate-screen 'left)))
         (,(kbd "<s-up>") . (lambda () (interactive) (ec-exwm-rotate-screen 'inverted)))
         (,(kbd "<s-right>") . (lambda () (interactive) (ec-exwm-rotate-screen 'right)))
-        (,(kbd "<s-down>") . (lambda () (interactive) (ec-exwm-rotate-screen 'normal)))
-
-        (,(kbd "s-J") . evil-window-decrease-height)
-        (,(kbd "s-K") . evil-window-increase-height)
-        (,(kbd "s-L") . evil-window-increase-width)
-        (,(kbd "s-H") . evil-window-decrease-width)
-
-        (,(kbd "<XF86MonBrightnessUp>")   . (lambda () (interactive) (ec-exec "light -A 5")))
-        (,(kbd "<XF86MonBrightnessDown>") . (lambda () (interactive) (ec-exec "light -U 5")))
-
-        (,(kbd "<XF86AudioLowerVolume>")  . ec-decrease-volume)
-        (,(kbd "<XF86AudioRaiseVolume>")  . ec-increase-volume)
-        (,(kbd "<XF86AudioMute>")         . ec-toggle-muted)
-        (,(kbd "<XF86AudioMicMute>")      . ec-toggle-microphone)
-
-        (,(kbd "<XF86AudioPause>")        . ec-play-pause)
-        (,(kbd "<XF86AudioPlay>")         . ec-play-pause)
-        (,(kbd "<XF86AudioPrev>")         . ec-play-previous)
-        (,(kbd "<XF86AudioNext>")         . ec-play-next)))
+        (,(kbd "<s-down>") . (lambda () (interactive) (ec-exwm-rotate-screen 'normal)))))
 
 (setq exwm-input-simulation-keys
       `((,(kbd "j")        . [down])
