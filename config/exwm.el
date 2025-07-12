@@ -9,6 +9,16 @@
 
 (keymap-set global-map "C-c r" #'ec-exec)
 
+(defun ec--enable-exwm ()
+  "Enable EXWM."
+  (interactive)
+  (ec-exwm-update-screens)
+  (exwm-randr-mode)
+  (exwm-xim-mode)
+  (exwm-wm-mode))
+
+(keymap-set global-map "s-x" #'ec--enable-exwm)
+
 (defcustom ec-monitor-xrandr-alist nil "Xrandr flags for each monitor."
   :type '(alist :key-type string :value-type string)
   :group 'exwm)
@@ -43,7 +53,6 @@
         (,(kbd "s-k") . evil-window-up)
         (,(kbd "s-l") . evil-window-right)
         (,(kbd "s-h") . evil-window-left)
-        (,(kbd "s-x") . ec-exwm-update-screens)
         (,(kbd "<s-left>") . (lambda () (interactive) (ec-exwm-rotate-screen 'left)))
         (,(kbd "<s-up>") . (lambda () (interactive) (ec-exwm-rotate-screen 'inverted)))
         (,(kbd "<s-right>") . (lambda () (interactive) (ec-exwm-rotate-screen 'right)))
@@ -248,12 +257,7 @@ If the monitor is a touchscreen also adjust the touch input."
   (keymap-set exwm-mode-map "i" #'exwm-input-release-keyboard)
   (keymap-set exwm-mode-map ":" #'evil-ex)
 
-  (ec-exwm-update-screens)
-
-  (exwm-randr-mode)
-  (exwm-xim-mode))
-
-(with-eval-after-load 'evil
-  (evil-set-initial-state 'exwm-mode 'emacs))
+  (with-eval-after-load 'evil
+    (evil-set-initial-state 'exwm-mode 'emacs)))
 
 ;;; exwm.el ends here
