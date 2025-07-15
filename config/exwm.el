@@ -13,6 +13,13 @@
   "Enable EXWM."
   (interactive)
   (ec-exwm-update-screens)
+  ;; Preserve all global super, function, and multimedia keybindings.
+  (map-keymap (lambda (event definition)
+                (when (or (and (symbolp event) (string-match-p "^f[1-9]$\\|^f1[0-2]$" (symbol-name event)))
+                          (and (symbolp event) (string-prefix-p "XF86" (symbol-name event)))
+                          (and (numberp event) (string-prefix-p "s-" (key-description (vector event)))))
+                  (push `(,(vector event) . ,definition) exwm-input-global-keys)))
+              global-map)
   (exwm-randr-mode)
   (exwm-xim-mode)
   (exwm-wm-mode))
