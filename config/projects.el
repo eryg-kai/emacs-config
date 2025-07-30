@@ -41,4 +41,8 @@ FILES-ONLY is ignored."
 
 (setq project-buffers-viewer #'ec-project-list-buffers-ibuffer)
 
+(with-eval-after-load 'project
+  (keymap-set project-prefix-map "F" #'project-root-find-file)
+  (add-to-list 'project-switch-commands '(project-root-find-file "Root find") t))
+
 ;;; projects.el ends here
