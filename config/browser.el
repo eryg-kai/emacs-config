@@ -31,6 +31,14 @@
 
 (advice-add #'shr-colorize-region :around #'ec--shr-bg)
 
+(defun ec--eww-close (fn &rest args)
+  "Kill buffer after running FN with ARGS."
+  (let ((buffer (current-buffer)))
+    (apply fn args)
+    (kill-buffer buffer)))
+
+(advice-add #'eww-browse-with-external-browser :around #'ec--eww-close)
+
 (defcustom ec-url-transforms nil "Pairs of replacements to perform on URLs."
   :type '(alist :key-type string :value-type string)
   :group 'eww)
