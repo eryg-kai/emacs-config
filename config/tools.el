@@ -275,7 +275,8 @@
 (advice-add 'net-utils-run-program :after #'ec--net-utils-mode)
 
 ;; PDFs.
-(add-hook 'emacs-startup-hook #'pdf-loader-install)
+(when (fboundp 'pdf-loader-install)
+  (add-hook 'emacs-startup-hook #'pdf-loader-install))
 
 ;; Multi-session variables.
 (setq multisession-directory (expand-file-name "multisession/" (xdg-data-home)))
