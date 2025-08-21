@@ -48,7 +48,7 @@ jobs:
 
       - name: Install packages
         if: steps.cache.outputs.cache-hit != 'true'
-        run: emacs --batch -l ./init.el --eval "(progn (package-refresh-contents) (defun y-or-n-p (_) t) (package-install-selected-packages))"
+        run: mkdir -p ~/.local/share/emacs && emacs --batch -l ./init.el --eval "(progn (package-refresh-contents) (defun y-or-n-p (_) t) (package-install-selected-packages))"
 
       - uses: martijnhols/actions-cache/save@v3
         if: success() && steps.cache.outputs.cache-hit != 'true'
