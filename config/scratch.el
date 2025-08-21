@@ -25,7 +25,7 @@
   (let* ((default-directory (project-root (project-current t)))
          (mode (cond ((eq major-mode 'exwm-mode) 'org-mode)
                      ((eq major-mode 'emacs-lisp-mode) 'lisp-interaction-mode)
-                     ((not (or (derived-mode-p 'text-mode) (derived-mode-p 'prog-mode))) 'text-mode)
+                     ((not (derived-mode-p 'text-mode 'prog-mode)) 'text-mode)
                      (t major-mode)))
          (mode-name (replace-regexp-in-string "-mode$" "" (symbol-name mode)))
          (name (project-prefixed-buffer-name (concat mode-name "-scratch"))))
