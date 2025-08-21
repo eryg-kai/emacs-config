@@ -100,7 +100,8 @@
 (add-hook 'emacs-lisp-mode #'superword-mode)
 
 ;; Undo.
-(add-hook 'emacs-startup-hook #'global-undo-tree-mode)
+(when (fboundp 'global-undo-tree-mode)
+  (add-hook 'emacs-startup-hook #'global-undo-tree-mode))
 
 (setq evil-undo-system 'undo-tree
       undo-tree-incompatible-major-modes '(term-mode image-mode)
