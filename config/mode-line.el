@@ -77,7 +77,8 @@
   (setq battery-update-timer
         (run-at-time nil battery-update-interval #'ec--battery-update))
   ;; Listen for being plugged in/out.
-  (battery--upower-subscribe))
+  (when (featurep 'dbusbind)
+    (battery--upower-subscribe)))
 
 (defun ec--battery-update ()
   "Update variable `ec-battery-mode-line'."
