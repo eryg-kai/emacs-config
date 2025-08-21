@@ -103,6 +103,7 @@
 (add-hook 'emacs-startup-hook #'global-undo-tree-mode)
 
 (setq evil-undo-system 'undo-tree
+      undo-tree-incompatible-major-modes '(term-mode image-mode)
       undo-tree-history-directory-alist
       `(("." . ,(expand-file-name "undo-tree/" (xdg-data-home)))))
 
