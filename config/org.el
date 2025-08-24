@@ -282,6 +282,11 @@ Call FN with ARGS for any log entry that does not take a note."
            (file+function ,(ec-capture-user "log.org") ec-capture-measurement)
            "|%U|%^{Value}|" ; Temporary stand-in; will be replaced.
            :immediate-finish t)
+          ("pf" "food" plain
+           (file+function ,(ec-capture-user "log.org") ec-capture-food)
+           (function ec-capture-food-template)
+           :before-finalize ec--table-recalculate
+           :immediate-finish t)
           ("f" "flashcards")
           ("fv" "vocab" entry
            (function ec-capture-language)
@@ -331,6 +336,34 @@ Call FN with ARGS for any log entry that does not take a note."
                    (if (string= item "Date") "%U" (format "%%^{%s}" item)))
                  parts "|")
             "|")))
+
+;; Using table-line-pos instead would be ideal, but unfortunately it only works
+;; from the beginning of table, and this needs to insert just before the end,
+;; since the last line is used for some averages/totals.
+(defun ec-capture-food ()
+  "Capture food entry before the last hline."
+  (goto-char (point-min))
+  (re-search-forward "#\\+tblname: calories")
+  (goto-char (org-table-end))
+  ;; Could actually look for the last hline but this is good enough for my use.
+  (forward-line -2))
+
+(defun ec-capture-food-template ()
+  "Return a capture template based on available food items."
+  (with-current-buffer (or (find-buffer-visiting (ec-capture-user "log.org"))
+                           (find-file-noselect (ec-capture-user "log.org")))
+    (goto-char (point-min))
+    (re-search-forward "#\\+tblname: food")
+    (org-table-analyze)
+    (format "|%%u|%%^{%s}|%%^{srv}|||"
+            (mapconcat (lambda (i) (org-no-properties (org-table-get i 1)))
+                       (number-sequence 1 (1- (length org-table-dlines)))
+                       "|"))))
+
+(defun ec--table-recalculate ()
+  "Recalculate table formulas."
+  ;; TODO: Automatically insert an hline as well if capturing for a new day.
+  (org-table-recalculate 'all))
 
 (defun ec-init-capture ()
   "Initialize a capture."
