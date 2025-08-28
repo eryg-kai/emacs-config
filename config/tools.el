@@ -213,7 +213,10 @@
    '(:application tramp :protocol "scp")
    'remote-direct-async-process)
 
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+
+  ;; This fixes staging hunks.
+  (add-to-list 'tramp-connection-properties (list "/scp:" "direct-async" t)))
 
 (defun ec-eshell-remote-cd (&optional directory)
   "Change to DIRECTORY in the remote."
