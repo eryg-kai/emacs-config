@@ -202,7 +202,9 @@
       tramp-copy-size-limit (* 1024 1024)
       tramp-use-scp-direct-remote-copying t
       tramp-persistency-file-name (expand-file-name "emacs/tramp" (xdg-data-home))
-      enable-remote-dir-locals t)
+      enable-remote-dir-locals t
+      remote-file-name-inhibit-locks t
+      remote-file-name-inhibit-cache nil)
 
 (with-eval-after-load 'tramp
   (connection-local-set-profile-variables
