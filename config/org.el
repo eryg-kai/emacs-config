@@ -343,7 +343,7 @@ Call FN with ARGS for any log entry that does not take a note."
 (defun ec-capture-food ()
   "Capture food entry before the last hline."
   (goto-char (point-min))
-  (re-search-forward "#\\+tblname: calories")
+  (re-search-forward "* Calories")
   (goto-char (org-table-end))
   ;; Could actually look for the last hline but this is good enough for my use.
   (forward-line -2))
