@@ -448,7 +448,9 @@ Call FN with ARGS for any log entry that does not take a note."
         ("-d" "Discovery"
          ((tags "+PRIORITY<\"M\"" ((org-agenda-overriding-header "Priorities")))
           (tags "review" ((org-agenda-overriding-header "Review")))
-          (tags "research" ((org-agenda-overriding-header "Research"))))))
+          (tags "research" ((org-agenda-overriding-header "Research")))))
+        ("-a" "Archive"
+         ((todo "CANCEL|DONE|\\[X\\]" ((org-agenda-overriding-header "Done"))))))
       org-agenda-sorting-strategy
       '((agenda time-up habit-down priority-down effort-down category-keep)
         (todo priority-down effort-down category-keep)
