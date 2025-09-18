@@ -33,6 +33,8 @@
 
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 
+(defalias 'org-babel-execute:go-ts 'org-babel-execute:go)
+
 (defun ec-gud-localize (fn fmt &rest args)
   "Run FN with FMT and ARGS after ensuring FMT does not contain Tramp prefixes."
   (let* ((remote (file-remote-p default-directory))
