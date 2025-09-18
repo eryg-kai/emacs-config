@@ -286,6 +286,7 @@ Call FN with ARGS for any log entry that does not take a note."
            (file+function ,(ec-capture-user "log.org") ec-capture-food)
            (function ec-capture-food-template)
            :before-finalize ec--table-recalculate
+           :no-save t
            :immediate-finish t)
           ("f" "flashcards")
           ("fv" "vocab" entry
