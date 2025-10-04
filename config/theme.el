@@ -15,11 +15,15 @@
 (add-hook 'term-mode-hook #'ec--disable-scroll-margin)
 
 (setq window-divider-default-places t
+      window-divider-default-right-width 5
+      window-divider-default-bottom-width 5
       scroll-margin 8
       hscroll-margin 8
       max-mini-window-height 0.1
       truncate-string-ellipsis "…"
       vc-annotate-background-mode nil)
+
+(add-hook 'emacs-startup-hook #'window-divider-mode)
 
 (blink-cursor-mode 0)
 
