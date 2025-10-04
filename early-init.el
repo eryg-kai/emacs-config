@@ -67,7 +67,9 @@
 ;; TODO: EXWM causes a flash and the mode-line disappears for a bit.
 (setq-default default-frame-alist
               '((background-color . "#282c34")
+                (foreground-color . "#bbc2cf")
                 (fullscreen . maximized)))
+(set-face-attribute 'fringe nil :background "#282c34")
 
 ;; Disable as early as possible to prevent brief visibility.
 (menu-bar-mode -1)
