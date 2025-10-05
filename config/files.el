@@ -16,6 +16,15 @@
       auto-save-file-name-transforms
       `((".*" ,(expand-file-name "auto-save/" (xdg-data-home)) t)))
 
+;; Inhibit messages in the minibuffer about writing files.
+(defun ec--silence (fn &rest args)
+  "Set variable `inhibit-message' to t then run FN with ARGS."
+  (let ((inhibit-message t))
+    (apply fn args)))
+
+(advice-add 'write-region :around #'ec--silence)
+(advice-add 'append-to-file :around #'ec--silence)
+
 ;; Recentf.
 (setq recentf-max-menu-items 1000
       recentf-max-saved-items 1000
@@ -82,7 +91,7 @@
 ;; TODO: Track which buffer this buffer replaced if any.
 (defun ec--track-buffer ()
   "Track the current buffer."
-  (let* ((buffer(current-buffer))
+  (let* ((buffer (current-buffer))
          (name (or (buffer-file-name buffer) (buffer-name buffer)))
          (time (current-time))
          (previous (car ec--tracked-buffers)))
