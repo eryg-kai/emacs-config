@@ -23,7 +23,7 @@
     (apply fn args)))
 
 (advice-add 'write-region :around #'ec--silence)
-(advice-add 'append-to-file :around #'ec--silence)
+(advice-add 'save-buffer :around #'ec--silence)
 
 ;; Recentf.
 (setq recentf-max-menu-items 1000
