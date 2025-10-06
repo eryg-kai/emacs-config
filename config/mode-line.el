@@ -301,7 +301,7 @@ Keymap for managing windows in mode-line.")
                         " " (bound-and-true-p display-time-string))))
          " " mode-line-position
          " ")
-       1.4))))
+       1.2))))
   (ec--refresh-mode-line))
 
 (defun ec--refresh-mode-line ()
