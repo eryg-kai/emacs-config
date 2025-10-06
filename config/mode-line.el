@@ -214,7 +214,7 @@ return the inactive face.  In all other cases defer to FN."
 
 ;; Version control.
 (defun ec--mode-line-vc (_ &optional backend)
-  "Remove.BACKEND from the mode-line."
+  "Remove BACKEND from the mode-line."
   (when (and backend (stringp vc-mode))
     (setq vc-mode (ec-center-truncate
                    (replace-regexp-in-string (format "^ %s" backend) "" vc-mode)
