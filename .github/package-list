@@ -55,11 +55,9 @@ org                            9.7.30
 org-bullets                    20200317.1740
 org-drill                      20210427.2003
 org-edna                       1.1.2
-osd                            20250102.214607
 pdf-tools                      20240429.407
 persist                        0.6.1
 persistent-scratch             20230225.1439
-pinentry                       0.1
 queue                          0.2
 racket-mode                    20250605.2049
 rainbow-mode                   1.0.6

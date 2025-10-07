@@ -129,8 +129,9 @@ If battery is low, send a notification."
                      ((< percent battery-load-low) 'warning)
                      ('warning))))
     (when (and (eq state 'discharging) (> battery-load-low percent))
-      (osd-notify (list (format "%s battery is %.0f%%" model percent)
-                        "poweroff imminent" "emacs")))
+      (notifications-notify :title "Poweroff imminent"
+                            :body (format "%s battery is %.0f%%" model percent)
+                            :app-name (system-name)))
     (cond (t (propertize (format "%.0f%%%%%s" percent left)
                          'help-echo (format "%s battery" model)
                          'mouse-face 'mode-line-highlight

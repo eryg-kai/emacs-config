@@ -4,16 +4,7 @@
 
 ;;; Code:
 
-(nconc package-selected-packages '(osd
-                                   pinentry))
-
 ;; Notifications.
-(keymap-set global-map "C-c n" #'osd-show-notifications)
-(keymap-set global-map "C-c C-n" #'osd-show-notifications)
-
-(defun ec-enable-pinentry-soon()
-  (run-with-idle-timer 1 nil #'pinentry-start))
-
 (defun ec-maybe-start-servers ()
   "Start servers."
   (require 'server) ; There's no autoload on `server-running-p'.
@@ -24,8 +15,6 @@
   (let ((is-server (or (daemonp) (not (server-running-p)))))
     (unless (server-running-p) (server-start))
     (when is-server
-      (when (fboundp 'pinentry-start) (pinentry-start))
-      (when (fboundp 'osd-start) (osd-start))
       (ec-battery-mode)
       (display-time-mode))))
 
