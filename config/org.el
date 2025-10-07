@@ -458,31 +458,6 @@ Call FN with ARGS for any log entry that does not take a note."
         (tags priority-down effort-down category-keep)
         (search category-keep)))
 
-;; Appointments.
-(setq appt-message-warning-time 30
-      appt-display-interval 15)
-
-(defun ec--agenda-to-appt ()
-  "Generate appointments from the agenda."
-  (org-agenda-to-appt t)
-  (when (fboundp 'appt-check) (appt-check)))
-
-(defvar ec--agenda-appt-timer nil "Agenda to appointment timer.")
-
-(defun ec--agenda-to-appt-soon ()
-  "Generate appointments after a timer."
-  (when ec--agenda-appt-timer (cancel-timer ec--agenda-appt-timer))
-  (setq ec--agenda-appt-timer (run-with-idle-timer 30 nil #'ec--agenda-to-appt)))
-
-(defun ec--appt-schedule ()
-  "Generate appointments after a timer if the current file is an agenda file."
-  (when (member (buffer-file-name) (org-agenda-files))
-    (ec--agenda-to-appt-soon)))
-
-(defun ec--hook-appt-schedule ()
-  "Regenerate appointments when saving the current file."
-  (add-hook 'before-save-hook #'ec--appt-schedule nil t))
-
 ;; Flashcards.
 (setq org-drill-maximum-items-per-session 150
       org-drill-maximum-duration 30

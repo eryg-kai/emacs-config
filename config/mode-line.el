@@ -136,28 +136,6 @@ If battery is low, send a notification."
                          'mouse-face 'mode-line-highlight
                          'face face)))))
 
-;; Appointment information.
-(defvar ec-mode-line-agenda-keymap
-  (let ((map (make-sparse-keymap)))
-    (keymap-set map "<mode-line> <mouse-1>" #'org-agenda-list)
-    map) "\
-Keymap for managing appointments in mode-line.")
-
-(defun ec--appt-mode-line (min-to-app &optional abbrev)
-  "Appointment string using list of strings MIN-TO-APP; ABBREV is ignored."
-  (let* ((multiple (> (length min-to-app) 1))
-         (imin (if (or (not multiple)
-                       (not (delete (car min-to-app) min-to-app)))
-                   (car min-to-app))))
-    (propertize
-     (if (equal imin "0") "now"
-       (format "%s min" (or imin (mapconcat #'identity min-to-app ","))))
-     'help-echo "mouse-1: Open agenda"
-     'local-map ec-mode-line-agenda-keymap
-     'mouse-face 'mode-line-highlight)))
-
-(advice-add 'appt-mode-line :override #'ec--appt-mode-line)
-
 ;; Time and load average.
 (setq display-time-string-forms
       '((propertize
@@ -222,94 +200,77 @@ return the inactive face.  In all other cases defer to FN."
 
 (advice-add 'vc-mode-line :after #'ec--mode-line-vc)
 
-;; Windows and buffers.
-(defvar ec-mode-line-window-keymap
-  (let ((map (make-sparse-keymap)))
-    (keymap-set map "<mode-line> <mouse-1>" `(menu-item "Menu Bar" ignore :filter (lambda (_) (mouse-menu-bar-map))))
-    (keymap-set map "<mode-line> <mouse-2>" #'ec-exwm-workspace-prev)
-    (keymap-set map "<mode-line> <mouse-3>" #'ec-exwm-workspace-next)
-    map) "\
-Keymap for managing windows in mode-line.")
+;; Put it all together.
+(defcustom ec-mode-line-format-buffer
+  `("%e" ; Error about full memory.
+    " " mode-line-mule-info mode-line-modified mode-line-remote
+    " " (:propertize "%I"
+                     help-echo "Buffer size"
+                     mouse-face mode-line-highlight)
+    " " (:eval (propertize (ec-center-truncate (format-mode-line "%b") 20)
+                           'face 'mode-line-buffer-id))
+    (vc-mode vc-mode)
+    " " ,(seq-filter (lambda (m) (not (and (stringp m) (string-blank-p m))))
+                     mode-line-modes)
+    (:eval (when (bound-and-true-p flymake-mode)
+             (list " " flymake-mode-line-counters)))
+    (:eval (ec--mode-line-selection))
+    (:eval (when (bound-and-true-p anzu--state)
+             (list " " anzu--mode-line-format)))
+    " " mode-line-position)
+  "Buffer-specific mode-line."
+  :type 'sexp
+  :group 'mode-line)
 
-(keymap-set mode-line-buffer-identification-keymap "<mode-line> <mouse-1>" #'mouse-buffer-menu)
-(keymap-set mode-line-buffer-identification-keymap "<mode-line> <mouse-2>" #'mode-line-previous-buffer)
+(defcustom ec-mode-line-format-global
+  '((:eval (when (or defining-kbd-macro
+                     executing-kbd-macro
+                     ec--record-process)
+             (list " " (propertize "•REC" 'face 'mode-line-emphasis))))
+    (:eval (when (and (fboundp 'org-clocking-p)
+                      (org-clocking-p))
+             (list " " org-mode-line-string)))
+    (:eval (when (bound-and-true-p erc-modified-channels-alist)
+             (list " " (string-trim erc-modified-channels-object))))
+    " " (:eval ec-battery-mode-line)
+    " " (:eval (bound-and-true-p display-time-string)))
+  "Global mode-line."
+  :type 'sexp
+  :group 'mode-line)
 
-;; Putting it all together.
-(defun ec--mode-line-render (left right &optional height)
-  "Return mode-line with LEFT and RIGHT aligned and made HEIGHT tall."
-  (list
-   ;; HACK: This zero-width character is used to fake vertical padding.
-   (when (and height (display-graphic-p))
-     (propertize "\u200b" 'display `((raise ,(/ (1- height) -2.0)) (height ,height))))
-   left
-   (propertize " " 'display `((space :align-to
-                                     (- (+ right right-fringe right-margin)
-                                        ,(string-width (format-mode-line right))))))
-   right))
+(defvar ec--mode-line-overlays nil)
+
+(defun ec-modeline-update (&rest _)
+  "Redisplay mode-line."
+  (unless (or (not ec--mode-line-overlays)
+              (active-minibuffer-window))
+    (let* ((buffer (format-mode-line ec-mode-line-format-buffer))
+           (global (format-mode-line ec-mode-line-format-global))
+           (space (propertize
+                   " " 'display
+                   `(space :align-to (- right-fringe
+                                        ,(if (display-graphic-p) 0 1)
+                                        (+ ,(string-width buffer) ,(string-width global)))))))
+      (dolist (o ec--mode-line-overlays)
+        (when (overlay-buffer o)
+          (overlay-put o 'after-string (concat space buffer global))))
+      (with-current-buffer " *Minibuf-0*"
+        (erase-buffer)
+        (insert space buffer global)))))
+
+;; React to mode-line and window changes.
+(advice-add 'force-mode-line-update :after #'ec-modeline-update)
+(add-hook 'window-state-change-hook #'ec-modeline-update)
 
 (defun ec-set-mode-line ()
-  "Customize the mode line."
-  (setq-default
-   mode-line-format
-   '((:eval
-      (ec--mode-line-render
-       `("%e" ; Error about full memory.
-         " " (:eval (propertize (if (bound-and-true-p winum-mode)
-                                    (winum-get-number-string)
-                                  "?")
-                                'face (when (mode-line-window-selected-p)
-                                        (ec--mode-line-state-face))
-                                'mouse-face 'mode-line-highlight
-                                'local-map ec-mode-line-window-keymap
-                                'help-echo "mouse-1: Display global menu\nmouse-2: Previous frame\nmouse-3: Next frame"))
-         (:eval (ec--mode-line-selection))
-         (:eval (when (bound-and-true-p anzu--state)
-                  (list " " anzu--mode-line-format)))
-         " " mode-line-mule-info mode-line-modified mode-line-remote
-         " " (:propertize "%I"
-                          help-echo "Buffer size"
-                          mouse-face mode-line-highlight)
-         " " (:eval (propertize (ec-center-truncate (format-mode-line "%b") 20)
-                                'face 'mode-line-buffer-id
-                                'help-echo "Buffer name mouse-1: Display buffer menu\nmouse-2: Previous buffer\nmouse-3: Next buffer"
-                                'mouse-face 'mode-line-highlight
-                                'local-map mode-line-buffer-identification-keymap))
-         (vc-mode vc-mode)
-         " " ,(seq-filter (lambda (m) (not (and (stringp m) (string-blank-p m))))
-                          mode-line-modes)
-         (:eval (when (eq major-mode 'erc-mode)
-                  (list " " mode-line-buffer-identification)))
-         (:eval (when (bound-and-true-p flymake-mode)
-                  (list " " flymake-mode-line-counters)))
-         (:eval (when (and (mode-line-window-selected-p)
-                           (fboundp 'org-clocking-p)
-                           (org-clocking-p))
-                  (list " " org-mode-line-string))))
-       '((:eval (when (and (mode-line-window-selected-p)
-                           (bound-and-true-p appt-mode-string))
-                  (list " " (string-trim appt-mode-string))))
-         (:eval (when (and (mode-line-window-selected-p)
-                           (or defining-kbd-macro
-                               executing-kbd-macro
-                               ec--record-process))
-                  (list " " (propertize "•REC" 'face 'mode-line-emphasis))))
-         (:eval (when (and (mode-line-window-selected-p)
-                           (bound-and-true-p erc-modified-channels-alist))
-                  (list " " (string-trim erc-modified-channels-object))))
-         (:eval (when (mode-line-window-selected-p)
-                  (list " " ec-battery-mode-line
-                        " " (bound-and-true-p display-time-string))))
-         " " mode-line-position
-         " ")
-       1.2))))
-  (ec--refresh-mode-line))
-
-(defun ec--refresh-mode-line ()
-  "Refresh the mode line in all existing buffers."
-  (dolist (buffer (buffer-list))
-    (when (get-buffer buffer)
-      (with-current-buffer buffer
-        (setq mode-line-format (default-value 'mode-line-format))))))
+  "Set up mode-line."
+  (setq ec--mode-line-overlays nil)
+  (dolist (buf '(" *Echo Area 0*" " *Echo Area 1*"))
+    (with-current-buffer (get-buffer-create buf)
+      (remove-overlays (point-min) (point-max))
+      (push (make-overlay (point-min) (point-max) nil nil t)
+            ec--mode-line-overlays)))
+  (ec-modeline-update))
 
 ;; Load it later so the theme kicks in to avoid an unstyled mode line.
 (add-hook 'emacs-startup-hook #'ec-set-mode-line 10)

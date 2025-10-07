@@ -8,8 +8,6 @@
                                    pinentry))
 
 ;; Notifications.
-(setq appt-display-format nil)
-
 (keymap-set global-map "C-c n" #'osd-show-notifications)
 (keymap-set global-map "C-c C-n" #'osd-show-notifications)
 
@@ -29,10 +27,7 @@
       (when (fboundp 'pinentry-start) (pinentry-start))
       (when (fboundp 'osd-start) (osd-start))
       (ec-battery-mode)
-      (display-time-mode)
-      (with-eval-after-load 'org ; Regen appts when the day changes.
-        (run-at-time "00:01" (* 60 60 24) #'ec--agenda-to-appt-soon))
-      (add-hook 'org-mode-hook #'ec--hook-appt-schedule))))
+      (display-time-mode))))
 
 (add-hook 'emacs-startup-hook #'ec-maybe-start-servers)
 
