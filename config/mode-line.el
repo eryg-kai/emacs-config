@@ -65,100 +65,6 @@
 ;; The mode-line is not updated by default when clocking out.
 (add-hook 'org-clock-out-hook #'org-clock-update-mode-line)
 
-;; Battery.
-(defvar ec-battery-mode-line nil "Mode line string for battery information.")
-
-;; `display-battery-mode' exists but it does not give you separate laptop and
-;; headset battery information.  Instead, use it for the dbus subscription and
-;; parsing each battery's info but put together the mode line manually.
-(defun ec-battery-mode ()
-  "Start polling batteries."
-  (require 'battery)
-  (setq battery-update-timer
-        (run-at-time nil battery-update-interval #'ec--battery-update))
-  ;; Listen for being plugged in/out.
-  (when (featurep 'dbusbind)
-    (battery--upower-subscribe)))
-
-(defun ec--battery-update ()
-  "Update variable `ec-battery-mode-line'."
-  (setq ec-battery-mode-line
-        (mapconcat #'ec--mode-line-battery (ec-battery) " "))
-  ;; Force because it might have been triggered by dbus.
-  (force-mode-line-update t))
-
-(defun ec--battery-signal-handler (&rest _ignore)
-  "Run the battery update now."
-  (cancel-timer battery-update-timer)
-  (setq battery-update-timer
-        (run-at-time nil battery-update-interval #'ec--battery-update)))
-
-;; `battery--upower-signal-handler' runs `timer-event-handler' which for some
-;; reason after running the timer increases the delay by the repeat time instead
-;; of resetting the delay (so from 60 seconds to 2 minutes to 3 minutes, etc).
-;; At some point I had a delay of over an hour, I think because my cable was bad
-;; and kept tripping the signal.
-(advice-add #'battery--upower-signal-handler :override #'ec--battery-signal-handler)
-
-(defun ec-battery ()
-  "Get battery percentages for all devices."
-  (seq-filter
-   (lambda (props)
-     (let ((type (cdr (assoc "Type" props))))
-       (or (eq type 2) (eq type 19)))) ;; 2 == battery, 19 == headphones
-   (mapcar #'battery--upower-device-properties (battery--upower-devices))))
-
-(defun ec--mode-line-battery (props)
-  "Turn battery PROPS into a mode line string.
-
-If battery is low, send a notification."
-  (let* ((state   (battery--upower-state props nil))
-         (percent (cdr (assoc "Percentage"  props)))
-         (model   (cdr (assoc "Model"       props)))
-         (tte     (cdr (assoc "TimeToEmpty" props)))
-         (ttf     (cdr (assoc "TimeToFull"  props)))
-         (secs (if (< 0 tte) tte ttf))
-         (mins (/ secs 60))
-         (hrs (/ secs 3600))
-         (left (if (or (< 0 mins) (< 0 hrs))
-                   (format " (%d:%02d)" hrs (% mins 60))
-                 ""))
-         (face (cond ((eq state 'fully-charged) 'success)
-                     ((eq state 'charging) 'success)
-                     ((< percent battery-load-critical) 'error)
-                     ((< percent battery-load-low) 'warning)
-                     ('warning))))
-    (when (and (eq state 'discharging) (> battery-load-low percent))
-      (notifications-notify :title "Poweroff imminent"
-                            :body (format "%s battery is %.0f%%" model percent)
-                            :app-name (system-name)))
-    (cond (t (propertize (format "%.0f%%%%%s" percent left)
-                         'help-echo (format "%s battery" model)
-                         'mouse-face 'mode-line-highlight
-                         'face face)))))
-
-;; Time and load average.
-(setq display-time-string-forms
-      '((propertize
-         ;; Use this instead of the default to get rid of the space and to
-         ;; move the menu to `mouse-1'.
-         (format "%.2f" (nth (or display-time-load-average 0) (load-average t)))
-         'local-map (make-mode-line-mouse-map
-                     'mouse-1 'display-time-next-load-average)
-         'mouse-face 'mode-line-highlight
-         'help-echo (concat
-                     "System load average for past "
-                     (pcase display-time-load-average
-                       (0 "1 minute")
-                       (1 "5 minutes")
-                       (_ "15 minutes"))
-                     "; mouse-1: next"))
-        ;; Use this instead of the default to customize the help echo.
-        " " (propertize (concat 24-hours ":" minutes)
-                        'help-echo (format-time-string "%Y-%m-%d %a %H:%M" now)
-                        'mouse-face 'mode-line-highlight
-                        'face 'mode-line-emphasis)))
-
 ;; Position.
 (setq mode-line-position '("%l:%C " (-3 "%p")))
 
@@ -232,9 +138,7 @@ return the inactive face.  In all other cases defer to FN."
                       (org-clocking-p))
              (list " " org-mode-line-string)))
     (:eval (when (bound-and-true-p erc-modified-channels-alist)
-             (list " " (string-trim erc-modified-channels-object))))
-    " " (:eval ec-battery-mode-line)
-    " " (:eval (bound-and-true-p display-time-string)))
+             (list " " (string-trim erc-modified-channels-object)))))
   "Global mode-line."
   :type 'sexp
   :group 'mode-line)
@@ -254,10 +158,10 @@ return the inactive face.  In all other cases defer to FN."
                                         (+ ,(string-width buffer) ,(string-width global)))))))
       (dolist (o ec--mode-line-overlays)
         (when (overlay-buffer o)
-          (overlay-put o 'after-string (concat space buffer global))))
+          (overlay-put o 'after-string (concat space global buffer))))
       (with-current-buffer " *Minibuf-0*"
         (erase-buffer)
-        (insert space buffer global)))))
+        (insert space global buffer)))))
 
 ;; React to mode-line and window changes.
 (advice-add 'force-mode-line-update :after #'ec-modeline-update)
