@@ -6,11 +6,6 @@
 
 ;;; Code:
 
-(defun ec-diff (a b)
-  "Focus the frame and diff A with B."
-  (select-frame-set-input-focus (selected-frame))
-  (ediff-files a b))
-
 (defun ec-center-truncate (item len)
   "Replace center of ITEM with `truncate-string-ellipsis' to make it length LEN.
 
