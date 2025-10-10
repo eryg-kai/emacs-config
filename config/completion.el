@@ -8,7 +8,6 @@
 
 (nconc package-selected-packages '(cape
                                    tempel
-                                   ispell
                                    consult))
 
 ;; Completion.
