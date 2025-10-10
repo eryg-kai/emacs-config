@@ -5,7 +5,6 @@
 ;;; Code:
 
 (nconc package-selected-packages '(magit
-                                   git-link
                                    forge))
 
 ;; Ediff.
@@ -60,11 +59,6 @@
   ;; not load until something triggers it.
   (keymap-set project-prefix-map "m" #'magit-project-status)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
-
-;; Git link.
-(keymap-set global-map "C-c g l" #'git-link)
-
-(setq git-link-default-remote "github")
 
 ;; Commit mode.
 (setq git-commit-summary-max-length 50)
