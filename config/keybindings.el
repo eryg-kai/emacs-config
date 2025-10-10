@@ -66,7 +66,4 @@
   (add-hook 'org-mode-hook #'evil-org-mode)
   (evil-org-agenda-set-keys))
 
-(keymap-set global-map "<XF86MonBrightnessUp>"   #'(lambda () (interactive) (ec-exec "light -A 5")))
-(keymap-set global-map "<XF86MonBrightnessDown>" #'(lambda () (interactive) (ec-exec "light -U 5")))
-
 ;;; keybindings.el ends here
