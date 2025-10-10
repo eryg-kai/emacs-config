@@ -35,9 +35,7 @@
 ;;   - To install run `package-install-selected-packages'.
 ;;   - To remove packages no longer in the list run `package-autoremove'.
 ;;   - To update run `package-refresh-contents' then install packages again.
-;; Packages not in MELPA can be installed with Quelpa.
-;;   - For example: (quelpa '(beancount :repo "beancount/beancount-mode" :fetcher github))
-(setq package-selected-packages '(quelpa esup with-simulated-input)
+(setq package-selected-packages '(esup with-simulated-input)
       package-quickstart t
       package-quickstart-file (expand-file-name "emacs/quickstart.el" (xdg-data-home)))
 
