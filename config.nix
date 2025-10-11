@@ -1,7 +1,7 @@
 { stdenv }:
 
 stdenv.mkDerivation rec {
-  pname = "kaimacs-source";
+  pname = "kaimacs-config";
   version = "2025-10-10";
 
   src = ./.;

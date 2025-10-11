@@ -32,7 +32,7 @@
               treesit-grammars.with-all-grammars
             ];
           };
-          kaimacs-config = pkgs.callPackage ./source.nix {};
+          kaimacs-config = pkgs.callPackage ./config.nix {};
         };
       });
 }
