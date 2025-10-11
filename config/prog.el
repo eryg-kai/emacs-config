@@ -10,6 +10,7 @@
                                    kotlin-ts-mode
                                    markdown-mode
                                    nix-mode
+                                   qml-mode
                                    racket-mode
                                    rainbow-mode
                                    reformatter
