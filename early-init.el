@@ -71,6 +71,11 @@
                 (fullscreen . maximized)))
 (set-face-attribute 'fringe nil :background "#282c34")
 
+;; Configure the title with the full path and username.
+(setq-default frame-title-format '((buffer-file-name "%f" "%b")
+                                   " — "
+                                   user-login-name))
+
 ;; Disable as early as possible to prevent brief visibility.
 (menu-bar-mode -1)
 (when (bound-and-true-p tool-bar-mode) (tool-bar-mode -1))
