@@ -27,12 +27,10 @@
 
 (blink-cursor-mode 0)
 
-;; Set fonts for GUI Emacs.
-(when (display-graphic-p)
-  ;; Tweak fallback font sizes so they match the line height of the main font.
-  (set-fontset-font t 'unicode (font-spec :name "Source Han Code JP" :size 9.0) nil 'prepend)
-  (set-fontset-font t 'unicode (font-spec :name "Source Han Sans HW K" :size 9.0) nil 'prepend)
-  (set-fontset-font t 'unicode (font-spec :name "Symbols Nerd Font" :size 9.0) nil 'prepend))
+;; Tweak fallback font sizes so they match the line height of the main font.
+(set-fontset-font t 'unicode (font-spec :name "Source Han Code JP" :size 9.0) nil 'prepend)
+(set-fontset-font t 'unicode (font-spec :name "Source Han Sans HW K" :size 9.0) nil 'prepend)
+(set-fontset-font t 'unicode (font-spec :name "Symbols Nerd Font" :size 9.0) nil 'prepend)
 
 ;; Main font.
 (add-to-list 'default-frame-alist '(font . "Inconsolata"))
