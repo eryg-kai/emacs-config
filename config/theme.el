@@ -148,8 +148,10 @@ If THEME is an override theme (ends in `override'), do nothing."
   ;; Set theme on new frames. This will make emacsclient invocations themed when
   ;; using emacs --daemon.
   (cond ((daemonp) (add-hook 'after-make-frame-functions #'ec--load-theme))
-        ;; Otherwise load on startup.
-        (t (add-hook 'emacs-startup-hook #'ec--load-theme))))
+        ;; Otherwise load on startup unless it looks like a virtual console.
+        ((or (display-graphic-p)
+             (not (string= "linux" (getenv "TERM"))))
+         (add-hook 'emacs-startup-hook #'ec--load-theme))))
 
 (with-eval-after-load 'org
   (defface org-bullet  '((t (:inherit org-priority :height 0.9)))

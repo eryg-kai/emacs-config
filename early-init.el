@@ -60,16 +60,16 @@
 (setq package-user-dir "~/.local/share/emacs/elpa"
       quelpa-dir "~/.local/share/emacs/quelpa")
 
-;; The theme has not loaded yet, so set initial colors to avoid a flash of the
-;; wrong color.  Also make it fullscreen otherwise it starts small and then
-;; resizes once EXWM kicks in.
+;; The theme has not loaded yet, so set initial colors unless in a virtual
+;; consol to avoid a flash of the wrong color.
 ;; TODO: Store background based on last used theme and use that.
-;; TODO: EXWM causes a flash and the mode-line disappears for a bit.
-(setq-default default-frame-alist
-              '((background-color . "#282c34")
-                (foreground-color . "#bbc2cf")
-                (fullscreen . maximized)))
-(set-face-attribute 'fringe nil :background "#282c34")
+(when (or (display-graphic-p)
+          (not (string= "linux" (getenv "TERM"))))
+  (setq-default default-frame-alist
+                '((background-color . "#282c34")
+                  (foreground-color . "#bbc2cf")
+                  (fullscreen . maximized)))
+  (set-face-attribute 'fringe nil :background "#282c34"))
 
 ;; Configure the title with the full path and username.
 (setq-default frame-title-format '((buffer-file-name "%f" "%b")
