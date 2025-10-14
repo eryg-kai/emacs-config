@@ -27,14 +27,6 @@
 
 (blink-cursor-mode 0)
 
-;; Tweak fallback font sizes so they match the line height of the main font.
-(set-fontset-font t 'unicode (font-spec :name "Source Han Code JP" :size 9.0) nil 'prepend)
-(set-fontset-font t 'unicode (font-spec :name "Source Han Sans HW K" :size 9.0) nil 'prepend)
-(set-fontset-font t 'unicode (font-spec :name "Symbols Nerd Font" :size 9.0) nil 'prepend)
-
-;; Main font.
-(add-to-list 'default-frame-alist '(font . "Inconsolata"))
-
 ;; Theme overrides.
 (defvar ec-themes '(doom-one doom-solarized-light) "List of themes to cycle between.")
 
@@ -142,12 +134,20 @@ If THEME is an override theme (ends in `override'), do nothing."
 
 (defun ec--load-theme (&rest _)
   "Load the current theme'."
+  ;; Tweak fallback font sizes so they match the line height of the main font.
+  (set-fontset-font t 'unicode (font-spec :name "Source Han Code JP" :size 9.0) nil 'prepend)
+  (set-fontset-font t 'unicode (font-spec :name "Source Han Sans HW K" :size 9.0) nil 'prepend)
+  (set-fontset-font t 'unicode (font-spec :name "Symbols Nerd Font" :size 9.0) nil 'prepend)
+
+  ;; Main font.
+  (add-to-list 'default-frame-alist '(font . "Inconsolata"))
+
   (load-theme (or (bound-and-true-p ec--current-theme) (car ec-themes)) t))
 
 (when (ec-theme-p 'doom-one)
   ;; Set theme on new frames. This will make emacsclient invocations themed when
   ;; using emacs --daemon.
-  (cond ((daemonp) (add-hook 'after-make-frame-functions #'ec--load-theme))
+  (cond ((daemonp) (add-hook 'server-after-make-frame-hook #'ec--load-theme))
         ;; Otherwise load on startup unless it looks like a virtual console.
         ((or (display-graphic-p)
              (not (string= "linux" (getenv "TERM"))))
