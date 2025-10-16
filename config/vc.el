@@ -5,7 +5,13 @@
 ;;; Code:
 
 (nconc package-selected-packages '(magit
+                                   pinentry
                                    forge))
+
+;; Pinentry when using virtual console.
+(when (and (not (display-graphic-p))
+           (string= "linux" (getenv "TERM")))
+  (add-hook 'emacs-startup-hook #'pinentry-start))
 
 ;; Ediff.
 (setq-default ediff-split-window-function #'split-window-horizontally
