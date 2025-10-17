@@ -134,10 +134,9 @@ If THEME is an override theme (ends in `override'), do nothing."
 
 (defun ec--load-theme (&rest _)
   "Load the current theme'."
-  ;; Tweak fallback font sizes so they match the line height of the main font.
-  (set-fontset-font t 'unicode (font-spec :name "Source Han Code JP" :size 9.0) nil 'prepend)
-  (set-fontset-font t 'unicode (font-spec :name "Source Han Sans HW K" :size 9.0) nil 'prepend)
-  (set-fontset-font t 'unicode (font-spec :name "Symbols Nerd Font" :size 9.0) nil 'prepend)
+  (set-fontset-font t 'unicode (font-spec :name "Noto Sans Mono CJK KR" :size 10.0) nil 'prepend)
+  (set-fontset-font t 'unicode (font-spec :name "Noto Sans Mono CJK JP" :size 10.0) nil 'prepend)
+  (set-fontset-font t 'unicode (font-spec :name "Symbols Nerd Font" :size 10.0) nil 'prepend)
 
   ;; Main font.
   (add-to-list 'default-frame-alist '(font . "Inconsolata"))
@@ -167,7 +166,7 @@ If THEME is an override theme (ends in `override'), do nothing."
           ;; "■" "◆" "▲" "▶"
           ;; ""
           ;; "➔"
-          "→")
+          "")
         org-habit-completed-glyph ?>
         org-habit-today-glyph ?=
         org-todo-keyword-faces

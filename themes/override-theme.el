@@ -81,7 +81,7 @@
  (org-mode-line-clock :background 'unspecified)
  (org-mode-line-clock-overrun :background 'unspecified :inherit 'error)
 
- (fill-column-indicator :family "Source Han Code JP" :height 0.7)
+ (fill-column-indicator :family "Noto Sans Mono CJK JP" :height 0.7)
 
  (avy-lead-face   :background 'unspecified :inherit 'highlight)
  (avy-lead-face-0 :background 'unspecified :inherit 'highlight)
