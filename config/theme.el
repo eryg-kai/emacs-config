@@ -138,9 +138,6 @@ If THEME is an override theme (ends in `override'), do nothing."
   (set-fontset-font t 'unicode (font-spec :name "Noto Sans Mono CJK JP" :size 10.0) nil 'prepend)
   (set-fontset-font t 'unicode (font-spec :name "Symbols Nerd Font" :size 10.0) nil 'prepend)
 
-  ;; Main font.
-  (add-to-list 'default-frame-alist '(font . "Inconsolata"))
-
   (load-theme (or (bound-and-true-p ec--current-theme) (car ec-themes)) t))
 
 (when (ec-theme-p 'doom-one)

@@ -61,13 +61,15 @@
       quelpa-dir "~/.local/share/emacs/quelpa")
 
 ;; The theme has not loaded yet, so set initial colors unless in a virtual
-;; consol to avoid a flash of the wrong color.
+;; console to avoid a flash of the wrong styles.
 ;; TODO: Store background based on last used theme and use that.
-(when (or (display-graphic-p)
+(when (or initial-window-system
+          (daemonp)
           (not (string= "linux" (getenv "TERM"))))
   (setq-default default-frame-alist
                 '((background-color . "#282c34")
                   (foreground-color . "#bbc2cf")
+                  (font . "Inconsolata")
                   (fullscreen . maximized)))
   (set-face-attribute 'fringe nil :background "#282c34"))
 
