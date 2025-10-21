@@ -169,7 +169,13 @@ return the inactive face.  In all other cases defer to FN."
 
 (defun ec-set-mode-line ()
   "Set up mode-line."
+  ;; The real mode line is used as a select/highlight indicator.
+  (setq-default mode-line-format '(" "))
+  ;; Then the minibuffer is used as a fake mode-line.
   (setq ec--mode-line-overlays nil)
+  (dolist (buffer (buffer-list))
+    (with-current-buffer buffer
+      (setq mode-line-format (default-value 'mode-line-format))))
   (dolist (buf '(" *Echo Area 0*" " *Echo Area 1*"))
     (with-current-buffer (get-buffer-create buf)
       (remove-overlays (point-min) (point-max))

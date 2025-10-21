@@ -14,7 +14,7 @@
 
 (add-hook 'term-mode-hook #'ec--disable-scroll-margin)
 
-(setq window-divider-default-places t
+(setq window-divider-default-places 'right-only
       window-divider-default-right-width 5
       window-divider-default-bottom-width 5
       scroll-margin 8
@@ -43,6 +43,10 @@
     (motion   . box)
     (operator . box))
   "Cursor types (`cursor-type') for each Evil state.")
+
+;; Used to differentiate instances running as different users.
+(defface ec-user-highlight '((t :inherit mode-line))
+  "Highlight color for the current user.")
 
 (defun ec-theme-p (theme)
   "Return non-nil if THEME exists."

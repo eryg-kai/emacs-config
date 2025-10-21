@@ -15,6 +15,10 @@
  (match               :foreground 'unspecified :background 'unspecified :bold 'unspecified :inherit 'highlight)
  (secondary-selection :foreground 'unspecified :background 'unspecified :inherit 'match)
 
+ (mode-line :height 0.14)
+ (mode-line-inactive :height 0.14)
+ (mode-line-active :height 0.14 :inherit 'ec-user-highlight)
+
  (org-drill-hidden-cloze-face :foreground 'unspecified :background 'unspecified)
 
  (lsp-face-highlight-textual :foreground 'unspecified :distant-foreground 'unspecified :background 'unspecified :weight 'normal :inherit 'highlight)
