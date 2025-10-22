@@ -30,12 +30,16 @@
       eshell-destroy-buffer-when-process-dies t
       eshell-hist-ignoredups t
       eshell-prefer-lisp-variables t
-      eshell-prefer-lisp-functions t
+      eshell-prefer-lisp-functions nil
       eshell-highlight-prompt nil
       eshell-prompt-function 'ec--eshell-prompt
       eshell-banner-message ""
       eshell-directory-name (expand-file-name "eshell" (xdg-data-home))
       eshell-z-freq-dir-hash-table-file-name (expand-file-name "eshell/z" (xdg-data-home)))
+
+;; The prefer variable seems to have no effect (lisp functions are always
+;; preferred), so fix that here.
+(advice-add #'eshell--find-plain-lisp-command :override #'ignore)
 
 ;; Unique history per eshell buffer.
 (defun ec--eshell-set-history-file ()
