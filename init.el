@@ -58,6 +58,8 @@
 ;; here to be the source of truth for the package list so overwrite it.
 (customize-set-variable 'package-selected-packages package-selected-packages)
 
+(setq server-stop-automatically 'empty)
+
 ;; Tests.
 (defun ec-test()
   "Test configuration."
