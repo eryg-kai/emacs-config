@@ -286,4 +286,9 @@
 ;; Multi-session variables.
 (setq multisession-directory (expand-file-name "multisession/" (xdg-data-home)))
 
+;; Podman.
+(setq docker-command "podman"
+      docker-compose-command "podman-compose"
+      docker-container-tramp-method "podman")
+
 ;;; tools.el ends here
