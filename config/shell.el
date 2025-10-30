@@ -39,7 +39,12 @@
 
 ;; The prefer variable seems to have no effect (lisp functions are always
 ;; preferred), so fix that here.
-(advice-add #'eshell--find-plain-lisp-command :override #'ignore)
+(defun ec--find-plain-lisp-command (fn command)
+  "Call FN if the elisp version of COMMAND should be used."
+  (when (member command '("cd" "exit"))
+    (funcall fn command)))
+
+(advice-add #'eshell--find-plain-lisp-command :around #'ec--find-plain-lisp-command)
 
 ;; Unique history per eshell buffer.
 (defun ec--eshell-set-history-file ()
