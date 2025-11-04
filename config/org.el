@@ -131,10 +131,12 @@
 ;; Capturing.
 (keymap-set global-map "C-c C-z" #'org-add-note)
 
-(defun ec-capture-user (file &optional user)
-  "Return the path to FILE for USER or the current user."
+(defvar ec-capture-user-name user-login-name "Capture user name.")
+
+(defun ec-capture-user (file)
+  "Return the path to FILE for the capture user."
   (expand-file-name
-   (format "%s/%s" (or user user-login-name) file)
+   (format "%s/%s" ec-capture-user-name file)
    org-directory))
 
 (defun ec-get-template (name)
