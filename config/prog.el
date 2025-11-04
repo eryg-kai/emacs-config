@@ -105,4 +105,7 @@
 ;; Rust.
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
 
+;; JSONC.
+(add-to-list 'auto-mode-alist '("\\.jsonc\\'" . json-ts-mode))
+
 ;;; prog.el ends here
