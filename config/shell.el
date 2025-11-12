@@ -41,7 +41,7 @@
 ;; preferred), so fix that here.
 (defun ec--find-plain-lisp-command (fn command)
   "Call FN if the elisp version of COMMAND should be used."
-  (when (member command '("cd" "exit"))
+  (when (member command '("cd" "exit" "export"))
     (funcall fn command)))
 
 (advice-add #'eshell--find-plain-lisp-command :around #'ec--find-plain-lisp-command)
