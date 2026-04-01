@@ -24,6 +24,8 @@
   (keymap-set eglot-mode-map "C-c a o" 'eglot-code-action-organize-imports)
   (keymap-set eglot-mode-map "C-c a d" 'xref-find-definitions))
 
+(setq eglot-code-action-indications '(eldoc-hint))
+
 ;; Go.
 (when (fboundp 'reformatter-define)
   (reformatter-define go-format
