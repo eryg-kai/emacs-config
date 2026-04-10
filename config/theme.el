@@ -235,8 +235,15 @@ If THEME is an override theme (ends in `override'), do nothing."
 (advice-add #'set-hard-newline-properties :after #'ec--mark-hard-newlines)
 
 ;; Fill column indicator.
-(setq-default display-fill-column-indicator-character
-              (if (display-graphic-p) ?\〱 ?\│))
+(defun ec--set-fci ()
+  "Set fill column indicator character."
+  (remove-hook 'server-after-make-frame-hook #'ec--set-fci)
+  (setq-default display-fill-column-indicator-character
+                (if (display-graphic-p) ?\〱 ?\│)))
+
+(if (daemonp)
+    (add-hook 'server-after-make-frame-hook #'ec--set-fci)
+  (ec--set-fci))
 
 (add-hook 'emacs-startup-hook #'global-display-fill-column-indicator-mode)
 
