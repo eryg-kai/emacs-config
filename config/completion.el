@@ -207,9 +207,11 @@ COLLECTION, and PREDICATE."
 ;; without this (or without manually loading `ffap').
 (autoload 'ffap-string-at-point "ffap")
 
-(defun ec-ffap ()
-  "Like `find-file-at-point' but handles line/column numbers and remote paths."
-  (interactive)
+(defun ec-ffap (&optional other-frame)
+  "Like `find-file-at-point' but handles line/column numbers and remote paths.
+
+if OTHER-FRAME (the optional prefix arg) is set, open in a new frame."
+  (interactive "P")
   ;; In `dired' this gets in the way of using C-x C-f to create files.  Use RET
   ;; instead to go to the file at point.
   (if (eq major-mode 'dired-mode)
@@ -226,9 +228,12 @@ COLLECTION, and PREDICATE."
            (column (when index (match-string 2 str)))
            (file (if index (substring str 0 index) str))
            ;; Only check non-remote paths for existence.
-           (exists (or (ffap-file-remote-p file) (ffap-file-exists-string file))))
+           (exists (or (ffap-file-remote-p file) (ffap-file-exists-string file)))
+           (filename (ffap-prompter (when exists file))))
       ;; Use the prompter to provide a chance to verify.
-      (find-file-at-point (ffap-prompter (when exists file)))
+      (if other-frame
+          (find-file-other-frame filename)
+        (find-file-at-point filename))
       (when (and exists index)
         (goto-char (point-min))
         (forward-line (1- (string-to-number line)))
