@@ -138,6 +138,8 @@ If THEME is an override theme (ends in `override'), do nothing."
 
 (defun ec--load-theme (&rest _)
   "Load the current theme'."
+  (remove-hook 'server-after-make-frame-hook #'ec--load-theme)
+
   (set-fontset-font t 'unicode (font-spec :name "Noto Sans Mono CJK KR" :size 10.0) nil 'prepend)
   (set-fontset-font t 'unicode (font-spec :name "Noto Sans Mono CJK JP" :size 10.0) nil 'prepend)
   (set-fontset-font t 'unicode (font-spec :name "Symbols Nerd Font" :size 10.0) nil 'prepend)
