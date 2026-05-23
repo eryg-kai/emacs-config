@@ -82,4 +82,7 @@
 ;; Forge.
 (setq forge-database-file (expand-file-name "forge/forge.db" (xdg-data-home)))
 
+;; `forge-get-url' has no autoload and is used in one of my templates.
+(autoload 'forge-get-url "forge")
+
 ;;; vc.el ends here
