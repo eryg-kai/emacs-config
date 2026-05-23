@@ -58,7 +58,7 @@
 ;; here to be the source of truth for the package list so overwrite it.
 (customize-set-variable 'package-selected-packages package-selected-packages)
 
-(setq server-stop-automatically 'empty)
+(setq server-stop-automatically 'kill-terminal)
 
 ;; Tests.
 (defun ec-test()
