@@ -39,7 +39,8 @@ FILES-ONLY is ignored."
   (ibuffer t (format "*Ibuffer-%s*" (project-name project))
            `((directory . ,(expand-file-name (project-root project))))))
 
-(setq project-buffers-viewer #'ec-project-list-buffers-ibuffer)
+(setq project-buffers-viewer #'ec-project-list-buffers-ibuffer
+      project-vc-merge-submodules nil)
 
 (with-eval-after-load 'project
   (keymap-set project-prefix-map "F" #'project-root-find-file)
