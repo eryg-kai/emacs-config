@@ -130,9 +130,6 @@ Options are:
                 (("^\\*Error\\*$" "^\\*Calendar\\*" "^\\*Disabled Command\\*$")
                  (display-buffer-at-bottom) :height 0.3)
 
-                ;; Display floating.
-                (("^\\*[zZ]oom\\*$") (display-buffer-no-window) :float t)
-
                 (("^\\*Dictionary\\*")
                  (display-buffer-in-direction) :only t :width 0.5)
 
