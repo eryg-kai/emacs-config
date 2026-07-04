@@ -56,9 +56,6 @@ Special behavior will be exhibited based on PLIST options."
   (when-let* ((window (cl-some (lambda (a) (funcall a buffer alist)) actions)))
     (when (and (plist-get plist :focus) (not (window-minibuffer-p)))
       (select-window window))
-    (when (and (plist-get plist :float) (fboundp 'exwm-floating--set-floating))
-      (with-current-buffer buffer
-        (exwm-floating--set-floating exwm--id)))
     ;; Returning the window lets `display-buffer' know it should stop.
     window))
 
