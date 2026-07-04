@@ -49,13 +49,21 @@ displaying after running FN."
   "Run ACTIONS with BUFFER and ALIST until non-nil.
 
 Special behavior will be exhibited based on PLIST options."
-  (when (and (plist-get plist :only) (not (window-minibuffer-p)))
-    (ec--store-layout buffer)
-    ;; Don't mess with the layout if the buffer is already visible.
-    (unless (get-buffer-window buffer) (delete-other-windows)))
   (when-let* ((window (cl-some (lambda (a) (funcall a buffer alist)) actions)))
-    (when (and (plist-get plist :focus) (not (window-minibuffer-p)))
-      (select-window window))
+    ;; This can be 'fail with `display-buffer-no-window'.  Check to see if the
+    ;; buffer happens to be displayed anywhere else, otherwise set to nil.
+    (when (eq window 'fail)
+      (setq window (get-buffer-window buffer)))
+    ;; Do nothing for minibuffer windows (checks current window if nil).
+    (unless (window-minibuffer-p window)
+      (when (plist-get plist :only)
+        ;; Do nothing if the buffer is already visible somewhere else.
+        (unless window
+          (ec--store-layout buffer)
+          (setq window (display-buffer-same-window buffer nil))
+          (delete-other-windows)))
+      (when (plist-get plist :focus)
+        (select-window window)))
     ;; Returning the window lets `display-buffer' know it should stop.
     window))
 
@@ -72,7 +80,6 @@ Special behavior will be exhibited based on PLIST options."
             condition)
          ,(apply-partially #'ec--shackle-action actions plist)
          (window-height . ,(or (plist-get plist :height) #'fit-window-to-buffer))
-         (window-width  . ,(or (plist-get plist :width) (+ 2 fill-column)))
          (direction     . ,(or (plist-get plist :direction) 'right))
          (side          . ,(or (plist-get plist :side) 'right))
          (allow-no-window . t))))))
@@ -88,7 +95,6 @@ take multiple conditions.
 Options are:
   `:height' -- Number or function, defaults to `fit-window-to-buffer'.
   `:focus'  -- Focus the buffer after display.
-  `:width'  -- Number or function, defaults to 2 + `fill-column'.
   `:side'   -- Side for directional displays.
   `:only'   -- Delete other windows temporarily (like `org-agenda')."
   (when reset (setq display-buffer-alist nil))
@@ -127,17 +133,15 @@ Options are:
                 (("^\\*Error\\*$" "^\\*Calendar\\*" "^\\*Disabled Command\\*$")
                  (display-buffer-at-bottom) :height 0.3)
 
-                (("^\\*Dictionary\\*")
-                 (display-buffer-in-direction) :only t :width 0.5)
-
                 ;; Dedicated temporary/branch state (like how `org-agenda' works
                 ;; by default).
                 (("^\\*Help\\*$" "^\\*ripgrep-search\\*$" "^\\*Man" "^\\*grep\\*$"
                   "^\\*Process List\\*$" "^\\*Password-Store\\*$" "^\\*eldoc\\*$"
                   "^\\*xref\\*" "^\\*Occur\\*$" "^\\*info\\*$"
                   "^\\*docker-images\\*" "^\\*docker-containers\\*"
+                  "^\\*Dictionary\\*"
                   Buffer-menu-mode proced-mode)
-                 (display-buffer-in-direction) :only t :focus t :width 0.5))
+                 (display-buffer-no-window) :only t :focus t))
               t))
 
 (add-hook 'emacs-startup-hook #'ec--setup-shackle)
