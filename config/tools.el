@@ -94,7 +94,8 @@
       proced-filter 'regular
       proced-filter-alist
       '((regular (args . ec-proced-filter))
-        (all)))
+        (all))
+      proced-enable-color-flag t)
 
 (defun ec--proced-format-args (fn &rest args)
   "Strip full paths from the result of FN ran with ARGS when using the short format."
