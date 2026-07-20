@@ -16,7 +16,8 @@
                                    reformatter
                                    web-mode
                                    yaml-mode
-                                   yarn-mode))
+                                   yarn-mode
+                                   zig-mode))
 
 ;; Eglot.
 (with-eval-after-load 'eglot
