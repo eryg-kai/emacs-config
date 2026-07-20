@@ -188,11 +188,6 @@ COLLECTION, and PREDICATE."
       xref-show-xrefs-function #'consult-xref
       xref-show-definitions-function #'consult-xref)
 
-;; `consult-preview-at-point-mode' has no autoload.
-(autoload 'consult-preview-at-point-mode "consult")
-
-(add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
-
 (with-eval-after-load 'evil
   (keymap-set evil-normal-state-map "C-y" #'consult-yank-from-kill-ring)
   (keymap-set evil-insert-state-map "C-y" #'consult-yank-from-kill-ring))
