@@ -29,6 +29,10 @@
 (with-eval-after-load 'evil
   (evil-collection-init)
 
+  (setq evil-collection-binding-overrides
+        '((repl-submit  :state insert)
+          (repl-newline :state normal)))
+
   (setq evil-snipe-scope 'whole-visible)
   (evil-snipe-mode)
   (evil-snipe-override-mode)
