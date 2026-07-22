@@ -30,8 +30,8 @@
   (evil-collection-init)
 
   (setq evil-collection-binding-overrides
-        '((repl-submit  :state insert)
-          (repl-newline :state normal)))
+        '((repl-submit  :state (normal insert))
+          (repl-newline :enabled nil)))
 
   (setq evil-snipe-scope 'whole-visible)
   (evil-snipe-mode)
